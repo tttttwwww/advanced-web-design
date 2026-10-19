@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-1 CSS3 选择器</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            padding: 30px;
+        }
+        .box{
+            width: 150px;
+            height: 159px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: white;
+            font-size:40px;
+            display: flex;
+            /* 水平垂直居中 */
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s;
+            box-sizing: border-box;
+            /* width包括了padding和border */
+        }
+
+        /* 一排盒子，放不下自动换行 */
+        .wrap{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* ===== 1. 结构伪类选择器 ===== */
+        /* 奇数个、偶数个盒子换不同的底色 */
+        .wrap .box:nth-child(odd){
+            background-color: #f4faff;
+        }
+        .wrap .box:nth-child(even){
+            background-color: #fff9f2;
+        }
+        /* 第 1 个、第 3 个、最后 1 个换边框和字的颜色 */
+        .wrap .box:first-child{
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        .wrap .box:nth-child(3){
+            border-color: #3498db;
+            color: #3498db;
+        }
+        .wrap .box:last-child{
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        /* ===== 2. 伪元素选择器 ::before / ::after ===== */
+        .wrap .box::before{
+            content: "「";
+            color: #ccc;
+        }
+        .wrap .box::after{
+            content: "」";
+            color: #ccc;
+        }
+
+        /* ===== 3. 鼠标放上去：变色 + 上浮 + 阴影 ===== */
+        .wrap .box:hover{
+            background-color: #3498db;
+            color: #fff;
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
+        }
+        .wrap .box:hover::before,
+        .wrap .box:hover::after{
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+    </div>
+</body>
+</html>

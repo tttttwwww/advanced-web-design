@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>练习首页</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #eef1f8;
+			color: #1b2440;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 46px 0 38px;
+			background: linear-gradient(135deg, #26347c 0%, #3f5efb 70%, #5f86ff 100%);
+			color: #fff;
+			border-radius: 0 0 28px 28px;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 8px;
+			color: #b9c8ff;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(26px, 4vw, 38px);
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 14px 0 0;
+			color: #dbe3ff;
+			font-size: 15px;
+		}
+
+		.tu_author {
+			margin: 18px 0 0;
+			color: #ffe6a1;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+			padding: 36px 0 16px;
+		}
+
+		section {
+			margin-bottom: 40px;
+		}
+
+		h2 {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 20px;
+		}
+
+		h2::before {
+			content: "";
+			width: 6px;
+			height: 20px;
+			border-radius: 3px;
+			background: #3f5efb;
+			transform: translateY(3px);
+		}
+
+		.tu_sub {
+			color: #7a88ab;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.tu_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			gap: 16px;
+		}
+
+		.tu_card {
+			display: flex;
+			flex-direction: column;
+			padding: 16px;
+			background: #fff;
+			border: 1px solid #e3e8f5;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(27, 36, 64, 0.06);
+			color: inherit;
+			text-decoration: none;
+			transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+		}
+
+		.tu_card:hover {
+			transform: translateY(-4px);
+			border-color: #b7c6ff;
+			box-shadow: 0 14px 28px rgba(27, 36, 64, 0.14);
+		}
+
+		.tu_card-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_badge {
+			padding: 3px 10px;
+			border-radius: 8px;
+			background: #e8edff;
+			color: #3f5efb;
+			font-family: Consolas, monospace;
+			font-size: 14px;
+			font-weight: 700;
+		}
+
+		.tu_project .tu_badge {
+			background: #e2f7ec;
+			color: #17916b;
+		}
+
+		.tu_title {
+			font-size: 15px;
+			font-weight: 600;
+			color: #24305a;
+		}
+
+		.tu_desc {
+			margin: 10px 0 0;
+			color: #6b7aa3;
+			font-size: 13px;
+		}
+
+		.tu_go {
+			margin-top: 12px;
+			color: #3f5efb;
+			font-size: 13px;
+			font-weight: 600;
+		}
+
+		.tu_project .tu_go {
+			color: #17916b;
+		}
+
+		footer {
+			padding: 20px 24px 34px;
+			text-align: center;
+			color: #8792b3;
+			font-size: 13px;
+		}
+
+		@media (max-width: 480px) {
+			.tu_hero {
+				padding-top: 34px;
+			}
+
+			h2 {
+				font-size: 18px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tu_card {
+				transition: none;
+			}
+
+			.tu_card:hover {
+				transform: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<p class="tu_eyebrow">HOME</p>
+			<h1>Web 前端练习首页</h1>
+			<p class="tu_lead">课程练习汇总页，点击任意卡片进入对应页面。编号即课次，从基础的图文排版到 CSS 动画与响应式布局，由浅入深。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section aria-labelledby="tu_base-title">
+			<h2 id="tu_base-title">基础练习 <span class="tu_sub">第 6 – 8 课：布局与选择器</span></h2>
+			<div class="tu_grid">
+				<a class="tu_card" href="6-1.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">6-1</span>
+						<span class="tu_title">Flex 布局演示</span>
+					</span>
+					<span class="tu_desc">Flex 弹性盒布局的基础示例。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="6-2.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">6-2</span>
+						<span class="tu_title">Document</span>
+					</span>
+					<span class="tu_desc">空白文档模板页（早期文件，保留原样）。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="7-1 上图下文.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">7-1</span>
+						<span class="tu_title">上图下文</span>
+					</span>
+					<span class="tu_desc">图片在上、文字在下的图文混排练习。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="7-2 左图右文.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">7-2</span>
+						<span class="tu_title">左图右文</span>
+					</span>
+					<span class="tu_desc">左图右文的图文版式练习。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="8-1.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">8-1</span>
+						<span class="tu_title">CSS3 选择器</span>
+					</span>
+					<span class="tu_desc">CSS3 各类选择器的用法演示。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_anim-title">
+			<h2 id="tu_anim-title">动画与响应式 <span class="tu_sub">第 10 课：动画、媒体查询</span></h2>
+			<div class="tu_grid">
+				<a class="tu_card" href="10-1.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">10-1</span>
+						<span class="tu_title">CSS 颜色动画</span>
+					</span>
+					<span class="tu_desc">缤纷律动：多色渐变与关键帧动画。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="10-2.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">10-2</span>
+						<span class="tu_title">光影之间 | 动画幻灯片</span>
+					</span>
+					<span class="tu_desc">纯 CSS 的动画幻灯片效果。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="10-3.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">10-3</span>
+						<span class="tu_title">视口响应 | rem</span>
+					</span>
+					<span class="tu_desc">媒体查询配合 rem 实现视口自适应。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="10-4.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">10-4</span>
+						<span class="tu_title">媒体查询网格布局</span>
+					</span>
+					<span class="tu_desc">随视口宽度变化的响应式网格。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_deep-title">
+			<h2 id="tu_deep-title">CSS 深入 <span class="tu_sub">第 11 课：长度单位与 3D</span></h2>
+			<div class="tu_grid">
+				<a class="tu_card" href="11-1.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">11-1</span>
+						<span class="tu_title">CSS 长度单位</span>
+					</span>
+					<span class="tu_desc">绝对 / 相对单位速查，色条直观对比。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+
+				<a class="tu_card" href="11-2.html">
+					<span class="tu_card-head">
+						<span class="tu_badge">11-2</span>
+						<span class="tu_title">CSS 3D 动画</span>
+					</span>
+					<span class="tu_desc">旋转立方体、环形轮播与翻转卡片。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_project-title">
+			<h2 id="tu_project-title">综合项目 <span class="tu_sub">自包含子项目</span></h2>
+			<div class="tu_grid">
+				<a class="tu_card tu_project" href="soda-music/">
+					<span class="tu_card-head">
+						<span class="tu_badge">APP</span>
+						<span class="tu_title">苏打音乐播放器</span>
+					</span>
+					<span class="tu_desc">soda-music：Web Audio 合成音色的音乐播放器。</span>
+					<span class="tu_go">进入页面 →</span>
+				</a>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · Web 前端练习首页</p>
+	</footer>
+</body>
+</html>

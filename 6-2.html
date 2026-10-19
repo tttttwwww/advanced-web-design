@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .title{
+            width: 500px;
+            height: 33px;
+            line-height: 33px;
+            margin: 50px;
+        }
+        .title h2{
+            font-size: 14px;
+            padding-left: 10px;
+            
+        }
+        .title a{
+            font-size: 12px;
+            color: #ccc;
+            text-decoration: none;
+            margin-right: 6px;
+        }
+        .title:first-child{
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+        }
+        .title:nth-child(2){
+            display: flex;
+            border: 1px solid #ccc;
+        }
+        .title:nth-child(2) h2{
+            flex-grow: 1;
+        }
+        .title:nth-child(3){
+            position: relative;
+            border-bottom: 1px solid #ccc;
+        }
+        .title:nth-child(3) a{
+            position: absolute;
+            right: 10px;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h2>涂玮轩的标题</h2>
+        <a href="7-1 上图下文.html">更多</a>
+    </div>
+    <div class="title">
+        <h2>涂玮轩的标题</h2>
+        <a href="7-2 左图右文.html">更多</a>
+    </div>
+    <div class="title">
+        <h2>涂玮轩的标题</h2>
+        <a href="7-2 左图右文.html">查看详情</a>
+    </div>
+</body>
+</html>

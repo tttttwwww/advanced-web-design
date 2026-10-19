@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>视口响应 | 媒体查询与 rem</title>
+	<style>
+		:root {
+			font-size: 14px;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		.screen-box {
+			position: relative;
+			width: 100%;
+			min-height: 100vh;
+			min-height: 100svh;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			padding: 4rem 2rem;
+			background-color: #d64e36;
+			color: #fff;
+			transition: background-color 500ms ease;
+		}
+
+		.screen-box::before {
+			position: absolute;
+			inset: 1.25rem;
+			border: 1px solid rgba(255, 255, 255, 0.55);
+			content: "";
+			pointer-events: none;
+		}
+
+		.content {
+			width: min(100%, 56rem);
+			text-align: center;
+		}
+
+		.eyebrow {
+			margin: 0 0 1.5rem;
+			font-size: 0.8rem;
+			font-weight: 600;
+			letter-spacing: 0.28rem;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 4rem;
+			font-weight: 500;
+			line-height: 1.08;
+		}
+
+		h1 span {
+			display: block;
+		}
+
+		.author {
+			margin: 2rem 0 0;
+			font-size: 1.15rem;
+			letter-spacing: 0.18rem;
+		}
+
+		.viewport-size {
+			display: inline-block;
+			margin-top: 3rem;
+			padding: 0.65rem 1rem;
+			border: 1px solid rgba(255, 255, 255, 0.72);
+			font-size: 0.75rem;
+			letter-spacing: 0.12rem;
+		}
+
+		.viewport-size::after {
+			content: "SMALL VIEWPORT";
+		}
+
+		@media (min-width: 600px) {
+			:root {
+				font-size: 18px;
+			}
+
+			.screen-box {
+				background-color: #16897e;
+			}
+
+			.viewport-size::after {
+				content: "MEDIUM VIEWPORT";
+			}
+		}
+
+		@media (min-width: 1000px) {
+			:root {
+				font-size: 20px;
+			}
+
+			.screen-box {
+				background-color: #4d721f;
+			}
+
+			.viewport-size::after {
+				content: "LARGE VIEWPORT";
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.screen-box {
+				transition: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="screen-box">
+		<div class="content">
+			<p class="eyebrow">MEDIA QUERY / REM</p>
+			<h1><span>视口变化</span><span>色彩随之改变</span></h1>
+			<p class="author">涂玮轩</p>
+			<span class="viewport-size" aria-label="当前视口尺寸："></span>
+		</div>
+	</main>
+</body>
+</html>

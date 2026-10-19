@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSS 长度单位</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #eef1f8;
+			color: #1b2440;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 46px 0 40px;
+			background: linear-gradient(135deg, #26347c 0%, #3f5efb 70%, #5f86ff 100%);
+			color: #fff;
+			border-radius: 0 0 28px 28px;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1120px);
+			margin: 0 auto;
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 8px;
+			color: #b9c8ff;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(26px, 4vw, 38px);
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 14px 0 0;
+			color: #dbe3ff;
+			font-size: 15px;
+		}
+
+		.tu_author {
+			margin: 18px 0 0;
+			color: #ffe6a1;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.14);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 160ms ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+		}
+
+		main {
+			width: min(100% - 48px, 1120px);
+			margin: 0 auto;
+			padding: 36px 0 16px;
+		}
+
+		section {
+			margin-bottom: 42px;
+		}
+
+		h2 {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 21px;
+		}
+
+		h2::before {
+			content: "";
+			width: 6px;
+			height: 20px;
+			border-radius: 3px;
+			background: #3f5efb;
+			transform: translateY(3px);
+		}
+
+		.tu_sec-rel h2::before {
+			background: #17916b;
+		}
+
+		.tu_sub {
+			color: #7a88ab;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.tu_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+			gap: 16px;
+		}
+
+		.tu_card {
+			display: flex;
+			flex-direction: column;
+			padding: 16px 16px 18px;
+			background: #fff;
+			border: 1px solid #e3e8f5;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(27, 36, 64, 0.06);
+			transition: transform 160ms ease, box-shadow 160ms ease;
+		}
+
+		.tu_card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 14px 28px rgba(27, 36, 64, 0.12);
+		}
+
+		.tu_card-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_badge {
+			padding: 4px 10px;
+			border-radius: 8px;
+			background: #e8edff;
+			color: #3f5efb;
+			font-family: Consolas, monospace;
+			font-size: 16px;
+			font-weight: 700;
+		}
+
+		.tu_sec-rel .tu_badge {
+			background: #e2f7ec;
+			color: #17916b;
+		}
+
+		.tu_unit-name {
+			font-size: 14px;
+			font-weight: 600;
+			color: #45527a;
+		}
+
+		.tu_desc {
+			margin: 10px 0 14px;
+			color: #6b7aa3;
+			font-size: 13px;
+		}
+
+		.tu_demo {
+			height: 84px;
+			display: flex;
+			align-items: center;
+			margin-top: auto;
+			padding: 0 10px;
+			overflow: hidden;
+			background: #f6f8fe;
+			border: 1px dashed #c9d4f0;
+			border-radius: 10px;
+			font-size: 16px;
+		}
+
+		.tu_sec-rel .tu_demo {
+			background: #f4fbf8;
+			border-color: #bfe6d6;
+		}
+
+		.tu_bar {
+			display: block;
+			flex: none;
+			height: 22px;
+			margin-bottom: 6px;
+			border-radius: 6px;
+			background: linear-gradient(90deg, #4a6cf7, #8aa7ff);
+		}
+
+		.tu_sec-rel .tu_bar {
+			background: linear-gradient(90deg, #17916b, #4ecf9e);
+		}
+
+		.tu_demo .tu_bar {
+			margin-bottom: 0;
+		}
+
+		.tu_calc {
+			margin: 8px 0 0;
+			color: #8792b3;
+			font-size: 12px;
+		}
+
+		.tu_calc code {
+			padding: 1px 5px;
+			border-radius: 5px;
+			background: #eef1fa;
+			color: #3f5efb;
+			font-family: Consolas, monospace;
+		}
+
+		.tu_sec-rel .tu_calc code {
+			background: #e9f7f1;
+			color: #17916b;
+		}
+
+		.tu_hint {
+			margin: 14px 0 0;
+			padding: 10px 14px;
+			background: #fff;
+			border-left: 4px solid #3f5efb;
+			border-radius: 0 8px 8px 0;
+			color: #5b6890;
+			font-size: 13px;
+		}
+
+		.tu_sec-rel .tu_hint {
+			border-left-color: #17916b;
+		}
+
+		.tu_d-px   { width: 120px; }
+		.tu_d-in   { width: 1in; }
+		.tu_d-cm   { width: 2cm; }
+		.tu_d-mm   { width: 20mm; }
+		.tu_d-pt   { width: 72pt; }
+		.tu_d-pc   { width: 6pc; }
+		.tu_d-pct  { width: 62%; }
+		.tu_d-em   { width: 8em; }
+		.tu_d-rem  { width: 8rem; }
+		.tu_d-ex   { width: 16ex; }
+		.tu_d-ch   { width: 16ch; }
+		.tu_d-vw   { width: min(100%, 10vw); }
+		.tu_d-vmin { width: min(100%, 22vmin); }
+		.tu_d-vmax { width: min(100%, 14vmax); }
+		.tu_d-vh   { width: 34px; height: 6vh; }
+		.tu_d-4em  { width: 4em; }
+		.tu_d-4rem { width: 4rem; }
+
+		.tu_compare {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 16px;
+		}
+
+		.tu_panel {
+			padding: 18px;
+			background: #fff;
+			border: 1px solid #e3e8f5;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(27, 36, 64, 0.06);
+		}
+
+		.tu_panel h3 {
+			margin: 0 0 6px;
+			font-size: 16px;
+		}
+
+		.tu_panel .tu_tip {
+			margin: 0 0 14px;
+			color: #6b7aa3;
+			font-size: 13px;
+		}
+
+		.tu_nest {
+			padding: 12px;
+			overflow: hidden;
+			background: #f8faff;
+			border: 1px dashed #c9d4f0;
+			border-radius: 10px;
+			font-size: 16px;
+		}
+
+		.tu_step {
+			margin-bottom: 8px;
+			padding: 8px 10px;
+			overflow: hidden;
+			background: #fff;
+			border-left: 3px solid #4a6cf7;
+			border-radius: 0 8px 8px 0;
+		}
+
+		.tu_step:last-child {
+			margin-bottom: 0;
+		}
+
+		.tu_step-a {
+			font-size: 1.5em;
+		}
+
+		.tu_step-r {
+			font-size: 1.5rem;
+			border-left-color: #17916b;
+		}
+
+		.tu_step-label {
+			margin: 0 0 6px;
+			color: #6b7aa3;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_table-wrap {
+			overflow-x: auto;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(27, 36, 64, 0.06);
+		}
+
+		table {
+			width: 100%;
+			background: #fff;
+			border: 1px solid #e3e8f5;
+			border-collapse: collapse;
+			font-size: 14px;
+		}
+
+		th,
+		td {
+			padding: 12px 16px;
+			text-align: left;
+			border-bottom: 1px solid #eef1f8;
+		}
+
+		th {
+			background: #3f5efb;
+			color: #fff;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		tr:last-child td {
+			border-bottom: none;
+		}
+
+		td:first-child {
+			color: #3f5efb;
+			font-family: Consolas, monospace;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+
+		.tu_tips {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 16px 0 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.tu_tips li {
+			padding: 8px 14px;
+			background: #fff;
+			border: 1px solid #e3e8f5;
+			border-radius: 999px;
+			font-size: 13px;
+		}
+
+		.tu_tips b {
+			color: #3f5efb;
+			font-family: Consolas, monospace;
+		}
+
+		footer {
+			padding: 20px 24px 34px;
+			text-align: center;
+			color: #8792b3;
+			font-size: 13px;
+		}
+
+		@media (max-width: 480px) {
+			.tu_hero {
+				padding-top: 34px;
+			}
+
+			h2 {
+				font-size: 18px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tu_card {
+				transition: none;
+			}
+
+			.tu_card:hover {
+				transform: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">CSS LENGTH UNITS</p>
+			<h1>Web 前端的长度单位</h1>
+			<p class="tu_lead">写 CSS 时，宽度、高度、内外边距、字号……几乎所有尺寸值后面都要跟一个单位。下面把网页开发中常用的长度单位分成「绝对单位」和「相对单位」两类，每个单位都配了一条真实长度的色条，可以直观对比。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_sec-abs" aria-labelledby="tu_abs-title">
+			<h2 id="tu_abs-title">一、绝对单位 <span class="tu_sub">大小固定不变，浏览器里最终都会换算成 px</span></h2>
+			<div class="tu_grid">
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">px</span>
+						<span class="tu_unit-name">像素 pixel</span>
+					</div>
+					<p class="tu_desc">屏幕上最基本的显示单位，网页开发中用得最多。它是一个固定值，不会随窗口或字号改变。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-px"></span></div>
+					<p class="tu_calc"><code>width: 120px</code> 固定 120 像素</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">in</span>
+						<span class="tu_unit-name">英寸 inch</span>
+					</div>
+					<p class="tu_desc">英制长度单位，1 英寸 = 2.54 厘米。屏幕按 96dpi 换算，所以 1in 就是 96px。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-in"></span></div>
+					<p class="tu_calc"><code>width: 1in</code> = 96px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">cm</span>
+						<span class="tu_unit-name">厘米 centimeter</span>
+					</div>
+					<p class="tu_desc">公制长度单位，日常最熟悉的尺寸。按 96dpi 换算，1cm ≈ 37.8px。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-cm"></span></div>
+					<p class="tu_calc"><code>width: 2cm</code> ≈ 75.6px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">mm</span>
+						<span class="tu_unit-name">毫米 millimeter</span>
+					</div>
+					<p class="tu_desc">比厘米更精细，10mm = 1cm，常用于打印稿的精确排版。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-mm"></span></div>
+					<p class="tu_calc"><code>width: 20mm</code> ≈ 75.6px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">pt</span>
+						<span class="tu_unit-name">磅 point</span>
+					</div>
+					<p class="tu_desc">印刷行业的传统单位，1pt = 1/72 英寸 ≈ 1.33px，字体大小常常用它表示。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-pt"></span></div>
+					<p class="tu_calc"><code>width: 72pt</code> = 96px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">pc</span>
+						<span class="tu_unit-name">派卡 pica</span>
+					</div>
+					<p class="tu_desc">排版单位，1 派卡 = 12 磅。在网页里较少使用，了解即可。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-pc"></span></div>
+					<p class="tu_calc"><code>width: 6pc</code> = 96px</p>
+				</article>
+			</div>
+			<p class="tu_hint">注意看色条：1in、72pt、6pc 三条色条长度完全一样（都是 96px）—— 绝对单位只是写法不同，在屏幕上最终都会换算成像素。</p>
+		</section>
+
+		<section class="tu_sec-rel" aria-labelledby="tu_rel-title">
+			<h2 id="tu_rel-title">二、相对单位 <span class="tu_sub">跟着参照物变化，是响应式布局的主力</span></h2>
+			<div class="tu_grid">
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">%</span>
+						<span class="tu_unit-name">百分比 percentage</span>
+					</div>
+					<p class="tu_desc">相对父元素：宽度相对父元素的宽度，高度相对父元素的高度。做流式布局最常用。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-pct"></span></div>
+					<p class="tu_calc"><code>width: 62%</code> 占虚线框宽度的 62%</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">em</span>
+						<span class="tu_unit-name">相对当前字号</span>
+					</div>
+					<p class="tu_desc">相对当前元素自己的 font-size：1em = 自己的字号。嵌套时会一层层叠加放大。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-em"></span></div>
+					<p class="tu_calc"><code>width: 8em</code> = 8 × 16px = 128px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">rem</span>
+						<span class="tu_unit-name">相对根字号</span>
+					</div>
+					<p class="tu_desc">相对根元素 &lt;html&gt; 的 font-size，不管嵌套多少层都取同一个值，适合整页缩放。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-rem"></span></div>
+					<p class="tu_calc"><code>width: 8rem</code> = 8 × 16px = 128px</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">ex</span>
+						<span class="tu_unit-name">x 高度</span>
+					</div>
+					<p class="tu_desc">相对当前字体中小写字母 x 的高度，大约是字号的一半，排版时用来对齐字母。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-ex"></span></div>
+					<p class="tu_calc"><code>width: 16ex</code> ≈ 16 个 x 的高度</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">ch</span>
+						<span class="tu_unit-name">数字 0 宽度</span>
+					</div>
+					<p class="tu_desc">相对当前字体中数字「0」的宽度，常用来限制一行最多能排多少个字符。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-ch"></span></div>
+					<p class="tu_calc"><code>width: 16ch</code> ≈ 16 个数字 0</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">vh</span>
+						<span class="tu_unit-name">视口高度</span>
+					</div>
+					<p class="tu_desc">视口（浏览器可视区域）高度的 1%，100vh 就是一整个窗口的高度。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-vh"></span></div>
+					<p class="tu_calc"><code>height: 6vh</code> 窗口高度的 6%</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">vw</span>
+						<span class="tu_unit-name">视口宽度</span>
+					</div>
+					<p class="tu_desc">视口宽度的 1%，100vw 就是一整个窗口的宽度，常用于满屏区块。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-vw"></span></div>
+					<p class="tu_calc"><code>width: 10vw</code> 窗口宽度的 10%</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">vmin</span>
+						<span class="tu_unit-name">较小视口单位</span>
+					</div>
+					<p class="tu_desc">取 vw 和 vh 中较小的那一个，适合做「在任何屏幕上都不会溢出」的尺寸。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-vmin"></span></div>
+					<p class="tu_calc"><code>width: 22vmin</code> 宽高中取较小值</p>
+				</article>
+
+				<article class="tu_card">
+					<div class="tu_card-head">
+						<span class="tu_badge">vmax</span>
+						<span class="tu_unit-name">较大视口单位</span>
+					</div>
+					<p class="tu_desc">取 vw 和 vh 中较大的那一个，横竖屏切换时始终贴近较长的那一边。</p>
+					<div class="tu_demo"><span class="tu_bar tu_d-vmax"></span></div>
+					<p class="tu_calc"><code>width: 14vmax</code> 宽高中取较大值</p>
+				</article>
+			</div>
+			<p class="tu_hint">拖动浏览器窗口试试：% 始终相对虚线框变化；vw、vmin、vmax 的色条会跟着窗口变长变短；把窗口拉矮，vh 的竖条也会跟着变。</p>
+		</section>
+
+		<section aria-labelledby="tu_emrem-title">
+			<h2 id="tu_emrem-title">三、em 与 rem 的区别 <span class="tu_sub">嵌套时 em 层层叠加，rem 永远不变</span></h2>
+			<div class="tu_compare">
+				<div class="tu_panel">
+					<h3>em：跟着自己的字号走</h3>
+					<p class="tu_tip">下面三层都写 <code>font-size: 1.5em</code>：24px → 36px → 54px，色条 <code>width: 4em</code> 也跟着越变越长。</p>
+					<div class="tu_nest">
+						<div class="tu_step tu_step-a">
+							<p class="tu_step-label">第 1 层：1.5em = 24px，4em = 96px</p>
+							<div class="tu_bar tu_d-4em"></div>
+							<div class="tu_step tu_step-a">
+								<p class="tu_step-label">第 2 层：1.5em = 36px，4em = 144px</p>
+								<div class="tu_bar tu_d-4em"></div>
+								<div class="tu_step tu_step-a">
+									<p class="tu_step-label">第 3 层：1.5em = 54px，4em = 216px</p>
+									<div class="tu_bar tu_d-4em"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="tu_panel">
+					<h3>rem：永远只看根字号</h3>
+					<p class="tu_tip">同样三层都写 <code>font-size: 1.5rem</code>：永远是 16px × 1.5 = 24px，色条 <code>width: 4rem</code> 三层一样长。</p>
+					<div class="tu_nest">
+						<div class="tu_step tu_step-r">
+							<p class="tu_step-label">第 1 层：1.5rem = 24px，4rem = 64px</p>
+							<div class="tu_bar tu_d-4rem"></div>
+							<div class="tu_step tu_step-r">
+								<p class="tu_step-label">第 2 层：1.5rem = 24px，4rem = 64px</p>
+								<div class="tu_bar tu_d-4rem"></div>
+								<div class="tu_step tu_step-r">
+									<p class="tu_step-label">第 3 层：1.5rem = 24px，4rem = 64px</p>
+									<div class="tu_bar tu_d-4rem"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_table-title">
+			<h2 id="tu_table-title">四、常用换算与怎么选</h2>
+			<div class="tu_table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>写法</th>
+							<th>换算关系</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1in</td>
+							<td>= 96px = 2.54cm = 25.4mm</td>
+						</tr>
+						<tr>
+							<td>1cm</td>
+							<td>≈ 37.8px</td>
+						</tr>
+						<tr>
+							<td>1mm</td>
+							<td>≈ 3.78px</td>
+						</tr>
+						<tr>
+							<td>1pt</td>
+							<td>= 1/72 in ≈ 1.33px（印刷“磅”）</td>
+						</tr>
+						<tr>
+							<td>1pc</td>
+							<td>= 12pt = 16px（派卡）</td>
+						</tr>
+						<tr>
+							<td>1em</td>
+							<td>= 当前元素的 font-size（默认 16px），嵌套时叠加</td>
+						</tr>
+						<tr>
+							<td>1rem</td>
+							<td>= 根元素 html 的 font-size（默认 16px）</td>
+						</tr>
+						<tr>
+							<td>100vh / 100vw</td>
+							<td>= 整个视口的高度 / 宽度</td>
+						</tr>
+						<tr>
+							<td>vmin / vmax</td>
+							<td>vw 与 vh 中较小 / 较大的一个</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<ul class="tu_tips">
+				<li>整页等比缩放 → <b>rem</b></li>
+				<li>相对自身字号（图标、行高）→ <b>em</b></li>
+				<li>撑满父容器 → <b>%</b></li>
+				<li>满屏区块、通栏 → <b>vh / vw</b></li>
+				<li>移动端安全尺寸 → <b>vmin</b></li>
+				<li>打印精确尺寸 → <b>cm / mm / pt</b></li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · Web 前端长度单位小结</p>
+	</footer>
+</body>
+</html>

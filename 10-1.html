@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSS 颜色动画</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			display: grid;
+			place-items: center;
+			background: radial-gradient(ellipse at 50% 45%, #29483e 0%, #182c27 45%, #10191a 100%);
+			color: #f2f6ec;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		main {
+			width: min(100%, 520px);
+			padding: 32px 20px;
+			text-align: center;
+		}
+
+		h1 {
+			margin: 0 0 12px;
+			font-size: 32px;
+			font-weight: 600;
+		}
+
+		p {
+			margin: 0 0 8px;
+			color: #a9c0b1;
+			font-size: 15px;
+		}
+
+		.student {
+			margin: 0 0 34px;
+			color: #d8e7a5;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		.stage {
+			position: relative;
+			width: min(78vw, 340px);
+			aspect-ratio: 1;
+			margin: 0 auto;
+			perspective: 800px;
+		}
+
+		.stage::before,
+		.stage::after {
+			position: absolute;
+			content: "";
+			border-radius: 50%;
+			pointer-events: none;
+		}
+
+		.stage::before {
+			inset: 4%;
+			border: 1px dashed rgba(216, 231, 165, 0.42);
+			animation: orbit-spin 28s linear infinite;
+		}
+
+		.stage::after {
+			inset: 13%;
+			border: 1px solid rgba(115, 210, 174, 0.3);
+			transform: rotateX(68deg) rotate(-25deg);
+			animation: orbit-tilt 12s ease-in-out infinite alternate;
+		}
+
+		.box {
+			position: absolute;
+			inset: 50% auto auto 50%;
+			width: 58%;
+			aspect-ratio: 1;
+			display: grid;
+			place-content: center;
+			gap: 9px;
+			overflow: hidden;
+			border: 1px solid rgba(255, 255, 255, 0.55);
+			border-radius: 24px;
+			color: #fff;
+			box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+			transform: translate(-50%, -50%);
+			animation:
+				color-cycle 16s linear infinite,
+				box-float 4s ease-in-out infinite,
+				box-tilt 7s ease-in-out infinite,
+				glow-pulse 3s ease-in-out infinite;
+		}
+
+		.box::before {
+			position: absolute;
+			inset: -60% auto -60% -80%;
+			width: 55%;
+			content: "";
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+			transform: rotate(24deg);
+			animation: shine-sweep 3.6s ease-in-out infinite;
+		}
+
+		.box span {
+			position: relative;
+			z-index: 1;
+		}
+
+		.word {
+			font-size: 22px;
+			font-weight: 700;
+			letter-spacing: 4px;
+		}
+
+		.caption {
+			font-size: 10px;
+			letter-spacing: 3px;
+			opacity: 0.8;
+		}
+
+		.satellite {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 12px;
+			aspect-ratio: 1;
+			border: 2px solid #f2f6ec;
+			border-radius: 50%;
+			background: #f4a340;
+			box-shadow: 0 0 18px rgba(244, 163, 64, 0.9);
+			transform-origin: 0 0;
+			animation: satellite-orbit 8s linear infinite;
+		}
+
+		@keyframes color-cycle {
+			0%, 100% { background-color: #f26f63; }
+			12.5% { background-color: #f4a340; }
+			25% { background-color: #f4d35e; }
+			37.5% { background-color: #a8d65e; }
+			50% { background-color: #2bbfa5; }
+			62.5% { background-color: #36a9e1; }
+			75% { background-color: #5278df; }
+			87.5% { background-color: #d875cf; }
+		}
+
+		@keyframes box-float {
+			0%, 100% { translate: 0 0; }
+			50% { translate: 0 -12px; }
+		}
+
+		@keyframes box-tilt {
+			0%, 100% { rotate: -4deg; }
+			50% { rotate: 4deg; }
+		}
+
+		@keyframes glow-pulse {
+			0%, 100% { box-shadow: 0 18px 42px rgba(43, 191, 165, 0.25), 0 0 12px rgba(255, 255, 255, 0.12); }
+			50% { box-shadow: 0 22px 58px rgba(43, 191, 165, 0.55), 0 0 34px rgba(255, 255, 255, 0.38); }
+		}
+
+		@keyframes shine-sweep {
+			0%, 18% { left: -80%; }
+			65%, 100% { left: 140%; }
+		}
+
+		@keyframes orbit-spin {
+			to { rotate: 1turn; }
+		}
+
+		@keyframes orbit-tilt {
+			from { transform: rotateX(68deg) rotate(-25deg) scale(0.9); }
+			to { transform: rotateX(68deg) rotate(25deg) scale(1.08); }
+		}
+
+		@keyframes satellite-orbit {
+			to { transform: rotate(1turn) translateX(min(37vw, 158px)); }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.stage::before,
+			.stage::after,
+			.box,
+			.box::before,
+			.satellite {
+				animation: none;
+			}
+
+			.box {
+				background-color: #2bbfa5;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<h1>缤纷律动</h1>
+		<p class="student">24001010417 涂玮轩</p>
+		<div class="stage">
+			<div class="box">
+				<span class="word">COLOR</span>
+				<span class="caption">CSS MOTION</span>
+			</div>
+			<span class="satellite"></span>
+		</div>
+	</main>
+</body>
+</html>

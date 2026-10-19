@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>媒体查询网格布局</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			min-height: 100vh;
+			margin: 0;
+			background: #edf1eb;
+			color: #1d332d;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		header {
+			width: min(100%, 1120px);
+			margin: 0 auto;
+			padding: 44px 24px 24px;
+		}
+
+		.eyebrow {
+			margin: 0 0 10px;
+			color: #577b68;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 3px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 32px;
+			font-weight: 600;
+		}
+
+		.author {
+			margin: 12px 0 0;
+			color: #64766d;
+			font-size: 14px;
+		}
+
+		.grid {
+			width: min(calc(100% - 48px), 1120px);
+			display: grid;
+			grid-template-columns: minmax(0, 1fr);
+			gap: 14px;
+			margin: 12px auto 48px;
+		}
+
+		.box {
+			min-width: 0;
+			min-height: 150px;
+			display: grid;
+			place-items: center;
+			border: 1px solid rgba(255, 255, 255, 0.36);
+			border-radius: 8px;
+			color: #fff;
+			font-size: 32px;
+			font-weight: 600;
+			box-shadow: 0 8px 18px rgba(26, 49, 39, 0.1);
+			transition: transform 180ms ease, box-shadow 180ms ease;
+		}
+
+		.box:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 13px 24px rgba(26, 49, 39, 0.18);
+		}
+
+		.box:nth-child(4n + 1) { background: #21796e; }
+		.box:nth-child(4n + 2) { background: #c65a42; }
+		.box:nth-child(4n + 3) { background: #557b34; }
+		.box:nth-child(4n) { background: #315f91; }
+
+		@media (min-width: 480px) {
+			.grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (min-width: 768px) {
+			header {
+				padding-top: 64px;
+			}
+
+			.grid {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 18px;
+			}
+		}
+
+		@media (min-width: 1100px) {
+			.grid {
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 20px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.box {
+				transition: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<p class="eyebrow">RESPONSIVE GRID / MEDIA QUERY</p>
+		<h1>视口变化，布局随之改变</h1>
+		<p class="author">涂玮轩</p>
+	</header>
+
+	<main class="grid" aria-label="八个响应式布局盒子">
+		<div class="box">01</div>
+		<div class="box">02</div>
+		<div class="box">03</div>
+		<div class="box">04</div>
+		<div class="box">05</div>
+		<div class="box">06</div>
+		<div class="box">07</div>
+		<div class="box">08</div>
+	</main>
+</body>
+</html>

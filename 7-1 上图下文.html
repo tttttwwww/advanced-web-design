@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-1 上图下文</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            padding: 50px;
+            background: #f5f5f5;
+        }
+        /* 卡片：图片在上，文字在下 */
+        .card {
+            width: 300px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        /* 图片：宽度撑满卡片，转成块级元素后独占一行 */
+        .card img {
+            width: 100%;
+            display: block;
+        }
+        /* 文字部分：自然排在图片下方 */
+        .card .text {
+            padding: 15px;
+        }
+        .card .text h3 {
+            font-size: 18px;
+            font-weight: normal;
+            margin-bottom: 8px;
+        }
+        .card .text p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        } 
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="https://picsum.photos/seed/html71/300/200" alt="示例图片">
+        <div class="text">
+            <h3>上图下文卡片</h3>
+            <p>这是一个“图片在上、文字在下”的布局：图片设为块级元素后独占一行，下面的文字就自动排在图片下方。</p>
+        </div>
+    </div>
+</body>
+</html>

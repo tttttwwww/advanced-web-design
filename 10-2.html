@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>光影之间 | CSS 动画幻灯片</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			display: grid;
+			place-items: center;
+			padding: 38px 20px;
+			overflow-x: hidden;
+			background: #000;
+			color: #fff;
+			font-family: "Microsoft YaHei", sans-serif;
+		}
+
+		main {
+			width: min(100%, 540px);
+			text-align: center;
+			animation: page-enter 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+		}
+
+		.eyebrow {
+			margin: 0 0 10px;
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(28px, 7vw, 40px);
+			font-weight: 500;
+		}
+
+		.byline {
+			margin: 10px 0 26px;
+			color: rgba(255, 255, 255, 0.72);
+			font-size: 14px;
+			letter-spacing: 2px;
+		}
+
+		.slideshow {
+			position: relative;
+			height: clamp(480px, 70vh, 610px);
+			min-height: 480px;
+			overflow: hidden;
+			border: 1px solid rgba(234, 240, 220, 0.28);
+			border-radius: 18px;
+			background: transparent;
+			box-shadow: 0 28px 70px rgba(0, 0, 0, 0.4);
+			isolation: isolate;
+		}
+
+		.slide {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			grid-template-rows: 58% 42%;
+			overflow: hidden;
+			opacity: 0;
+			animation-duration: 12s;
+			animation-iteration-count: infinite;
+			animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+		}
+
+		.slide-one {
+			animation-name: show-one;
+		}
+
+		.slide-two {
+			animation-name: show-two;
+		}
+
+		.slide-three {
+			animation-name: show-three;
+		}
+
+		.photo {
+			position: relative;
+			min-height: 0;
+			overflow: hidden;
+			background: transparent;
+		}
+
+		.photo::after {
+			position: absolute;
+			inset: 35% 0 0;
+			content: "";
+			background: linear-gradient(transparent, rgba(0, 0, 0, 0.48));
+			pointer-events: none;
+		}
+
+		.photo img {
+			width: 100%;
+			height: 100%;
+			display: block;
+			object-fit: cover;
+			animation: photo-drift 6s ease-in-out infinite alternate;
+		}
+
+		.slide-two .photo img {
+			animation-delay: -3s;
+		}
+
+		.slide-three .photo img {
+			animation-delay: -4s;
+		}
+
+		.number {
+			position: absolute;
+			z-index: 1;
+			top: 20px;
+			left: 22px;
+			display: inline-flex;
+			align-items: center;
+			gap: 9px;
+			color: #fff;
+			font-size: 12px;
+			letter-spacing: 2px;
+			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+		}
+
+		.number::before {
+			width: 24px;
+			height: 1px;
+			content: "";
+			background: #fff;
+		}
+
+		.copy {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			padding: 24px clamp(22px, 6vw, 38px);
+			background: transparent;
+			color: #fff;
+			text-align: left;
+		}
+
+		.category {
+			margin: 0 0 11px;
+			color: rgba(255, 255, 255, 0.68);
+			font-size: 11px;
+			letter-spacing: 3px;
+		}
+
+		.copy h2 {
+			margin: 0 0 12px;
+			font-size: clamp(23px, 5.5vw, 31px);
+			font-weight: 500;
+			line-height: 1.3;
+		}
+
+		.description {
+			max-width: 390px;
+			margin: 0;
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 14px;
+			line-height: 1.8;
+		}
+
+		.progress {
+			height: 3px;
+			overflow: hidden;
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.progress::after {
+			width: 100%;
+			height: 100%;
+			display: block;
+			content: "";
+			background: #fff;
+			transform: scaleX(0);
+			transform-origin: left;
+			animation: progress 12s linear infinite;
+		}
+
+		@keyframes show-one {
+			0%, 4% { opacity: 0; transform: translateX(34px) scale(0.985); }
+			8%, 44% { opacity: 1; transform: translateX(0) scale(1); }
+			50%, 100% { opacity: 0; transform: translateX(-34px) scale(1.015); }
+		}
+
+		@keyframes show-two {
+			0%, 50% { opacity: 0; transform: translateX(34px) scale(0.985); }
+			54%, 94% { opacity: 1; transform: translateX(0) scale(1); }
+			100% { opacity: 0; transform: translateX(-34px) scale(1.015); }
+		}
+
+		@keyframes photo-drift {
+			from { transform: scale(1.02) translateX(-0.5%); }
+			to { transform: scale(1.13) translateX(0.5%); }
+		}
+
+		@keyframes progress {
+			to { transform: scaleX(1); }
+		}
+
+		@keyframes page-enter {
+			from { opacity: 0; transform: translateY(18px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		@media (max-width: 480px) {
+			body {
+				padding: 26px 16px;
+			}
+
+			.byline {
+				margin-bottom: 20px;
+			}
+
+			.slideshow {
+				height: min(70vh, 560px);
+				min-height: 450px;
+			}
+
+			.slide {
+				grid-template-rows: 54% 46%;
+			}
+
+			.copy {
+				padding: 20px 22px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			main,
+			.slide,
+			.photo img,
+			.progress::after {
+				animation: none;
+			}
+
+			.slide-one {
+				opacity: 1;
+				transform: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<p class="eyebrow">A MOMENT IN MOTION</p>
+		<h1>光影之间</h1>
+		<p class="byline">涂玮轩 · CSS 动画幻灯片</p>
+
+		<section class="slideshow" aria-label="自动播放的两张图片幻灯片">
+			<article class="slide slide-one">
+				<figure class="photo">
+					<img src="img/1.png" alt="暖色光影中的风景">
+					<figcaption class="number">01 / 02</figcaption>
+				</figure>
+				<div class="copy">
+					<p class="category">GOLDEN HOUR</p>
+					<h2>让光，慢一点落下</h2>
+					<p class="description">日光掠过远方，平凡的一刻也有了自己的温度。</p>
+				</div>
+			</article>
+
+			<article class="slide slide-two">
+				<figure class="photo">
+					<img src="img/2.png" alt="山野之间的自然风景">
+					<figcaption class="number">02 / 02</figcaption>
+				</figure>
+				<div class="copy">
+					<p class="category">INTO THE WILD</p>
+					<h2>把山风装进画面</h2>
+					<p class="description">沿着起伏的山色前行，听见自然轻轻呼吸。</p>
+				</div>
+			</article>
+		</section>
+		<div class="progress" aria-hidden="true"></div>
+	</main>
+</body>
+</html>

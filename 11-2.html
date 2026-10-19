@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSS 3D 动画</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: radial-gradient(ellipse at 50% -10%, #2a2f6b 0%, #14162e 55%, #0b0d1d 100%);
+			color: #e8ecff;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 48px 0 34px;
+			background: linear-gradient(135deg, #1b1f4d 0%, #383f9e 60%, #5b4bd6 100%);
+			border-radius: 0 0 28px 28px;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 8px;
+			color: #9fb0ff;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(26px, 4vw, 38px);
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 14px 0 0;
+			color: #ccd4ff;
+			font-size: 15px;
+		}
+
+		.tu_author {
+			margin: 18px 0 0;
+			color: #ffe6a1;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.12);
+			border: 1px solid rgba(255, 255, 255, 0.4);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 160ms ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.28);
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+			padding: 36px 0 16px;
+		}
+
+		section {
+			margin-bottom: 42px;
+		}
+
+		h2 {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 21px;
+		}
+
+		h2::before {
+			content: "";
+			width: 6px;
+			height: 20px;
+			border-radius: 3px;
+			background: #7c5cff;
+			transform: translateY(3px);
+		}
+
+		.tu_sub {
+			color: #8f9ac4;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.tu_shell {
+			padding: 20px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 18px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+		}
+
+		.tu_calc {
+			margin: 14px 0 0;
+			text-align: center;
+			color: #9aa5d0;
+			font-size: 13px;
+		}
+
+		.tu_calc code,
+		.tu_hint code,
+		.tu_code code {
+			font-family: Consolas, monospace;
+		}
+
+		.tu_calc code {
+			padding: 1px 6px;
+			border-radius: 5px;
+			background: rgba(124, 92, 255, 0.22);
+			color: #c3b4ff;
+		}
+
+		.tu_hint {
+			margin: 14px 0 0;
+			padding: 10px 14px;
+			background: rgba(124, 92, 255, 0.12);
+			border-left: 4px solid #7c5cff;
+			border-radius: 0 8px 8px 0;
+			color: #b9c1e8;
+			font-size: 13px;
+		}
+
+		/* ---------- 一、旋转立方体 ---------- */
+
+		.tu_cube-stage {
+			height: 300px;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			perspective: 900px;
+		}
+
+		.tu_cube {
+			position: relative;
+			width: 160px;
+			height: 160px;
+			transform-style: preserve-3d;
+			animation: tu_cube-tumble 14s linear infinite;
+		}
+
+		.tu_face {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-items: center;
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 10px;
+			color: #fff;
+			font-size: 26px;
+			font-weight: 700;
+			letter-spacing: 6px;
+			text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+		}
+
+		.tu_face-front    { background: rgba(63, 94, 251, 0.86);  transform: translateZ(80px); }
+		.tu_face-back     { background: rgba(224, 85, 95, 0.86);  transform: rotateY(180deg) translateZ(80px); }
+		.tu_face-right    { background: rgba(23, 184, 166, 0.86); transform: rotateY(90deg) translateZ(80px); }
+		.tu_face-left     { background: rgba(232, 116, 60, 0.86); transform: rotateY(-90deg) translateZ(80px); }
+		.tu_face-top      { background: rgba(63, 191, 98, 0.86);  transform: rotateX(90deg) translateZ(80px); }
+		.tu_face-bottom   { background: rgba(155, 92, 246, 0.86); transform: rotateX(-90deg) translateZ(80px); }
+
+		@keyframes tu_cube-tumble {
+			0%   { transform: rotateX(-18deg) rotateY(0deg); }
+			50%  { transform: rotateX(18deg) rotateY(180deg); }
+			100% { transform: rotateX(-18deg) rotateY(360deg); }
+		}
+
+		/* ---------- 二、环形轮播 ---------- */
+
+		.tu_ring-stage {
+			height: 300px;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			perspective: 1000px;
+		}
+
+		.tu_ring {
+			position: relative;
+			width: 140px;
+			height: 200px;
+			transform-style: preserve-3d;
+			animation: tu_ring-spin 26s linear infinite;
+		}
+
+		.tu_ring-stage:hover .tu_ring {
+			animation-play-state: paused;
+		}
+
+		.tu_panel {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-items: center;
+			border: 1px solid rgba(255, 255, 255, 0.4);
+			border-radius: 14px;
+			box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+			color: #fff;
+			font-size: 34px;
+			font-weight: 700;
+			backface-visibility: hidden;
+		}
+
+		.tu_panel-1 { transform: rotateY(0deg)   translateZ(185px); background: linear-gradient(160deg, #3f5efb, #6f8bff); }
+		.tu_panel-2 { transform: rotateY(45deg)  translateZ(185px); background: linear-gradient(160deg, #2f8fef, #6ab6ff); }
+		.tu_panel-3 { transform: rotateY(90deg)  translateZ(185px); background: linear-gradient(160deg, #17b8a6, #5ce0c6); }
+		.tu_panel-4 { transform: rotateY(135deg) translateZ(185px); background: linear-gradient(160deg, #3fbf62, #86e69a); }
+		.tu_panel-5 { transform: rotateY(180deg) translateZ(185px); background: linear-gradient(160deg, #d8b23a, #ffe08a); }
+		.tu_panel-6 { transform: rotateY(225deg) translateZ(185px); background: linear-gradient(160deg, #e8743c, #ffab72); }
+		.tu_panel-7 { transform: rotateY(270deg) translateZ(185px); background: linear-gradient(160deg, #e0555f, #ff9098); }
+		.tu_panel-8 { transform: rotateY(315deg) translateZ(185px); background: linear-gradient(160deg, #9b5cf6, #c79bff); }
+
+		@keyframes tu_ring-spin {
+			0%   { transform: rotateX(-8deg) rotateY(0deg); }
+			100% { transform: rotateX(-8deg) rotateY(360deg); }
+		}
+
+		/* ---------- 三、翻转卡片 ---------- */
+
+		.tu_flip-stage {
+			display: grid;
+			place-items: center;
+			padding: 12px 0;
+		}
+
+		.tu_flip {
+			width: 240px;
+			height: 300px;
+			perspective: 1000px;
+		}
+
+		.tu_flip-inner {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+			transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+		}
+
+		.tu_flip:hover .tu_flip-inner {
+			transform: rotateY(180deg);
+		}
+
+		.tu_flip-face {
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-content: center;
+			gap: 6px;
+			padding: 20px;
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 18px;
+			text-align: center;
+			backface-visibility: hidden;
+		}
+
+		.tu_flip-face strong {
+			font-size: 24px;
+			letter-spacing: 3px;
+		}
+
+		.tu_flip-face span {
+			font-size: 13px;
+			opacity: 0.85;
+		}
+
+		.tu_flip-front {
+			background: linear-gradient(160deg, #383f9e, #5b4bd6);
+		}
+
+		.tu_flip-back {
+			background: linear-gradient(160deg, #17b8a6, #3fbf62);
+			transform: rotateY(180deg);
+		}
+
+		/* ---------- 四、透视远近对比 ---------- */
+
+		.tu_depth-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+			gap: 16px;
+		}
+
+		.tu_depth-item {
+			margin: 0;
+		}
+
+		.tu_scene {
+			height: 190px;
+			display: grid;
+			place-items: center;
+			background: rgba(255, 255, 255, 0.04);
+			border: 1px dashed rgba(255, 255, 255, 0.2);
+			border-radius: 12px;
+		}
+
+		.tu_scene-near {
+			perspective: 350px;
+		}
+
+		.tu_scene-far {
+			perspective: 2000px;
+		}
+
+		.tu_plate {
+			width: 150px;
+			height: 150px;
+			border-radius: 14px;
+			background: linear-gradient(135deg, #3f5efb, #7c5cff);
+			box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+			animation: tu_plate-sway 4s ease-in-out infinite alternate;
+		}
+
+		@keyframes tu_plate-sway {
+			from { transform: rotateY(-50deg) rotateX(15deg); }
+			to   { transform: rotateY(50deg) rotateX(-15deg); }
+		}
+
+		.tu_caption {
+			margin: 10px 0 0;
+			color: #9aa5d0;
+			font-size: 13px;
+		}
+
+		.tu_caption b {
+			color: #c3b4ff;
+			font-family: Consolas, monospace;
+			font-weight: 600;
+		}
+
+		/* ---------- 五、核心属性速查 ---------- */
+
+		.tu_api-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+			gap: 16px;
+		}
+
+		.tu_api {
+			padding: 16px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 14px;
+		}
+
+		.tu_api h3 {
+			margin: 0 0 6px;
+			color: #9fb0ff;
+			font-family: Consolas, monospace;
+			font-size: 16px;
+		}
+
+		.tu_api p {
+			margin: 0 0 10px;
+			color: #a9b1d8;
+			font-size: 13px;
+		}
+
+		.tu_code {
+			margin: 0;
+			padding: 10px 12px;
+			overflow-x: auto;
+			background: rgba(0, 0, 0, 0.32);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			border-radius: 8px;
+			color: #8ef0c8;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+			line-height: 1.6;
+		}
+
+		footer {
+			padding: 20px 24px 34px;
+			text-align: center;
+			color: #7b85b3;
+			font-size: 13px;
+		}
+
+		@media (max-width: 480px) {
+			.tu_hero {
+				padding-top: 34px;
+			}
+
+			h2 {
+				font-size: 18px;
+			}
+
+			.tu_cube-stage,
+			.tu_ring-stage {
+				height: 260px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tu_cube,
+			.tu_ring,
+			.tu_plate {
+				animation: none;
+			}
+
+			.tu_flip-inner {
+				transition: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">CSS 3D ANIMATION</p>
+			<h1>立体世界：CSS 3D 动画</h1>
+			<p class="tu_lead">不用 JavaScript，只靠 <code>perspective</code>、<code>transform-style: preserve-3d</code> 和 <code>rotateX / rotateY / translateZ</code>，就能在浏览器里搭出会旋转的立方体、环形轮播和翻转卡片。下面每个例子都是真实可交互的 3D 场景。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section aria-labelledby="tu_cube-title">
+			<h2 id="tu_cube-title">一、旋转立方体 <span class="tu_sub">六个面拼出盒子，绕 X / Y 轴持续翻滚</span></h2>
+			<div class="tu_shell">
+				<div class="tu_cube-stage">
+					<div class="tu_cube">
+						<span class="tu_face tu_face-front">前</span>
+						<span class="tu_face tu_face-back">后</span>
+						<span class="tu_face tu_face-right">右</span>
+						<span class="tu_face tu_face-left">左</span>
+						<span class="tu_face tu_face-top">顶</span>
+						<span class="tu_face tu_face-bottom">底</span>
+					</div>
+				</div>
+				<p class="tu_calc">六个面用 <code>translateZ(±80px)</code> 撑开，容器 <code>preserve-3d</code> 让它们留在同一个 3D 空间里</p>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_ring-title">
+			<h2 id="tu_ring-title">二、环形轮播 <span class="tu_sub">8 张卡片围成一圈，绕 Y 轴旋转</span></h2>
+			<div class="tu_shell">
+				<div class="tu_ring-stage">
+					<div class="tu_ring">
+						<span class="tu_panel tu_panel-1">01</span>
+						<span class="tu_panel tu_panel-2">02</span>
+						<span class="tu_panel tu_panel-3">03</span>
+						<span class="tu_panel tu_panel-4">04</span>
+						<span class="tu_panel tu_panel-5">05</span>
+						<span class="tu_panel tu_panel-6">06</span>
+						<span class="tu_panel tu_panel-7">07</span>
+						<span class="tu_panel tu_panel-8">08</span>
+					</div>
+				</div>
+				<p class="tu_calc">每张卡片 <code>rotateY(n × 45deg) translateZ(185px)</code>，转到背面时靠 <code>backface-visibility: hidden</code> 隐藏</p>
+				<p class="tu_hint">小实验：把鼠标放到转盘上，动画会暂停；移开又继续转。</p>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_flip-title">
+			<h2 id="tu_flip-title">三、翻转卡片 <span class="tu_sub">hover 触发，绕 Y 轴翻转 180°</span></h2>
+			<div class="tu_shell">
+				<div class="tu_flip-stage">
+					<div class="tu_flip" tabindex="0">
+						<div class="tu_flip-inner">
+							<div class="tu_flip-face tu_flip-front">
+								<strong>正面</strong>
+								<span>把鼠标移上来</span>
+							</div>
+							<div class="tu_flip-face tu_flip-back">
+								<strong>背面</strong>
+								<span>翻转成功！</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<p class="tu_calc">正面正常显示，背面 <code>rotateY(180deg)</code> 藏在身后，悬停时整体翻转</p>
+				<p class="tu_hint">两张面都设了 <code>backface-visibility: hidden</code>，否则翻转会看到镜像的画面。</p>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_depth-title">
+			<h2 id="tu_depth-title">四、透视远近对比 <span class="tu_sub">同样的动作，不同的 perspective</span></h2>
+			<div class="tu_shell">
+				<div class="tu_depth-grid">
+					<figure class="tu_depth-item">
+						<div class="tu_scene tu_scene-near">
+							<div class="tu_plate"></div>
+						</div>
+						<figcaption class="tu_caption"><b>perspective: 350px</b> —— 视距近，近大远小非常明显</figcaption>
+					</figure>
+					<figure class="tu_depth-item">
+						<div class="tu_scene tu_scene-far">
+							<div class="tu_plate"></div>
+						</div>
+						<figcaption class="tu_caption"><b>perspective: 2000px</b> —— 视距远，画面接近扁平</figcaption>
+					</figure>
+				</div>
+				<p class="tu_calc">两个方块的动画完全相同，只有容器的透视距离不一样</p>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_api-title">
+			<h2 id="tu_api-title">五、核心属性速查 <span class="tu_sub">写 3D 动画记住这六个就够了</span></h2>
+			<div class="tu_api-grid">
+				<article class="tu_api">
+					<h3>perspective</h3>
+					<p>写在父容器上，设置观察者的视距；数值越小立体感越强。</p>
+					<pre class="tu_code"><code>.tu_stage {
+  perspective: 900px;
+}</code></pre>
+				</article>
+
+				<article class="tu_api">
+					<h3>transform-style</h3>
+					<p>必须是 preserve-3d，子元素才会在真正的 3D 空间里摆放。</p>
+					<pre class="tu_code"><code>.tu_cube {
+  transform-style: preserve-3d;
+}</code></pre>
+				</article>
+
+				<article class="tu_api">
+					<h3>rotateX / rotateY / rotateZ</h3>
+					<p>绕三条轴旋转，度数为正顺时针，可组合使用。</p>
+					<pre class="tu_code"><code>.tu_cube {
+  transform: rotateY(45deg) rotateX(-18deg);
+}</code></pre>
+				</article>
+
+				<article class="tu_api">
+					<h3>translateZ</h3>
+					<p>沿 Z 轴前后移动，正值朝向观察者，用来撑开立体结构。</p>
+					<pre class="tu_code"><code>.tu_face-front {
+  transform: translateZ(80px);
+}</code></pre>
+				</article>
+
+				<article class="tu_api">
+					<h3>backface-visibility</h3>
+					<p>元素背面朝向观察者时是否可见，翻转卡片的关键。</p>
+					<pre class="tu_code"><code>.tu_flip-face {
+  backface-visibility: hidden;
+}</code></pre>
+				</article>
+
+				<article class="tu_api">
+					<h3>@keyframes + transition</h3>
+					<p>连续旋转用 animation，交互式翻转用 transition。</p>
+					<pre class="tu_code"><code>@keyframes tu_ring-spin {
+  to { transform: rotateY(360deg); }
+}</code></pre>
+				</article>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · CSS 3D 动画</p>
+	</footer>
+</body>
+</html>

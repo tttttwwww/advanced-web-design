@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-2 左图右文</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f4f6f8;
+            padding: 40px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        /* 一列：三个卡片纵向排列 */
+        .col {
+            width: 640px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        /* 单个卡片：左图右文 */
+        .card {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+        }
+        /* 左边图片：固定宽度，三张图左对齐、一样宽 */
+        .card img {
+            width: 140px;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+            flex-shrink: 0;
+        }
+        /* 右边文字：和图片对齐 */
+        .card .text {
+            padding: 14px 18px;
+        }
+        .card .text h3 {
+            font-size: 16px;
+            color: #222;
+            margin-bottom: 6px;
+        }
+        .card .text p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="col">
+        <div class="card">
+            <img src="https://picsum.photos/seed/mountain/600/360" alt="山间日出">
+            <div class="text">
+                <h3>山间日出</h3>
+                <p>清晨的第一缕阳光洒在山脊上，云海翻涌，格外宁静。</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://picsum.photos/seed/lake/600/360" alt="湖畔风景">
+            <div class="text">
+                <h3>湖畔风景</h3>
+                <p>湖面如镜，倒映着远山与蓝天，适合散步发呆。</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://picsum.photos/seed/forest/600/360" alt="森林小径">
+            <div class="text">
+                <h3>森林小径</h3>
+                <p>阳光穿过树叶落在小径上，林间空气清新湿润。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
