@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>数 7 游戏 · 一百个盒子</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f5f2ec;
+			color: #2f2a26;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 55%, #db2777 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.75;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 640px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.7;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 30px auto 0;
+		}
+
+		.tu_panel {
+			background: #fff;
+			border-radius: 22px;
+			padding: 22px 24px;
+			box-shadow: 0 14px 34px rgba(76, 29, 149, 0.1);
+		}
+
+		.tu_rules {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			padding: 0;
+			list-style: none;
+		}
+
+		.tu_rule {
+			padding: 6px 14px;
+			background: #f3e8ff;
+			border: 1px solid #e9d5ff;
+			border-radius: 999px;
+			color: #6b21a8;
+			font-size: 13px;
+		}
+
+		.tu_rule code {
+			font-family: Consolas, monospace;
+			font-size: 12px;
+			color: #9d174d;
+		}
+
+		.tu_bar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding: 0 0 18px;
+			border-bottom: 1px dashed #e6dcd0;
+		}
+
+		.tu_stat {
+			margin: 0;
+			font-size: 14px;
+			color: #6b5f56;
+		}
+
+		.tu_stat b {
+			color: #7c3aed;
+			font-size: 18px;
+			padding: 0 2px;
+		}
+
+		.tu_btn {
+			padding: 8px 18px;
+			background: linear-gradient(135deg, #7c3aed, #db2777);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 14px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(124, 58, 237, 0.35);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_grid {
+			display: grid;
+			grid-template-columns: repeat(10, minmax(0, 1fr));
+			gap: 10px;
+			margin: 20px 0 4px;
+		}
+
+		.tu_box {
+			position: relative;
+			display: grid;
+			place-items: center;
+			aspect-ratio: 1 / 1;
+			background: #fbf9ff;
+			border: 1px solid #ddd0f2;
+			border-radius: 12px;
+			font-size: clamp(13px, 1.6vw, 17px);
+			font-variant-numeric: tabular-nums;
+			transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+		}
+
+		.tu_box:hover {
+			transform: translateY(-3px);
+			background: #f3e8ff;
+			border-color: #a855f7;
+		}
+
+		.tu_box-empty {
+			background: #fdf6f0;
+			border-style: dashed;
+			border-color: #f0d9c8;
+		}
+
+		.tu_box-empty:hover {
+			background: #ffe4e6;
+			border-color: #fb7185;
+		}
+
+		.tu_num {
+			transition: opacity 0.25s ease;
+		}
+
+		.tu_box-empty .tu_num {
+			opacity: 0;
+			color: #b91c1c;
+		}
+
+		body.tu_show .tu_box-empty .tu_num {
+			opacity: 0.55;
+		}
+
+		.tu_legend {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 18px;
+			margin: 16px 0 0;
+			font-size: 13px;
+			color: #6b5f56;
+		}
+
+		.tu_legend span {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+		}
+
+		.tu_dot {
+			width: 14px;
+			height: 14px;
+			border-radius: 5px;
+			background: #fbf9ff;
+			border: 1px solid #ddd0f2;
+		}
+
+		.tu_dot-empty {
+			background: #fdf6f0;
+			border: 1px dashed #f0d9c8;
+		}
+
+		footer {
+			width: min(100% - 48px, 1080px);
+			margin: 26px auto 40px;
+			color: #8a7d73;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_grid {
+				grid-template-columns: repeat(5, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.tu_panel {
+				padding: 18px 16px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 15-1 · Count 7</p>
+			<h1>数 7 游戏</h1>
+			<p class="tu_lead">一百个盒子，里面放着 1 到 100 的数字。凡是“逢 7”的数字，盒子一律清空——不能念出来，要拍一下手。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_board-title">
+			<h2 id="tu_board-title" hidden>一百个盒子</h2>
+
+			<ul class="tu_rules">
+				<li class="tu_rule">7 的倍数：<code>n % 7 === 0</code></li>
+				<li class="tu_rule">个位数是 7：<code>n % 10 === 7</code></li>
+				<li class="tu_rule">含数字 7（如 70 – 79）</li>
+			</ul>
+
+			<div class="tu_bar">
+				<p class="tu_stat">共 <b>100</b> 个盒子 · 有数字 <b id="tu_keep">0</b> 个 · 空盒子 <b id="tu_empty">0</b> 个</p>
+				<button class="tu_btn" id="tu_toggle" type="button" aria-pressed="false">揭晓答案</button>
+			</div>
+
+			<div class="tu_grid" id="tu_grid"></div>
+
+			<div class="tu_legend">
+				<span><i class="tu_dot"></i>显示数字：不满足规则</span>
+				<span><i class="tu_dot tu_dot-empty"></i>空盒子：满足规则，跳过</span>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 一百个盒子 · 数 7 规则</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_total = 100;
+			var tu_grid = document.getElementById('tu_grid');
+			var tu_keepEl = document.getElementById('tu_keep');
+			var tu_emptyEl = document.getElementById('tu_empty');
+			var tu_btn = document.getElementById('tu_toggle');
+
+			var tu_isSeven = function (tu_n) {
+				return tu_n % 7 === 0 || tu_n % 10 === 7 || String(tu_n).indexOf('7') !== -1;
+			};
+
+			var tu_frag = document.createDocumentFragment();
+			var tu_emptyCount = 0;
+
+			for (var tu_i = 1; tu_i <= tu_total; tu_i++) {
+				var tu_box = document.createElement('div');
+				var tu_hit = tu_isSeven(tu_i);
+
+				tu_box.className = 'tu_box' + (tu_hit ? ' tu_box-empty' : '');
+				tu_box.setAttribute('data-num', String(tu_i));
+				tu_box.setAttribute('aria-label', tu_hit ? '第 ' + tu_i + ' 号：空盒子' : '第 ' + tu_i + ' 号：' + tu_i);
+
+				var tu_num = document.createElement('span');
+				tu_num.className = 'tu_num';
+				tu_num.textContent = String(tu_i);
+				tu_box.appendChild(tu_num);
+
+				tu_frag.appendChild(tu_box);
+				if (tu_hit) {
+					tu_emptyCount++;
+				}
+			}
+
+			tu_grid.appendChild(tu_frag);
+			tu_emptyEl.textContent = String(tu_emptyCount);
+			tu_keepEl.textContent = String(tu_total - tu_emptyCount);
+
+			tu_btn.addEventListener('click', function () {
+				var tu_on = document.body.classList.toggle('tu_show');
+				tu_btn.textContent = tu_on ? '隐藏答案' : '揭晓答案';
+				tu_btn.setAttribute('aria-pressed', tu_on ? 'true' : 'false');
+			});
+		})();
+	</script>
+</body>
+</html>
