@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Font Awesome 字体图标</title>
+	<link rel="stylesheet" href="cdn/font-awesome/css/all.min.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f4f2ee;
+			color: #241f1a;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 44px 0 34px;
+			background: linear-gradient(135deg, #1c1917 0%, #2b2118 45%, #92400e 100%);
+			color: #fff;
+			border-radius: 0 0 28px 28px;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.12);
+			border: 1px solid rgba(255, 255, 255, 0.4);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 160ms ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.28);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 8px;
+			color: #fdba74;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(26px, 4vw, 38px);
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.tu_hl {
+			color: #fdba74;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 14px 0 0;
+			color: #e7e5e4;
+			font-size: 15px;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: rgba(255, 255, 255, 0.14);
+			color: #fed7aa;
+			font-family: Consolas, monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 18px 0 0;
+			color: #fde68a;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+			padding: 36px 0 16px;
+		}
+
+		section {
+			margin-bottom: 42px;
+		}
+
+		h2 {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 21px;
+		}
+
+		h2::before {
+			content: "";
+			width: 6px;
+			height: 20px;
+			border-radius: 3px;
+			background: #b45309;
+			transform: translateY(3px);
+		}
+
+		h3 {
+			margin: 22px 0 12px;
+			font-size: 16px;
+			color: #7c2d12;
+		}
+
+		.tu_sub {
+			color: #8a8177;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.tu_split {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 18px;
+		}
+
+		.tu_panel {
+			padding: 18px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(36, 31, 26, 0.05);
+		}
+
+		.tu_panel-demo {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			background: linear-gradient(160deg, #fffbeb, #fef3c7);
+		}
+
+		.tu_code {
+			margin: 0;
+			padding: 14px 16px;
+			overflow-x: auto;
+			background: #1c1917;
+			border-radius: 12px;
+			color: #fef3c7;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			line-height: 1.9;
+		}
+
+		.tu_code code {
+			font-family: inherit;
+		}
+
+		.tu_note {
+			margin: 12px 0 0;
+			color: #6b625a;
+			font-size: 13px;
+		}
+
+		.tu_note code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: #f1ede6;
+			color: #92400e;
+			font-family: Consolas, monospace;
+		}
+
+		.tu_big {
+			display: flex;
+			align-items: center;
+			gap: 22px;
+			padding: 6px 0;
+			font-size: 44px;
+			color: #92400e;
+		}
+
+		.tu_big .fa-solid,
+		.tu_big .fa-regular,
+		.tu_big .fa-brands {
+			transition: transform 200ms ease, color 200ms ease;
+		}
+
+		.tu_big .fa-solid:hover {
+			transform: scale(1.18) rotate(-8deg);
+			color: #ea580c;
+		}
+
+		.tu_grid-icons {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_icon {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 16px 8px 12px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 12px;
+			transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+		}
+
+		.tu_icon:hover {
+			transform: translateY(-4px);
+			border-color: #fbbf24;
+			background: #fffdf7;
+			box-shadow: 0 12px 22px rgba(146, 64, 14, 0.14);
+		}
+
+		.tu_icon i {
+			font-size: 26px;
+			color: #92400e;
+			transition: color 160ms ease, transform 160ms ease;
+		}
+
+		.tu_icon:hover i {
+			color: #ea580c;
+			transform: scale(1.12);
+		}
+
+		.tu_name {
+			color: #5c544c;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+			word-break: break-all;
+			text-align: center;
+		}
+
+		.tu_rows {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-end;
+			gap: 26px;
+			padding: 20px 18px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 14px;
+		}
+
+		.tu_sz {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+			color: #92400e;
+		}
+
+		.tu_sz span {
+			color: #8a8177;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_sz16 { font-size: 16px; }
+		.tu_sz24 { font-size: 24px; }
+		.tu_sz32 { font-size: 32px; }
+		.tu_sz48 { font-size: 48px; }
+		.tu_sz64 { font-size: 64px; }
+		.tu_sz96 { font-size: 96px; }
+
+		.tu_swatches {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_swatch {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+			padding: 18px 10px 12px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 12px;
+			font-size: 30px;
+		}
+
+		.tu_swatch span {
+			color: #8a8177;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_c-amber { color: #b45309; }
+		.tu_c-red { color: #dc2626; }
+		.tu_c-green { color: #15803d; }
+		.tu_c-blue { color: #1d4ed8; }
+		.tu_c-violet { color: #7c3aed; }
+		.tu_c-grad {
+			background: linear-gradient(135deg, #f59e0b, #e11d48);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+		.tu_shadow {
+			color: #f59e0b;
+			text-shadow: 0 5px 12px rgba(180, 83, 9, 0.45);
+		}
+
+		.tu_anims {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_anim {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 20px 10px 14px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 12px;
+			font-size: 30px;
+			color: #92400e;
+		}
+
+		.tu_anim span {
+			color: #8a8177;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_spin { animation: tu_spin 2.6s linear infinite; }
+		.tu_beat { animation: tu_beat 1.4s ease-in-out infinite; }
+		.tu_launch { animation: tu_launch 1.8s ease-in-out infinite; }
+		.tu_swing { animation: tu_swing 1.8s ease-in-out infinite; }
+
+		@keyframes tu_spin {
+			to { transform: rotate(360deg); }
+		}
+
+		@keyframes tu_beat {
+			0%, 100% { transform: scale(1); }
+			25% { transform: scale(1.22); }
+			45% { transform: scale(0.98); }
+			60% { transform: scale(1.1); }
+		}
+
+		@keyframes tu_launch {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-12px); }
+		}
+
+		@keyframes tu_swing {
+			0%, 100% { transform: rotate(-14deg); }
+			50% { transform: rotate(14deg); }
+		}
+
+		.tu_list {
+			margin: 0;
+			padding: 18px 20px 18px 40px;
+			background: #fff;
+			border: 1px solid #e6e1d8;
+			border-radius: 14px;
+			box-shadow: 0 6px 18px rgba(36, 31, 26, 0.05);
+			font-size: 14px;
+		}
+
+		.tu_list li {
+			margin: 6px 0;
+		}
+
+		.tu_list code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: #f1ede6;
+			color: #92400e;
+			font-family: Consolas, monospace;
+			font-size: 13px;
+		}
+
+		footer {
+			padding: 22px 24px 36px;
+			text-align: center;
+			color: #8a8177;
+			font-size: 13px;
+		}
+
+		footer a {
+			color: #92400e;
+		}
+
+		@media (max-width: 480px) {
+			.tu_hero {
+				padding-top: 32px;
+			}
+
+			h2 {
+				font-size: 18px;
+			}
+
+			.tu_rows {
+				gap: 18px;
+			}
+
+			.tu_sz96 {
+				font-size: 64px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tu_icon,
+			.tu_icon i,
+			.tu_big .fa-solid {
+				transition: none;
+			}
+
+			.tu_spin,
+			.tu_beat,
+			.tu_launch,
+			.tu_swing {
+				animation: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">LESSON 13-1 · FONT AWESOME</p>
+			<h1>字体图标：<span class="tu_hl">Font Awesome</span></h1>
+			<p class="tu_lead">每个图标都是字体文件里的一个<strong>字形</strong>，写一个 <code>&lt;i class="fa-solid fa-star"&gt;&lt;/i&gt;</code> 就能调出来。放大靠 <code>font-size</code>，上色靠 <code>color</code>，本质是文字，所以任意缩放都清晰。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section aria-labelledby="tu_usage-title">
+			<h2 id="tu_usage-title">基础用法 <span class="tu_sub">一个 link、一个 i 标签</span></h2>
+			<div class="tu_split">
+				<div class="tu_panel">
+					<pre class="tu_code"><code>&lt;!-- 1. 引入字体图标的样式表 --&gt;
+&lt;link rel="stylesheet" href="cdn/font-awesome/css/all.min.css"&gt;
+
+&lt;!-- 2. 用两段 class 拼出一个图标 --&gt;
+&lt;i class="fa-solid fa-star"&gt;&lt;/i&gt;
+&lt;i class="fa-regular fa-heart"&gt;&lt;/i&gt;
+&lt;i class="fa-brands fa-github"&gt;&lt;/i&gt;</code></pre>
+					<p class="tu_note">三段式命名：<code>fa-solid</code> 选字重（风格），<code>fa-star</code> 选具体字形。样式表里每个图标只是一条 <code>--fa:"\f005"</code> 编码映射。</p>
+				</div>
+				<div class="tu_panel tu_panel-demo">
+					<div class="tu_big">
+						<i class="fa-solid fa-star" title="fa-solid fa-star"></i>
+						<i class="fa-regular fa-heart" title="fa-regular fa-heart"></i>
+						<i class="fa-brands fa-github" title="fa-brands fa-github"></i>
+					</div>
+					<span class="tu_name">实心 · 线性 · 品牌</span>
+				</div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_solid-title">
+			<h2 id="tu_solid-title">Solid 实心风格 <span class="tu_sub">Free 版最齐全的一组</span></h2>
+			<div class="tu_grid-icons">
+				<div class="tu_icon" title="fa-solid fa-star"><i class="fa-solid fa-star"></i><span class="tu_name">star</span></div>
+				<div class="tu_icon" title="fa-solid fa-heart"><i class="fa-solid fa-heart"></i><span class="tu_name">heart</span></div>
+				<div class="tu_icon" title="fa-solid fa-user"><i class="fa-solid fa-user"></i><span class="tu_name">user</span></div>
+				<div class="tu_icon" title="fa-solid fa-house"><i class="fa-solid fa-house"></i><span class="tu_name">house</span></div>
+				<div class="tu_icon" title="fa-solid fa-magnifying-glass"><i class="fa-solid fa-magnifying-glass"></i><span class="tu_name">magnifying-glass</span></div>
+				<div class="tu_icon" title="fa-solid fa-gear"><i class="fa-solid fa-gear"></i><span class="tu_name">gear</span></div>
+				<div class="tu_icon" title="fa-solid fa-bell"><i class="fa-solid fa-bell"></i><span class="tu_name">bell</span></div>
+				<div class="tu_icon" title="fa-solid fa-envelope"><i class="fa-solid fa-envelope"></i><span class="tu_name">envelope</span></div>
+				<div class="tu_icon" title="fa-solid fa-calendar"><i class="fa-solid fa-calendar"></i><span class="tu_name">calendar</span></div>
+				<div class="tu_icon" title="fa-solid fa-camera"><i class="fa-solid fa-camera"></i><span class="tu_name">camera</span></div>
+				<div class="tu_icon" title="fa-solid fa-cloud"><i class="fa-solid fa-cloud"></i><span class="tu_name">cloud</span></div>
+				<div class="tu_icon" title="fa-solid fa-download"><i class="fa-solid fa-download"></i><span class="tu_name">download</span></div>
+				<div class="tu_icon" title="fa-solid fa-trash"><i class="fa-solid fa-trash"></i><span class="tu_name">trash</span></div>
+				<div class="tu_icon" title="fa-solid fa-book"><i class="fa-solid fa-book"></i><span class="tu_name">book</span></div>
+				<div class="tu_icon" title="fa-solid fa-music"><i class="fa-solid fa-music"></i><span class="tu_name">music</span></div>
+				<div class="tu_icon" title="fa-solid fa-image"><i class="fa-solid fa-image"></i><span class="tu_name">image</span></div>
+				<div class="tu_icon" title="fa-solid fa-comment"><i class="fa-solid fa-comment"></i><span class="tu_name">comment</span></div>
+				<div class="tu_icon" title="fa-solid fa-thumbs-up"><i class="fa-solid fa-thumbs-up"></i><span class="tu_name">thumbs-up</span></div>
+				<div class="tu_icon" title="fa-solid fa-bolt"><i class="fa-solid fa-bolt"></i><span class="tu_name">bolt</span></div>
+				<div class="tu_icon" title="fa-solid fa-rocket"><i class="fa-solid fa-rocket"></i><span class="tu_name">rocket</span></div>
+				<div class="tu_icon" title="fa-solid fa-trophy"><i class="fa-solid fa-trophy"></i><span class="tu_name">trophy</span></div>
+				<div class="tu_icon" title="fa-solid fa-shield-halved"><i class="fa-solid fa-shield-halved"></i><span class="tu_name">shield-halved</span></div>
+				<div class="tu_icon" title="fa-solid fa-code"><i class="fa-solid fa-code"></i><span class="tu_name">code</span></div>
+				<div class="tu_icon" title="fa-solid fa-palette"><i class="fa-solid fa-palette"></i><span class="tu_name">palette</span></div>
+				<div class="tu_icon" title="fa-solid fa-sun"><i class="fa-solid fa-sun"></i><span class="tu_name">sun</span></div>
+				<div class="tu_icon" title="fa-solid fa-moon"><i class="fa-solid fa-moon"></i><span class="tu_name">moon</span></div>
+				<div class="tu_icon" title="fa-solid fa-mug-hot"><i class="fa-solid fa-mug-hot"></i><span class="tu_name">mug-hot</span></div>
+				<div class="tu_icon" title="fa-solid fa-clock"><i class="fa-solid fa-clock"></i><span class="tu_name">clock</span></div>
+				<div class="tu_icon" title="fa-solid fa-location-dot"><i class="fa-solid fa-location-dot"></i><span class="tu_name">location-dot</span></div>
+				<div class="tu_icon" title="fa-solid fa-gift"><i class="fa-solid fa-gift"></i><span class="tu_name">gift</span></div>
+				<div class="tu_icon" title="fa-solid fa-plane"><i class="fa-solid fa-plane"></i><span class="tu_name">plane</span></div>
+				<div class="tu_icon" title="fa-solid fa-graduation-cap"><i class="fa-solid fa-graduation-cap"></i><span class="tu_name">graduation-cap</span></div>
+				<div class="tu_icon" title="fa-solid fa-lightbulb"><i class="fa-solid fa-lightbulb"></i><span class="tu_name">lightbulb</span></div>
+				<div class="tu_icon" title="fa-solid fa-fire"><i class="fa-solid fa-fire"></i><span class="tu_name">fire</span></div>
+				<div class="tu_icon" title="fa-solid fa-leaf"><i class="fa-solid fa-leaf"></i><span class="tu_name">leaf</span></div>
+				<div class="tu_icon" title="fa-solid fa-globe"><i class="fa-solid fa-globe"></i><span class="tu_name">globe</span></div>
+				<div class="tu_icon" title="fa-solid fa-lock"><i class="fa-solid fa-lock"></i><span class="tu_name">lock</span></div>
+				<div class="tu_icon" title="fa-solid fa-key"><i class="fa-solid fa-key"></i><span class="tu_name">key</span></div>
+				<div class="tu_icon" title="fa-solid fa-wifi"><i class="fa-solid fa-wifi"></i><span class="tu_name">wifi</span></div>
+				<div class="tu_icon" title="fa-solid fa-folder"><i class="fa-solid fa-folder"></i><span class="tu_name">folder</span></div>
+				<div class="tu_icon" title="fa-solid fa-file-lines"><i class="fa-solid fa-file-lines"></i><span class="tu_name">file-lines</span></div>
+				<div class="tu_icon" title="fa-solid fa-chart-line"><i class="fa-solid fa-chart-line"></i><span class="tu_name">chart-line</span></div>
+				<div class="tu_icon" title="fa-solid fa-database"><i class="fa-solid fa-database"></i><span class="tu_name">database</span></div>
+				<div class="tu_icon" title="fa-solid fa-server"><i class="fa-solid fa-server"></i><span class="tu_name">server</span></div>
+				<div class="tu_icon" title="fa-solid fa-terminal"><i class="fa-solid fa-terminal"></i><span class="tu_name">terminal</span></div>
+				<div class="tu_icon" title="fa-solid fa-gamepad"><i class="fa-solid fa-gamepad"></i><span class="tu_name">gamepad</span></div>
+				<div class="tu_icon" title="fa-solid fa-headphones"><i class="fa-solid fa-headphones"></i><span class="tu_name">headphones</span></div>
+				<div class="tu_icon" title="fa-solid fa-umbrella"><i class="fa-solid fa-umbrella"></i><span class="tu_name">umbrella</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_regular-title">
+			<h2 id="tu_regular-title">Regular 线性风格 <span class="tu_sub">字重 400，线条更轻</span></h2>
+			<div class="tu_grid-icons">
+				<div class="tu_icon" title="fa-regular fa-star"><i class="fa-regular fa-star"></i><span class="tu_name">star</span></div>
+				<div class="tu_icon" title="fa-regular fa-heart"><i class="fa-regular fa-heart"></i><span class="tu_name">heart</span></div>
+				<div class="tu_icon" title="fa-regular fa-user"><i class="fa-regular fa-user"></i><span class="tu_name">user</span></div>
+				<div class="tu_icon" title="fa-regular fa-bell"><i class="fa-regular fa-bell"></i><span class="tu_name">bell</span></div>
+				<div class="tu_icon" title="fa-regular fa-envelope"><i class="fa-regular fa-envelope"></i><span class="tu_name">envelope</span></div>
+				<div class="tu_icon" title="fa-regular fa-calendar"><i class="fa-regular fa-calendar"></i><span class="tu_name">calendar</span></div>
+				<div class="tu_icon" title="fa-regular fa-clock"><i class="fa-regular fa-clock"></i><span class="tu_name">clock</span></div>
+				<div class="tu_icon" title="fa-regular fa-comment"><i class="fa-regular fa-comment"></i><span class="tu_name">comment</span></div>
+				<div class="tu_icon" title="fa-regular fa-face-smile"><i class="fa-regular fa-face-smile"></i><span class="tu_name">face-smile</span></div>
+				<div class="tu_icon" title="fa-regular fa-circle-check"><i class="fa-regular fa-circle-check"></i><span class="tu_name">circle-check</span></div>
+				<div class="tu_icon" title="fa-regular fa-paper-plane"><i class="fa-regular fa-paper-plane"></i><span class="tu_name">paper-plane</span></div>
+				<div class="tu_icon" title="fa-regular fa-gem"><i class="fa-regular fa-gem"></i><span class="tu_name">gem</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_brands-title">
+			<h2 id="tu_brands-title">Brands 品牌图标 <span class="tu_sub">fa-brands 专用字体</span></h2>
+			<div class="tu_grid-icons">
+				<div class="tu_icon" title="fa-brands fa-github"><i class="fa-brands fa-github"></i><span class="tu_name">github</span></div>
+				<div class="tu_icon" title="fa-brands fa-gitlab"><i class="fa-brands fa-gitlab"></i><span class="tu_name">gitlab</span></div>
+				<div class="tu_icon" title="fa-brands fa-weixin"><i class="fa-brands fa-weixin"></i><span class="tu_name">weixin</span></div>
+				<div class="tu_icon" title="fa-brands fa-qq"><i class="fa-brands fa-qq"></i><span class="tu_name">qq</span></div>
+				<div class="tu_icon" title="fa-brands fa-weibo"><i class="fa-brands fa-weibo"></i><span class="tu_name">weibo</span></div>
+				<div class="tu_icon" title="fa-brands fa-zhihu"><i class="fa-brands fa-zhihu"></i><span class="tu_name">zhihu</span></div>
+				<div class="tu_icon" title="fa-brands fa-bilibili"><i class="fa-brands fa-bilibili"></i><span class="tu_name">bilibili</span></div>
+				<div class="tu_icon" title="fa-brands fa-x-twitter"><i class="fa-brands fa-x-twitter"></i><span class="tu_name">x-twitter</span></div>
+				<div class="tu_icon" title="fa-brands fa-youtube"><i class="fa-brands fa-youtube"></i><span class="tu_name">youtube</span></div>
+				<div class="tu_icon" title="fa-brands fa-instagram"><i class="fa-brands fa-instagram"></i><span class="tu_name">instagram</span></div>
+				<div class="tu_icon" title="fa-brands fa-apple"><i class="fa-brands fa-apple"></i><span class="tu_name">apple</span></div>
+				<div class="tu_icon" title="fa-brands fa-android"><i class="fa-brands fa-android"></i><span class="tu_name">android</span></div>
+				<div class="tu_icon" title="fa-brands fa-windows"><i class="fa-brands fa-windows"></i><span class="tu_name">windows</span></div>
+				<div class="tu_icon" title="fa-brands fa-linux"><i class="fa-brands fa-linux"></i><span class="tu_name">linux</span></div>
+				<div class="tu_icon" title="fa-brands fa-java"><i class="fa-brands fa-java"></i><span class="tu_name">java</span></div>
+				<div class="tu_icon" title="fa-brands fa-js"><i class="fa-brands fa-js"></i><span class="tu_name">js</span></div>
+				<div class="tu_icon" title="fa-brands fa-html5"><i class="fa-brands fa-html5"></i><span class="tu_name">html5</span></div>
+				<div class="tu_icon" title="fa-brands fa-css3"><i class="fa-brands fa-css3"></i><span class="tu_name">css3</span></div>
+				<div class="tu_icon" title="fa-brands fa-vuejs"><i class="fa-brands fa-vuejs"></i><span class="tu_name">vuejs</span></div>
+				<div class="tu_icon" title="fa-brands fa-react"><i class="fa-brands fa-react"></i><span class="tu_name">react</span></div>
+				<div class="tu_icon" title="fa-brands fa-node-js"><i class="fa-brands fa-node-js"></i><span class="tu_name">node-js</span></div>
+				<div class="tu_icon" title="fa-brands fa-docker"><i class="fa-brands fa-docker"></i><span class="tu_name">docker</span></div>
+				<div class="tu_icon" title="fa-brands fa-python"><i class="fa-brands fa-python"></i><span class="tu_name">python</span></div>
+				<div class="tu_icon" title="fa-brands fa-figma"><i class="fa-brands fa-figma"></i><span class="tu_name">figma</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_size-title">
+			<h2 id="tu_size-title">尺寸 <span class="tu_sub">只改 font-size，矢量不会糊</span></h2>
+			<div class="tu_rows">
+				<span class="tu_sz tu_sz16"><i class="fa-solid fa-star"></i><span>16px</span></span>
+				<span class="tu_sz tu_sz24"><i class="fa-solid fa-star"></i><span>24px</span></span>
+				<span class="tu_sz tu_sz32"><i class="fa-solid fa-star"></i><span>32px</span></span>
+				<span class="tu_sz tu_sz48"><i class="fa-solid fa-star"></i><span>48px</span></span>
+				<span class="tu_sz tu_sz64"><i class="fa-solid fa-star"></i><span>64px</span></span>
+				<span class="tu_sz tu_sz96"><i class="fa-solid fa-star"></i><span>96px</span></span>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_color-title">
+			<h2 id="tu_color-title">颜色与效果 <span class="tu_sub">因为它是文字，color / text-shadow 都能直接用</span></h2>
+			<div class="tu_swatches">
+				<div class="tu_swatch"><i class="fa-solid fa-star tu_c-amber"></i><span>color: #b45309</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-heart tu_c-red"></i><span>color: #dc2626</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-leaf tu_c-green"></i><span>color: #15803d</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-cloud tu_c-blue"></i><span>color: #1d4ed8</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-moon tu_c-violet"></i><span>color: #7c3aed</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-bolt tu_c-grad"></i><span>background-clip: text</span></div>
+				<div class="tu_swatch"><i class="fa-solid fa-fire tu_shadow"></i><span>text-shadow</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_anim-title">
+			<h2 id="tu_anim-title">动效 <span class="tu_sub">图标是行内元素，普通 CSS 动画即可</span></h2>
+			<div class="tu_anims">
+				<div class="tu_anim"><i class="fa-solid fa-gear tu_spin"></i><span>旋转 tu_spin</span></div>
+				<div class="tu_anim"><i class="fa-solid fa-heart tu_beat"></i><span>心跳 tu_beat</span></div>
+				<div class="tu_anim"><i class="fa-solid fa-rocket tu_launch"></i><span>上浮 tu_launch</span></div>
+				<div class="tu_anim"><i class="fa-solid fa-bell tu_swing"></i><span>摇摆 tu_swing</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_limit-title">
+			<h2 id="tu_limit-title">本页说明与局限 <span class="tu_sub">用字体图标的代价</span></h2>
+			<ul class="tu_list">
+				<li>字体文件已下载到本地 <code>cdn/font-awesome/webfonts/</code>，共 4 个子集（solid / regular / brands / v4 兼容），合计约 0.3 MB，断网也能显示。</li>
+				<li>图标是文字：只能整体改 <code>color</code>，无法像 SVG 那样单独调某条线的描边宽度或局部换色。</li>
+				<li>字体未加载完时会先显示成空方块，线上可以做字体预加载（<code>&lt;link rel="preload"&gt;</code>）缓解。</li>
+				<li>Free 版只有 solid、regular、brands 三套字重；Pro 版才有 light、thin 等，本页只用 Free。</li>
+				<li>图标本体是 CC BY 4.0，代码部分是 MIT，页面底部已注明来源。</li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 第 13 课：图标字体</p>
+		<p>图标由 <a href="https://fontawesome.com" target="_blank" rel="noopener">Font Awesome Free 6.7.2</a> 提供（图标 CC BY 4.0，代码 MIT），字体与 CSS 已本地化至 <code>cdn/font-awesome/</code>。</p>
+	</footer>
+</body>
+</html>

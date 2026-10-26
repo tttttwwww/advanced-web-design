@@ -4,10 +4,13 @@ Static HTML/CSS exercise collection plus one self-contained sub-project. There i
 
 ## Layout
 
-- Root `*.html` — standalone course exercises, one file each, styles inline in `<style>`. Numbered by lesson (`6-1`, `6-2`, `7-1 上图下文`, `8-1`, `10-*`).
+- Root `*.html` — standalone course exercises, one file each, styles inline in `<style>`. Numbered by lesson (`6-1`, `6-2`, `7-1 上图下文`, `8-1`, `10-*`, `11-*`, `13-*`).
 - `index.html` — homepage linking every exercise page (cards grouped by lesson) plus `soda-music/`.
 - `img/` — shared images referenced by root exercises (e.g. `10-2.html` → `img/1.png`).
+- `cdn/` — locally vendored icon libraries used by `13-1.html` / `13-2.html`: `cdn/font-awesome/` (Free 6.7.2 CSS + woff2 subsets) and `cdn/lucide/lucide.min.js` (1.59.0 UMD). No network needed; do not replace these with remote CDN links.
 - `soda-music/` — self-contained music player; `soda-music/README.md` (Chinese) documents features and how to add tracks.
+- `soda-app.html` — 汽水音乐风格单页 App（底部导航五视图 + Web Audio 合成播放器）；CSS/JS 全部内联，不依赖任何构建。
+- `icons/` — 阿里图标库 SVG（30 个），供 `soda-app.html` 以 `<img src="icons/xxx.svg">` 引用。图标文件本身是黑色，深色界面靠 CSS `filter: invert(1)` 反相；`全部.svg` / `维修.svg` 已删除自带白底。不要改成远程 CDN 链接。
 - `tu_prompt.md` — append-only prompt log (see rules below).
 
 ## Gotchas

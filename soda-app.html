@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>汽水音乐 · 底部导航版</title>
+<style>
+	* {
+		box-sizing: border-box;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	:root {
+		--tu-bg: #070a08;
+		--tu-panel: rgba(255, 255, 255, 0.055);
+		--tu-line: rgba(255, 255, 255, 0.09);
+		--tu-text: #edf4ea;
+		--tu-dim: #8f9c8b;
+		--tu-lime: #c8ff4d;
+		--tu-lime-2: #67e87d;
+		--tu-ink: #06230c;
+	}
+
+	html {
+		background: var(--tu-bg);
+	}
+
+	body {
+		min-width: 320px;
+		margin: 0;
+		color: var(--tu-text);
+		font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+		background:
+			radial-gradient(880px 520px at 8% -12%, rgba(200, 255, 77, 0.17), transparent 62%),
+			radial-gradient(760px 460px at 108% 4%, rgba(64, 224, 208, 0.13), transparent 58%),
+			var(--tu-bg);
+		line-height: 1.5;
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+
+	.tu_app {
+		position: relative;
+		max-width: 560px;
+		min-height: 100vh;
+		margin: 0 auto;
+		padding-bottom: calc(84px + env(safe-area-inset-bottom));
+	}
+
+	/* ================= 顶部栏 ================= */
+	.tu_header {
+		position: sticky;
+		top: 0;
+		z-index: 30;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px 16px;
+		background: rgba(7, 10, 8, 0.72);
+		backdrop-filter: blur(18px);
+		-webkit-backdrop-filter: blur(18px);
+		border-bottom: 1px solid var(--tu-line);
+	}
+
+	.tu_brand {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.tu_brand-mark {
+		display: grid;
+		place-items: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 11px;
+		font-size: 19px;
+		background: linear-gradient(135deg, rgba(200, 255, 77, 0.22), rgba(64, 224, 208, 0.16));
+		border: 1px solid rgba(200, 255, 77, 0.35);
+	}
+
+	.tu_brand-name {
+		font-size: 18px;
+		font-weight: 800;
+		letter-spacing: 1px;
+		background: linear-gradient(92deg, #f3ffd0, var(--tu-lime) 55%, #8ef0b3);
+		background-clip: text;
+		-webkit-background-clip: text;
+		color: transparent;
+	}
+
+	.tu_home {
+		margin-left: auto;
+		padding: 6px 11px;
+		border: 1px solid var(--tu-line);
+		border-radius: 999px;
+		color: var(--tu-dim);
+		font-size: 12px;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: color 0.2s, border-color 0.2s;
+	}
+
+	.tu_home:hover,
+	.tu_home:focus-visible {
+		color: var(--tu-lime);
+		border-color: rgba(200, 255, 77, 0.55);
+	}
+
+	.tu_avatar {
+		width: 36px;
+		height: 36px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #d9ff6a, #35d97f);
+		color: var(--tu-ink);
+		font-size: 15px;
+		font-weight: 800;
+		cursor: pointer;
+	}
+
+	/* ================= 视图容器 ================= */
+	.tu_main {
+		padding: 0 0 10px;
+	}
+
+	.tu_view {
+		display: none;
+		animation: tu_fade 0.28s ease both;
+	}
+
+	.tu_view.tu_on {
+		display: block;
+	}
+
+	@keyframes tu_fade {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* ================= 首页 ================= */
+	.tu_hello {
+		padding: 20px 16px 4px;
+	}
+
+	.tu_hello-sub {
+		margin: 0;
+		color: var(--tu-dim);
+		font-size: 12px;
+		letter-spacing: 2px;
+	}
+
+	.tu_hello-title {
+		margin: 6px 0 0;
+		font-size: 25px;
+		line-height: 1.28;
+		letter-spacing: 0.5px;
+	}
+
+	.tu_hello-title em {
+		font-style: normal;
+		color: var(--tu-lime);
+	}
+
+	.tu_hero {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		width: calc(100% - 32px);
+		margin: 18px 16px 0;
+		padding: 20px;
+		overflow: hidden;
+		text-align: left;
+		color: var(--tu-text);
+		background: linear-gradient(118deg, #1b2a12, #10351f 58%, #0b2c2c);
+		border: 1px solid rgba(200, 255, 77, 0.28);
+		border-radius: 22px;
+		cursor: pointer;
+		transition: transform 0.2s, border-color 0.2s;
+	}
+
+	.tu_hero::after {
+		content: "";
+		position: absolute;
+		right: -46px;
+		top: -56px;
+		width: 190px;
+		height: 190px;
+		border-radius: 50%;
+		background: radial-gradient(circle, rgba(200, 255, 77, 0.28), transparent 68%);
+		pointer-events: none;
+	}
+
+	.tu_hero:hover {
+		transform: translateY(-2px);
+		border-color: rgba(200, 255, 77, 0.55);
+	}
+
+	.tu_hero-text {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		min-width: 0;
+	}
+
+	.tu_hero-tag {
+		align-self: flex-start;
+		padding: 3px 9px;
+		border-radius: 999px;
+		background: rgba(200, 255, 77, 0.16);
+		color: var(--tu-lime);
+		font-size: 11px;
+		letter-spacing: 1px;
+	}
+
+	.tu_hero-text strong {
+		font-size: 17px;
+		line-height: 1.35;
+	}
+
+	.tu_hero-meta {
+		color: var(--tu-dim);
+		font-size: 12px;
+	}
+
+	.tu_hero-play {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 54px;
+		height: 54px;
+		margin-left: auto;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #ddff70, #45e07f);
+		color: var(--tu-ink);
+		font-size: 19px;
+		box-shadow: 0 10px 26px rgba(151, 255, 77, 0.34);
+	}
+
+	/* ================= 通用区块标题 ================= */
+	.tu_section-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 10px;
+		padding: 24px 16px 10px;
+	}
+
+	.tu_section-head h2 {
+		margin: 0;
+		font-size: 17px;
+		letter-spacing: 0.5px;
+	}
+
+	.tu_section-head span {
+		color: var(--tu-dim);
+		font-size: 12px;
+	}
+
+	/* ================= 歌单横向卡片 ================= */
+	.tu_playlists {
+		display: flex;
+		gap: 12px;
+		padding: 2px 16px 4px;
+		overflow-x: auto;
+		scroll-snap-type: x proximity;
+		scrollbar-width: none;
+	}
+
+	.tu_playlists::-webkit-scrollbar {
+		display: none;
+	}
+
+	.tu_playlist {
+		flex: 0 0 132px;
+		scroll-snap-align: start;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.tu_playlist-cover {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 132px;
+		height: 132px;
+		border-radius: 18px;
+		font-size: 44px;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+		transition: transform 0.2s;
+	}
+
+	.tu_playlist:hover .tu_playlist-cover {
+		transform: scale(1.03);
+	}
+
+	.tu_playlist-cover::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.42));
+	}
+
+	.tu_playlist b {
+		display: block;
+		margin-top: 8px;
+		font-size: 13px;
+		line-height: 1.35;
+	}
+
+	.tu_playlist small {
+		display: block;
+		margin-top: 2px;
+		color: var(--tu-dim);
+		font-size: 11px;
+	}
+
+	/* ================= 歌曲列表 ================= */
+	.tu_song-list {
+		margin: 0;
+		padding: 0 8px;
+		list-style: none;
+	}
+
+	.tu_song {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		width: 100%;
+		padding: 9px 8px;
+		border: 0;
+		border-radius: 14px;
+		background: transparent;
+		color: inherit;
+		text-align: left;
+		cursor: pointer;
+		transition: background 0.15s;
+	}
+
+	.tu_song:hover,
+	.tu_song:focus-visible {
+		background: rgba(255, 255, 255, 0.05);
+		outline: none;
+	}
+
+	.tu_song-cover {
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 46px;
+		height: 46px;
+		border-radius: 13px;
+		font-size: 22px;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+	}
+
+	.tu_song-info {
+		min-width: 0;
+	}
+
+	.tu_song-info b {
+		display: block;
+		overflow: hidden;
+		font-size: 14px;
+		font-weight: 600;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.tu_song-info small {
+		display: block;
+		overflow: hidden;
+		color: var(--tu-dim);
+		font-size: 11.5px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.tu_song-right {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-left: auto;
+		color: var(--tu-dim);
+	}
+
+	.tu_song-time {
+		font-size: 11px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.tu_song-right svg {
+		color: var(--tu-lime);
+		opacity: 0.75;
+	}
+
+	.tu_empty {
+		padding: 30px 12px;
+		color: var(--tu-dim);
+		font-size: 13px;
+		text-align: center;
+	}
+
+	/* ================= 发现 ================= */
+	.tu_page-title {
+		margin: 0;
+		padding: 22px 16px 6px;
+		font-size: 23px;
+		letter-spacing: 0.5px;
+	}
+
+	.tu_search {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		margin: 12px 16px 4px;
+		padding: 10px 14px;
+		border: 1px solid var(--tu-line);
+		border-radius: 14px;
+		background: var(--tu-panel);
+		color: var(--tu-dim);
+	}
+
+	.tu_search input {
+		flex: 1;
+		min-width: 0;
+		padding: 0;
+		border: 0;
+		outline: none;
+		background: none;
+		color: var(--tu-text);
+		font-size: 14px;
+		font-family: inherit;
+	}
+
+	.tu_search input::placeholder {
+		color: #6f7c6c;
+	}
+
+	.tu_chips {
+		display: flex;
+		gap: 8px;
+		padding: 10px 16px 6px;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.tu_chips::-webkit-scrollbar {
+		display: none;
+	}
+
+	.tu_chip {
+		flex: 0 0 auto;
+		padding: 7px 14px;
+		border: 1px solid var(--tu-line);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.05);
+		color: var(--tu-dim);
+		font-size: 12.5px;
+		font-family: inherit;
+		cursor: pointer;
+		transition: background 0.18s, color 0.18s;
+	}
+
+	.tu_chip.tu_on {
+		background: var(--tu-lime);
+		border-color: transparent;
+		color: var(--tu-ink);
+		font-weight: 700;
+	}
+
+	/* ================= 播放器视图 ================= */
+	.tu_player-wrap {
+		padding: 14px 20px 10px;
+		text-align: center;
+	}
+
+	.tu_disc {
+		position: relative;
+		width: 264px;
+		height: 264px;
+		margin: 6px auto 26px;
+		border-radius: 50%;
+		background:
+			repeating-radial-gradient(circle at 50% 50%, #171d18 0 3px, #0c100d 3px 6px);
+		box-shadow:
+			0 18px 46px rgba(0, 0, 0, 0.55),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+		display: grid;
+		place-items: center;
+	}
+
+	.tu_disc.tu_spin {
+		animation: tu_spin 16s linear infinite;
+	}
+
+	@keyframes tu_spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.tu_disc-art {
+		display: grid;
+		place-items: center;
+		width: 168px;
+		height: 168px;
+		border-radius: 50%;
+		font-size: 66px;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+	}
+
+	.tu_now-title {
+		margin: 0;
+		font-size: 24px;
+		line-height: 1.3;
+	}
+
+	.tu_now-artist {
+		margin: 7px 0 26px;
+		color: var(--tu-dim);
+		font-size: 13px;
+	}
+
+	.tu_progress {
+		padding: 0 4px;
+	}
+
+	.tu_progress-bar {
+		position: relative;
+		height: 5px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.11);
+		cursor: pointer;
+	}
+
+	.tu_progress-fill {
+		display: block;
+		width: 0;
+		height: 100%;
+		border-radius: inherit;
+		background: linear-gradient(90deg, var(--tu-lime), var(--tu-lime-2));
+		transition: width 0.22s linear;
+	}
+
+	.tu_times {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 8px;
+		color: var(--tu-dim);
+		font-size: 11px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.tu_controls {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		margin: 20px 0 6px;
+	}
+
+	.tu_ctl {
+		display: grid;
+		place-items: center;
+		width: 46px;
+		height: 46px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--tu-text);
+		cursor: pointer;
+		transition: color 0.2s, background 0.2s;
+	}
+
+	.tu_ctl svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	.tu_ctl:hover {
+		background: rgba(255, 255, 255, 0.07);
+	}
+
+	.tu_ctl.tu_on {
+		color: var(--tu-lime);
+	}
+
+	.tu_ctl-main {
+		width: 68px;
+		height: 68px;
+		background: linear-gradient(135deg, #d8ff62, #46e07f);
+		color: var(--tu-ink);
+		box-shadow: 0 12px 30px rgba(151, 255, 77, 0.32);
+	}
+
+	.tu_ctl-main:hover {
+		background: linear-gradient(135deg, #e2ff7d, #57ec8f);
+	}
+
+	.tu_ctl-main svg {
+		width: 26px;
+		height: 26px;
+	}
+
+	/* ================= 歌单库 ================= */
+	.tu_lib-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		padding: 10px 16px 4px;
+	}
+
+	.tu_lib-card {
+		padding: 14px;
+		border: 1px solid var(--tu-line);
+		border-radius: 18px;
+		background: var(--tu-panel);
+		color: inherit;
+		text-align: left;
+		cursor: pointer;
+		transition: transform 0.2s, border-color 0.2s;
+	}
+
+	.tu_lib-card:hover {
+		transform: translateY(-2px);
+		border-color: rgba(200, 255, 77, 0.4);
+	}
+
+	.tu_lib-cover {
+		display: grid;
+		place-items: center;
+		width: 64px;
+		height: 64px;
+		border-radius: 16px;
+		font-size: 30px;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+	}
+
+	.tu_lib-card b {
+		display: block;
+		margin-top: 10px;
+		font-size: 14px;
+	}
+
+	.tu_lib-card small {
+		display: block;
+		margin-top: 2px;
+		color: var(--tu-dim);
+		font-size: 11px;
+	}
+
+	/* ================= 我的 ================= */
+	.tu_profile {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin: 18px 16px;
+		padding: 18px;
+		border: 1px solid rgba(200, 255, 77, 0.22);
+		border-radius: 22px;
+		background: linear-gradient(132deg, rgba(200, 255, 77, 0.14), rgba(64, 224, 208, 0.07));
+	}
+
+	.tu_profile-avatar {
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 58px;
+		height: 58px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #d9ff6a, #2fd879);
+		color: var(--tu-ink);
+		font-size: 24px;
+		font-weight: 800;
+	}
+
+	.tu_profile h2 {
+		margin: 0;
+		font-size: 18px;
+	}
+
+	.tu_profile p {
+		margin: 3px 0 0;
+		color: var(--tu-dim);
+		font-size: 12px;
+	}
+
+	.tu_stats {
+		display: flex;
+		gap: 10px;
+		padding: 0 16px;
+	}
+
+	.tu_stat {
+		flex: 1;
+		padding: 14px 8px;
+		border: 1px solid var(--tu-line);
+		border-radius: 16px;
+		background: var(--tu-panel);
+		text-align: center;
+	}
+
+	.tu_stat b {
+		display: block;
+		font-size: 20px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.tu_stat span {
+		display: block;
+		margin-top: 2px;
+		color: var(--tu-dim);
+		font-size: 11px;
+	}
+
+	.tu_settings {
+		margin: 18px 16px;
+		padding: 0;
+		border: 1px solid var(--tu-line);
+		border-radius: 18px;
+		background: var(--tu-panel);
+		list-style: none;
+		overflow: hidden;
+	}
+
+	.tu_settings li {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 14px 16px;
+		font-size: 13.5px;
+		border-bottom: 1px solid var(--tu-line);
+	}
+
+	.tu_settings li:last-child {
+		border-bottom: 0;
+	}
+
+	.tu_settings span {
+		color: var(--tu-dim);
+		font-size: 12px;
+	}
+
+	.tu_mine-foot {
+		padding: 8px 16px 4px;
+		color: #5f6b5c;
+		font-size: 11.5px;
+		text-align: center;
+	}
+
+	/* ================= 迷你播放条 ================= */
+	.tu_mini {
+		position: fixed;
+		bottom: calc(74px + env(safe-area-inset-bottom));
+		left: 50%;
+		z-index: 39;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: min(520px, calc(100% - 24px));
+		padding: 8px 10px;
+		border: 1px solid rgba(200, 255, 77, 0.2);
+		border-radius: 16px;
+		background: rgba(16, 22, 16, 0.92);
+		backdrop-filter: blur(18px);
+		-webkit-backdrop-filter: blur(18px);
+		box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+		transform: translateX(-50%);
+	}
+
+	.tu_mini-cover {
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 38px;
+		height: 38px;
+		border-radius: 11px;
+		font-size: 18px;
+		cursor: pointer;
+	}
+
+	.tu_mini-text {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	.tu_mini-text b {
+		overflow: hidden;
+		font-size: 13px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.tu_mini-text small {
+		overflow: hidden;
+		color: var(--tu-dim);
+		font-size: 10.5px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.tu_mini-btn {
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		width: 34px;
+		height: 34px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.07);
+		color: var(--tu-text);
+		cursor: pointer;
+	}
+
+	.tu_mini-btn:last-child {
+		margin-left: 0;
+		color: var(--tu-lime);
+	}
+
+	.tu_mini-btn svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	/* ================= 底部导航 ================= */
+	.tu_bottom-nav {
+		position: fixed;
+		bottom: 0;
+		left: 50%;
+		z-index: 40;
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		width: 100%;
+		max-width: 560px;
+		height: calc(64px + env(safe-area-inset-bottom));
+		padding-bottom: env(safe-area-inset-bottom);
+		background: rgba(8, 12, 9, 0.88);
+		backdrop-filter: blur(22px);
+		-webkit-backdrop-filter: blur(22px);
+		border-top: 1px solid var(--tu-line);
+		transform: translateX(-50%);
+	}
+
+	.tu_navbtn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 3px;
+		padding: 8px 10px;
+		border: 0;
+		border-radius: 13px;
+		background: none;
+		color: var(--tu-dim);
+		font-family: inherit;
+		font-size: 10.5px;
+		cursor: pointer;
+		transition: color 0.2s;
+	}
+
+	.tu_navbtn svg {
+		width: 21px;
+		height: 21px;
+	}
+
+	.tu_navbtn:hover {
+		color: #c3d3bd;
+	}
+
+	.tu_navbtn.tu_on {
+		color: var(--tu-lime);
+	}
+
+	.tu_navbtn-play {
+		width: 52px;
+		height: 52px;
+		padding: 0;
+		margin-top: -14px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #d8ff62, #3fdd7b);
+		color: var(--tu-ink);
+		box-shadow: 0 8px 22px rgba(151, 255, 77, 0.4);
+	}
+
+	.tu_navbtn-play span {
+		font-size: 18px;
+		line-height: 1;
+	}
+
+	.tu_navbtn-play.tu_on {
+		color: var(--tu-ink);
+	}
+
+	@media (max-width: 360px) {
+		.tu_disc {
+			width: 226px;
+			height: 226px;
+		}
+
+		.tu_disc-art {
+			width: 146px;
+			height: 146px;
+			font-size: 56px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+
+		.tu_view,
+		.tu_disc.tu_spin {
+			animation: none;
+		}
+
+		.tu_progress-fill {
+			transition: none;
+		}
+	}
+
+	/* ================= 图标：阿里图标库 SVG 版 ================= */
+	.tu_ico {
+		display: block;
+		width: 20px;
+		height: 20px;
+		object-fit: contain;
+		filter: invert(1);
+		opacity: 0.66;
+		transition: opacity 0.2s, filter 0.2s;
+	}
+
+	.tu_ico-flip {
+		transform: scaleX(-1);
+	}
+
+	.tu_ico-raw {
+		filter: none;
+		opacity: 1;
+	}
+
+	.tu_ico-sm {
+		width: 13px;
+		height: 13px;
+	}
+
+	.tu_brand-mark .tu_ico {
+		width: 23px;
+		height: 23px;
+	}
+
+	.tu_home {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+	}
+
+	.tu_hero-play .tu_ico,
+	.tu_ctl-main .tu_ico,
+	.tu_navbtn-play .tu_ico {
+		filter: none;
+		opacity: 0.92;
+	}
+
+	.tu_hero-play .tu_ico {
+		width: 22px;
+		height: 22px;
+	}
+
+	.tu_ctl-main .tu_ico {
+		width: 25px;
+		height: 25px;
+	}
+
+	.tu_navbtn-play .tu_ico {
+		width: 21px;
+		height: 21px;
+	}
+
+	.tu_search .tu_ico {
+		flex: 0 0 auto;
+		width: 17px;
+		height: 17px;
+		opacity: 0.5;
+	}
+
+	.tu_song-right .tu_ico {
+		width: 15px;
+		height: 15px;
+	}
+
+	.tu_ctl .tu_ico {
+		width: 19px;
+		height: 19px;
+	}
+
+	.tu_mini-btn .tu_ico {
+		width: 15px;
+		height: 15px;
+		opacity: 0.85;
+	}
+
+	.tu_navbtn .tu_ico {
+		width: 21px;
+		height: 21px;
+	}
+
+	.tu_mini-cover {
+		overflow: hidden;
+		padding: 4px;
+	}
+
+	.tu_mini-cover .tu_ico {
+		width: 100%;
+		height: 100%;
+	}
+
+	.tu_disc-art {
+		overflow: hidden;
+	}
+
+	.tu_disc-art .tu_ico {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* 高亮态：图标转成汽水绿 */
+	.tu_navbtn.tu_on .tu_ico,
+	.tu_ctl.tu_on .tu_ico,
+	.tu_song-right .tu_ico,
+	.tu_mini-btn:last-child .tu_ico {
+		opacity: 1;
+		filter: invert(1) sepia(1) saturate(9) hue-rotate(46deg) brightness(1.05) drop-shadow(0 0 5px rgba(200, 255, 77, 0.55));
+	}
+
+	.tu_settings li {
+		justify-content: flex-start;
+	}
+
+	.tu_settings li .tu_ico {
+		flex: 0 0 auto;
+		width: 16px;
+		height: 16px;
+	}
+
+	.tu_settings li span {
+		margin-left: auto;
+	}
+</style>
+</head>
+<body>
+
+<div class="tu_app">
+
+	<!-- ========== 顶部栏 ========== -->
+	<header class="tu_header">
+		<div class="tu_brand">
+			<span class="tu_brand-mark" aria-hidden="true"><img class="tu_ico tu_ico-raw" src="icons/047_发泡.svg" alt="" width="23" height="23"></span>
+			<span class="tu_brand-name">汽水音乐</span>
+		</div>
+		<a class="tu_home" href="index.html"><img class="tu_ico tu_ico-sm" src="icons/btn_back.svg" alt="" width="13" height="13">返回首页</a>
+		<button class="tu_avatar" id="tu_avatarBtn" type="button" title="涂玮轩">涂</button>
+	</header>
+
+	<main class="tu_main">
+
+		<!-- ========== 首页 ========== -->
+		<section class="tu_view tu_on" id="tu_view-home" data-tu-view="home" aria-label="首页">
+			<div class="tu_hello">
+				<p class="tu_hello-sub" id="tu_helloSub">下午好</p>
+				<h1 class="tu_hello-title">今天想听点<em>汽水味</em>的？</h1>
+			</div>
+
+			<button class="tu_hero" id="tu_heroBtn" type="button">
+				<span class="tu_hero-text">
+					<span class="tu_hero-tag">每日灵感电台</span>
+					<strong>为你随机播放一批汽水单曲</strong>
+					<span class="tu_hero-meta">点一下即刻开听 · Web Audio 合成音色</span>
+				</span>
+				<span class="tu_hero-play" aria-hidden="true"><img class="tu_ico" src="icons/btn_play.svg" alt="" width="22" height="22"></span>
+			</button>
+
+			<div class="tu_section-head">
+				<h2>推荐歌单</h2>
+				<span>左右滑动</span>
+			</div>
+			<div class="tu_playlists" id="tu_playlists"></div>
+
+			<div class="tu_section-head">
+				<h2>今日推荐</h2>
+				<span>根据收听偏好</span>
+			</div>
+			<ul class="tu_song-list" id="tu_homeList"></ul>
+		</section>
+
+		<!-- ========== 发现 ========== -->
+		<section class="tu_view" id="tu_view-find" data-tu-view="find" aria-label="发现">
+			<h1 class="tu_page-title">发现</h1>
+			<label class="tu_search">
+				<img class="tu_ico" src="icons/btn_side.svg" alt="" width="17" height="17">
+				<input id="tu_searchInput" type="search" placeholder="搜索歌曲、歌手或心情" autocomplete="off">
+			</label>
+			<div class="tu_chips" id="tu_chips" role="group" aria-label="心情筛选">
+				<button class="tu_chip tu_on" type="button" data-tu-mood="全部">全部</button>
+				<button class="tu_chip" type="button" data-tu-mood="流行">流行</button>
+				<button class="tu_chip" type="button" data-tu-mood="民谣">民谣</button>
+				<button class="tu_chip" type="button" data-tu-mood="电子">电子</button>
+				<button class="tu_chip" type="button" data-tu-mood="轻音乐">轻音乐</button>
+			</div>
+			<ul class="tu_song-list" id="tu_findList"></ul>
+		</section>
+
+		<!-- ========== 播放器 ========== -->
+		<section class="tu_view" id="tu_view-player" data-tu-view="player" aria-label="播放器">
+			<div class="tu_player-wrap">
+				<div class="tu_disc" id="tu_disc">
+					<div class="tu_disc-art" id="tu_discArt"><img class="tu_ico tu_ico-raw" src="icons/232_爱好.svg" alt="" width="168" height="168"></div>
+				</div>
+
+				<h1 class="tu_now-title" id="tu_nowTitle">橘子汽水</h1>
+				<p class="tu_now-artist" id="tu_nowArtist">汽水实验室</p>
+
+				<div class="tu_progress" id="tu_progress">
+					<div class="tu_progress-bar" id="tu_progressBar" role="slider" tabindex="0"
+						aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+						<span class="tu_progress-fill" id="tu_progressFill"></span>
+					</div>
+					<div class="tu_times">
+						<span id="tu_timeNow">0:00</span>
+						<span id="tu_timeAll">3:18</span>
+					</div>
+				</div>
+
+				<div class="tu_controls">
+					<button class="tu_ctl" id="tu_shuffleBtn" type="button" aria-pressed="false" title="随机播放">
+						<img class="tu_ico" src="icons/btn_restart.svg" alt="" width="19" height="19">
+					</button>
+					<button class="tu_ctl" id="tu_prevBtn" type="button" title="上一首">
+						<img class="tu_ico" src="icons/btn_back.svg" alt="" width="19" height="19">
+					</button>
+					<button class="tu_ctl tu_ctl-main" id="tu_playBtn" type="button" title="播放 / 暂停">
+						<img class="tu_ico" id="tu_playIcon" src="icons/btn_play.svg" alt="" width="25" height="25">
+					</button>
+					<button class="tu_ctl" id="tu_nextBtn" type="button" title="下一首">
+						<img class="tu_ico tu_ico-flip" src="icons/btn_back.svg" alt="" width="19" height="19">
+					</button>
+					<button class="tu_ctl" id="tu_repeatBtn" type="button" aria-pressed="true" title="单曲循环">
+						<img class="tu_ico" src="icons/btn_refresh.svg" alt="" width="19" height="19">
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- ========== 歌单 ========== -->
+		<section class="tu_view" id="tu_view-library" data-tu-view="library" aria-label="歌单">
+			<h1 class="tu_page-title">歌单</h1>
+			<div class="tu_lib-grid" id="tu_libGrid"></div>
+			<div class="tu_section-head">
+				<h2>最近播放</h2>
+				<span>自动记录</span>
+			</div>
+			<ul class="tu_song-list" id="tu_recentList"></ul>
+		</section>
+
+		<!-- ========== 我的 ========== -->
+		<section class="tu_view" id="tu_view-mine" data-tu-view="mine" aria-label="我的">
+			<div class="tu_profile">
+				<div class="tu_profile-avatar">涂</div>
+				<div>
+					<h2>涂玮轩</h2>
+					<p>24001010417 · 汽水等级 Lv.6</p>
+				</div>
+			</div>
+			<div class="tu_stats">
+				<div class="tu_stat"><b>26</b><span>收藏歌曲</span></div>
+				<div class="tu_stat"><b>8</b><span>自建歌单</span></div>
+				<div class="tu_stat"><b>3.2h</b><span>本月收听</span></div>
+			</div>
+			<ul class="tu_settings">
+				<li><img class="tu_ico" src="icons/btn_setting.svg" alt="" width="16" height="16">音质设置 <span>Hi-Res 无损 ›</span></li>
+				<li><img class="tu_ico" src="icons/下载.svg" alt="" width="16" height="16">播放与下载 <span>仅 Wi-Fi ›</span></li>
+				<li><img class="tu_ico" src="icons/btn_history.svg" alt="" width="16" height="16">定时关闭 <span>未开启 ›</span></li>
+				<li><img class="tu_ico" src="icons/btn_alert.svg" alt="" width="16" height="16">关于汽水音乐 <span>v1.0 ›</span></li>
+			</ul>
+			<p class="tu_mine-foot">涂玮轩 出品 · 纯前端练习项目</p>
+		</section>
+
+	</main>
+
+	<!-- ========== 迷你播放条 ========== -->
+	<div class="tu_mini" id="tu_mini" hidden>
+		<span class="tu_mini-cover" id="tu_miniCover" title="打开播放器"><img class="tu_ico tu_ico-raw" src="icons/047_发泡.svg" alt="" width="30" height="30"></span>
+		<span class="tu_mini-text">
+			<b id="tu_miniTitle">橘子汽水</b>
+			<small id="tu_miniArtist">汽水实验室</small>
+		</span>
+		<button class="tu_mini-btn" id="tu_miniPlay" type="button" title="播放 / 暂停">
+			<img class="tu_ico" id="tu_miniPlayIcon" src="icons/btn_play.svg" alt="" width="15" height="15">
+		</button>
+		<button class="tu_mini-btn" id="tu_miniNext" type="button" title="下一首">
+			<img class="tu_ico tu_ico-flip" src="icons/btn_back.svg" alt="" width="15" height="15">
+		</button>
+	</div>
+
+	<!-- ========== 底部导航 ========== -->
+	<nav class="tu_bottom-nav" aria-label="主导航">
+		<button class="tu_navbtn tu_on" type="button" data-tu-target="home" aria-current="page">
+			<img class="tu_ico" src="icons/全部.svg" alt="" width="21" height="21">
+			<span>首页</span>
+		</button>
+		<button class="tu_navbtn" type="button" data-tu-target="find">
+			<img class="tu_ico" src="icons/地球.svg" alt="" width="21" height="21">
+			<span>发现</span>
+		</button>
+		<button class="tu_navbtn tu_navbtn-play" type="button" data-tu-target="player" aria-label="打开播放器">
+			<img class="tu_ico" src="icons/btn_play.svg" alt="" width="21" height="21">
+		</button>
+		<button class="tu_navbtn" type="button" data-tu-target="library">
+			<img class="tu_ico" src="icons/btn_history.svg" alt="" width="21" height="21">
+			<span>歌单</span>
+		</button>
+		<button class="tu_navbtn" type="button" data-tu-target="mine">
+			<img class="tu_ico" src="icons/btn_admin.svg" alt="" width="21" height="21">
+			<span>我的</span>
+		</button>
+	</nav>
+
+</div>
+
+<script>
+	(function () {
+		'use strict';
+
+		/* ================= 曲库数据 ================= */
+		var tu_tracks = [
+			{ id: 't1', title: '橘子汽水', artist: '汽水实验室', dur: 198, mood: '流行', emoji: '🥤', c1: '#d9ff6a', c2: '#0f9b4f', bpm: 112, notes: [0, 4, 7, 12, 7, 4, 0, 7] },
+			{ id: 't2', title: '苏打气泡', artist: '林小满', dur: 214, mood: '流行', emoji: '🫧', c1: '#9be7ff', c2: '#1f6fd0', bpm: 120, notes: [0, 2, 4, 7, 9, 7, 4, 2] },
+			{ id: 't3', title: '海盐柠檬', artist: '陈汽水', dur: 176, mood: '民谣', emoji: '🍋', c1: '#fff07a', c2: '#c98a12', bpm: 92, notes: [0, 3, 5, 7, 10, 7, 5, 3] },
+			{ id: 't4', title: '午夜零度', artist: '冰格乐队', dur: 232, mood: '电子', emoji: '🧊', c1: '#a6c8ff', c2: '#2b2f7a', bpm: 126, notes: [0, 5, 7, 12, 10, 7, 5, 0] },
+			{ id: 't5', title: '青提气泡水', artist: '夏日碎片', dur: 189, mood: '流行', emoji: '🍇', c1: '#c7ffb0', c2: '#2f9b4a', bpm: 104, notes: [0, 2, 5, 7, 9, 7, 5, 2] },
+			{ id: 't6', title: '白桃乌龙', artist: '小岛电台', dur: 205, mood: '轻音乐', emoji: '🍑', c1: '#ffd0dc', c2: '#d1477a', bpm: 84, notes: [0, 4, 7, 11, 7, 4] },
+			{ id: 't7', title: '柠檬海', artist: '蓝色信号', dur: 220, mood: '电子', emoji: '🌊', c1: '#8ff5e0', c2: '#0e6f7d', bpm: 118, notes: [0, 7, 5, 12, 10, 7, 3, 0] },
+			{ id: 't8', title: '星空汽水', artist: '夜航船', dur: 241, mood: '民谣', emoji: '✨', c1: '#cfc3ff', c2: '#4b3f9e', bpm: 88, notes: [0, 2, 4, 9, 7, 4, 2, 0] }
+		];
+
+		var tu_playlistData = [
+			{ title: '晨光唤醒', sub: '12 首 · 通勤轻快', emoji: '🌅', c1: '#ffe08a', c2: '#e07a2f' },
+			{ title: '夜色漫游', sub: '18 首 · 氛围治愈', emoji: '🌙', c1: '#9a8cff', c2: '#2f2a66' },
+			{ title: '学习专注', sub: '24 首 · 无人声', emoji: '🎧', c1: '#a8f0d0', c2: '#1c6f5e' },
+			{ title: '热恋心动', sub: '16 首 · 甜甜的', emoji: '💗', c1: '#ffb3cf', c2: '#c22a63' },
+			{ title: '派对狂欢', sub: '20 首 · 高能律动', emoji: '🎉', c1: '#ffd36b', c2: '#d0411f' }
+		];
+
+		var tu_libData = [
+			{ title: '我喜欢的音乐', sub: '26 首 · 私享', emoji: '💚', c1: '#d9ff6a', c2: '#1d8c56' },
+			{ title: '深夜循环', sub: '9 首 · 治愈', emoji: '🌌', c1: '#b7c9ff', c2: '#2a3573' },
+			{ title: '汽水实验室', sub: '12 首 · 收藏歌单', emoji: '🧪', c1: '#b0ffe8', c2: '#167d78' },
+			{ title: '跑步节拍', sub: '15 首 · 高 BPM', emoji: '🏃', c1: '#ffd8a8', c2: '#c96a12' }
+		];
+
+		var tu_state = {
+			idx: 0,
+			playing: false,
+			time: 0,
+			shuffle: false,
+			repeat: true,
+			started: false,
+			history: [],
+			view: 'home'
+		};
+
+		var tu_audioCtx = null;
+		var tu_master = null;
+		var tu_seqTimer = null;
+		var tu_tickTimer = null;
+		var tu_seqIndex = 0;
+
+		/* ================= DOM 快捷方式 ================= */
+		function tu_el(tu_id) {
+			return document.getElementById(tu_id);
+		}
+
+		function tu_qsa(tu_sel) {
+			return Array.prototype.slice.call(document.querySelectorAll(tu_sel));
+		}
+
+		/* ================= 工具函数 ================= */
+		function tu_fmt(tu_sec) {
+			tu_sec = Math.max(0, Math.floor(tu_sec));
+			var tu_m = Math.floor(tu_sec / 60);
+			var tu_s = tu_sec % 60;
+			return tu_m + ':' + (tu_s < 10 ? '0' : '') + tu_s;
+		}
+
+		function tu_coverStyle(tu_track) {
+			return 'background:linear-gradient(135deg,' + tu_track.c1 + ',' + tu_track.c2 + ')';
+		}
+
+		function tu_pickRandom() {
+			var tu_n = tu_tracks.length;
+			var tu_pick = Math.floor(Math.random() * tu_n);
+			if (tu_n > 1 && tu_pick === tu_state.idx) {
+				tu_pick = (tu_pick + 1) % tu_n;
+			}
+			return tu_pick;
+		}
+
+		/* ================= 音频合成 ================= */
+		function tu_audio() {
+			if (!tu_audioCtx) {
+				var tu_Ctx = window.AudioContext || window.webkitAudioContext;
+				if (!tu_Ctx) {
+					return null;
+				}
+				tu_audioCtx = new tu_Ctx();
+				tu_master = tu_audioCtx.createGain();
+				tu_master.gain.value = 0.055;
+				tu_master.connect(tu_audioCtx.destination);
+			}
+			if (tu_audioCtx.state === 'suspended') {
+				tu_audioCtx.resume();
+			}
+			return tu_audioCtx;
+		}
+
+		function tu_note(tu_freq, tu_dur, tu_type, tu_gain) {
+			var tu_ctx = tu_audioCtx;
+			if (!tu_ctx) {
+				return;
+			}
+			var tu_osc = tu_ctx.createOscillator();
+			var tu_env = tu_ctx.createGain();
+			var tu_now = tu_ctx.currentTime;
+			tu_osc.type = tu_type || 'triangle';
+			tu_osc.frequency.value = tu_freq;
+			tu_env.gain.setValueAtTime(0.0001, tu_now);
+			tu_env.gain.exponentialRampToValueAtTime(tu_gain || 1, tu_now + 0.02);
+			tu_env.gain.exponentialRampToValueAtTime(0.0001, tu_now + tu_dur);
+			tu_osc.connect(tu_env);
+			tu_env.connect(tu_master);
+			tu_osc.start(tu_now);
+			tu_osc.stop(tu_now + tu_dur + 0.05);
+		}
+
+		function tu_startSynth() {
+			tu_stopSynth();
+			var tu_t = tu_tracks[tu_state.idx];
+			var tu_step = 60 / tu_t.bpm / 2;
+			tu_seqIndex = 0;
+			tu_seqTimer = setInterval(function () {
+				var tu_pat = tu_t.notes;
+				var tu_off = tu_pat[tu_seqIndex % tu_pat.length];
+				var tu_freq = 220 * Math.pow(2, tu_off / 12);
+				tu_note(tu_freq, tu_step * 0.92, 'triangle', 1);
+				if (tu_seqIndex % 4 === 0) {
+					tu_note(110 * Math.pow(2, (tu_off % 12) / 12), tu_step * 1.7, 'sine', 0.9);
+				}
+				tu_seqIndex += 1;
+			}, tu_step * 1000);
+		}
+
+		function tu_stopSynth() {
+			if (tu_seqTimer) {
+				clearInterval(tu_seqTimer);
+				tu_seqTimer = null;
+			}
+		}
+
+		/* ================= 进度计时 ================= */
+		function tu_startTick() {
+			tu_stopTick();
+			tu_tickTimer = setInterval(function () {
+				if (!tu_state.playing) {
+					return;
+				}
+				var tu_t = tu_tracks[tu_state.idx];
+				tu_state.time += 0.25;
+				if (tu_state.time >= tu_t.dur) {
+					if (tu_state.repeat) {
+						tu_state.time = 0;
+						tu_paintProgress();
+						tu_startSynth();
+						return;
+					}
+					tu_state.time = 0;
+					tu_nextTrack(true);
+					return;
+				}
+				tu_paintProgress();
+			}, 250);
+		}
+
+		function tu_stopTick() {
+			if (tu_tickTimer) {
+				clearInterval(tu_tickTimer);
+				tu_tickTimer = null;
+			}
+		}
+
+		/* ================= 界面绘制 ================= */
+		function tu_paintProgress() {
+			var tu_t = tu_tracks[tu_state.idx];
+			var tu_ratio = Math.min(1, tu_state.time / tu_t.dur);
+			var tu_fill = tu_el('tu_progressFill');
+			var tu_bar = tu_el('tu_progressBar');
+			tu_fill.style.width = (tu_ratio * 100).toFixed(2) + '%';
+			tu_bar.setAttribute('aria-valuenow', String(Math.round(tu_ratio * 100)));
+			tu_el('tu_timeNow').textContent = tu_fmt(tu_state.time);
+			tu_el('tu_timeAll').textContent = tu_fmt(tu_t.dur);
+		}
+
+		function tu_paintPlayer() {
+			var tu_t = tu_tracks[tu_state.idx];
+			var tu_art = tu_el('tu_discArt');
+			/* 封面改用阿里图标库插图，只切换每首歌的渐变底色 */
+			tu_art.style.cssText = tu_coverStyle(tu_t);
+			tu_el('tu_nowTitle').textContent = tu_t.title;
+			tu_el('tu_nowArtist').textContent = tu_t.artist + ' · ' + tu_t.mood;
+			tu_el('tu_timeAll').textContent = tu_fmt(tu_t.dur);
+			tu_paintProgress();
+		}
+
+		function tu_paintMini() {
+			if (!tu_state.started) {
+				return;
+			}
+			var tu_t = tu_tracks[tu_state.idx];
+			tu_el('tu_miniTitle').textContent = tu_t.title;
+			tu_el('tu_miniArtist').textContent = tu_t.artist;
+			var tu_cover = tu_el('tu_miniCover');
+			tu_cover.style.cssText = tu_coverStyle(tu_t);
+			tu_el('tu_mini').hidden = tu_state.view === 'player';
+		}
+
+		function tu_paintPlayIcons() {
+			var tu_playing = tu_state.playing;
+			tu_el('tu_playIcon').src = tu_playing ? 'icons/btn_pause.svg' : 'icons/btn_play.svg';
+			tu_el('tu_miniPlayIcon').src = tu_playing ? 'icons/btn_pause.svg' : 'icons/btn_play.svg';
+			var tu_disc = tu_el('tu_disc');
+			tu_disc.classList.toggle('tu_spin', tu_playing);
+		}
+
+		/* ================= 播放控制 ================= */
+		function tu_setPlaying(tu_on) {
+			if (tu_on && !tu_audio()) {
+				return;
+			}
+			tu_state.playing = tu_on;
+			if (tu_on) {
+				tu_startSynth();
+				tu_startTick();
+			} else {
+				tu_stopSynth();
+			}
+			tu_paintPlayIcons();
+		}
+
+		function tu_playTrack(tu_i, tu_autoplay) {
+			tu_state.idx = tu_i;
+			tu_state.time = 0;
+			tu_state.started = true;
+			tu_paintPlayer();
+			tu_paintMini();
+			if (tu_autoplay === false) {
+				tu_setPlaying(false);
+			} else {
+				tu_setPlaying(true);
+			}
+			tu_pushHistory(tu_i);
+		}
+
+		function tu_pushHistory(tu_i) {
+			var tu_h = tu_state.history;
+			tu_h = tu_h.filter(function (tu_x) {
+				return tu_x !== tu_i;
+			});
+			tu_h.unshift(tu_i);
+			if (tu_h.length > 5) {
+				tu_h.pop();
+			}
+			tu_state.history = tu_h;
+			tu_paintRecent();
+		}
+
+		function tu_nextTrack(tu_auto) {
+			var tu_i;
+			if (tu_state.shuffle) {
+				tu_i = tu_pickRandom();
+			} else {
+				tu_i = (tu_state.idx + 1) % tu_tracks.length;
+			}
+			tu_playTrack(tu_i, tu_auto !== false);
+		}
+
+		function tu_prevTrack() {
+			var tu_i;
+			if (tu_state.shuffle) {
+				tu_i = tu_pickRandom();
+			} else {
+				tu_i = (tu_state.idx - 1 + tu_tracks.length) % tu_tracks.length;
+			}
+			tu_playTrack(tu_i, true);
+		}
+
+		/* ================= 列表渲染 ================= */
+		function tu_songRow(tu_t) {
+			return '<li>' +
+				'<button class="tu_song" type="button" data-tu-id="' + tu_t.id + '">' +
+				'<span class="tu_song-cover" style="' + tu_coverStyle(tu_t) + '">' + tu_t.emoji + '</span>' +
+				'<span class="tu_song-info"><b>' + tu_t.title + '</b>' +
+				'<small>' + tu_t.artist + ' · ' + tu_t.mood + '</small></span>' +
+				'<span class="tu_song-right"><span class="tu_song-time">' + tu_fmt(tu_t.dur) + '</span>' +
+				'<img class="tu_ico" src="icons/btn_play.svg" alt="" width="15" height="15">' +
+				'</span></button></li>';
+		}
+
+		function tu_renderList(tu_box, tu_arr) {
+			if (!tu_box) {
+				return;
+			}
+			tu_box.innerHTML = tu_arr.length ? tu_arr.map(tu_songRow).join('') :
+				'<li class="tu_empty">没有找到相关歌曲，换个关键词试试～</li>';
+		}
+
+		function tu_renderPlaylists() {
+			var tu_box = tu_el('tu_playlists');
+			tu_box.innerHTML = tu_playlistData.map(function (tu_p) {
+				return '<button class="tu_playlist" type="button" data-tu-playlist="' + tu_p.title + '">' +
+					'<span class="tu_playlist-cover" style="background:linear-gradient(135deg,' + tu_p.c1 + ',' + tu_p.c2 + ')">' + tu_p.emoji + '</span>' +
+					'<b>' + tu_p.title + '</b><small>' + tu_p.sub + '</small></button>';
+			}).join('');
+		}
+
+		function tu_renderLib() {
+			var tu_box = tu_el('tu_libGrid');
+			tu_box.innerHTML = tu_libData.map(function (tu_p) {
+				return '<button class="tu_lib-card" type="button" data-tu-playlist="' + tu_p.title + '">' +
+					'<span class="tu_lib-cover" style="background:linear-gradient(135deg,' + tu_p.c1 + ',' + tu_p.c2 + ')">' + tu_p.emoji + '</span>' +
+					'<b>' + tu_p.title + '</b><small>' + tu_p.sub + '</small></button>';
+			}).join('');
+		}
+
+		function tu_renderRecent() {
+			var tu_box = tu_el('tu_recentList');
+			var tu_arr = tu_state.history.map(function (tu_i) {
+				return tu_tracks[tu_i];
+			});
+			if (!tu_arr.length) {
+				tu_box.innerHTML = '<li class="tu_empty">还没有播放记录，去首页挑一首吧～</li>';
+				return;
+			}
+			tu_renderList(tu_box, tu_arr);
+		}
+
+		function tu_paintRecent() {
+			tu_renderRecent();
+		}
+
+		/* ================= 视图切换 ================= */
+		function tu_switchView(tu_name) {
+			tu_state.view = tu_name;
+			tu_qsa('.tu_view').forEach(function (tu_v) {
+				tu_v.classList.toggle('tu_on', tu_v.getAttribute('data-tu-view') === tu_name);
+			});
+			tu_qsa('.tu_navbtn').forEach(function (tu_b) {
+				var tu_on = tu_b.getAttribute('data-tu-target') === tu_name;
+				tu_b.classList.toggle('tu_on', tu_on);
+				if (tu_on) {
+					tu_b.setAttribute('aria-current', 'page');
+				} else {
+					tu_b.removeAttribute('aria-current');
+				}
+			});
+			if (tu_state.started) {
+				tu_el('tu_mini').hidden = tu_name === 'player';
+			}
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+
+		/* ================= 搜索与筛选 ================= */
+		function tu_filterTracks() {
+			var tu_kw = (tu_el('tu_searchInput').value || '').trim().toLowerCase();
+			var tu_chipOn = document.querySelector('.tu_chip.tu_on');
+			var tu_mood = tu_chipOn ? tu_chipOn.getAttribute('data-tu-mood') : '全部';
+			var tu_arr = tu_tracks.filter(function (tu_t) {
+				var tu_hitMood = tu_mood === '全部' || tu_t.mood === tu_mood;
+				var tu_hitKw = !tu_kw ||
+					tu_t.title.toLowerCase().indexOf(tu_kw) > -1 ||
+					tu_t.artist.toLowerCase().indexOf(tu_kw) > -1 ||
+					tu_t.mood.toLowerCase().indexOf(tu_kw) > -1;
+				return tu_hitMood && tu_hitKw;
+			});
+			tu_renderList(tu_el('tu_findList'), tu_arr);
+		}
+
+		/* ================= 事件绑定 ================= */
+		function tu_bind() {
+			/* 底部导航 */
+			tu_qsa('.tu_navbtn').forEach(function (tu_b) {
+				tu_b.addEventListener('click', function () {
+					var tu_name = tu_b.getAttribute('data-tu-target');
+					if (tu_name === 'player' && !tu_state.started) {
+						tu_playTrack(0, false);
+					}
+					tu_switchView(tu_name);
+				});
+			});
+
+			/* 首页电台 */
+			tu_el('tu_heroBtn').addEventListener('click', function () {
+				tu_playTrack(tu_pickRandom(), true);
+				tu_switchView('player');
+			});
+
+			/* 歌曲点击（事件委托） */
+			document.addEventListener('click', function (tu_e) {
+				var tu_btn = tu_e.target.closest('.tu_song');
+				if (tu_btn) {
+					var tu_id = tu_btn.getAttribute('data-tu-id');
+					for (var tu_i = 0; tu_i < tu_tracks.length; tu_i += 1) {
+						if (tu_tracks[tu_i].id === tu_id) {
+							tu_playTrack(tu_i, true);
+							tu_switchView('player');
+							break;
+						}
+					}
+					return;
+				}
+
+				var tu_pl = tu_e.target.closest('[data-tu-playlist]');
+				if (tu_pl) {
+					tu_playTrack(tu_pickRandom(), true);
+					tu_switchView('player');
+				}
+			});
+
+			/* 迷你播放条 */
+			tu_el('tu_miniCover').addEventListener('click', function () {
+				tu_switchView('player');
+			});
+			tu_el('tu_miniPlay').addEventListener('click', function () {
+				tu_setPlaying(!tu_state.playing);
+			});
+			tu_el('tu_miniNext').addEventListener('click', function () {
+				tu_nextTrack(true);
+			});
+
+			/* 播放器控制 */
+			tu_el('tu_playBtn').addEventListener('click', function () {
+				tu_setPlaying(!tu_state.playing);
+			});
+			tu_el('tu_nextBtn').addEventListener('click', function () {
+				tu_nextTrack(true);
+			});
+			tu_el('tu_prevBtn').addEventListener('click', function () {
+				tu_prevTrack();
+			});
+
+			tu_el('tu_shuffleBtn').addEventListener('click', function () {
+				tu_state.shuffle = !tu_state.shuffle;
+				tu_el('tu_shuffleBtn').classList.toggle('tu_on', tu_state.shuffle);
+				tu_el('tu_shuffleBtn').setAttribute('aria-pressed', String(tu_state.shuffle));
+			});
+
+			tu_el('tu_repeatBtn').addEventListener('click', function () {
+				tu_state.repeat = !tu_state.repeat;
+				tu_el('tu_repeatBtn').classList.toggle('tu_on', tu_state.repeat);
+				tu_el('tu_repeatBtn').setAttribute('aria-pressed', String(tu_state.repeat));
+			});
+
+			/* 进度条点击跳转 */
+			tu_el('tu_progressBar').addEventListener('click', function (tu_e) {
+				var tu_rect = tu_e.currentTarget.getBoundingClientRect();
+				var tu_ratio = (tu_e.clientX - tu_rect.left) / tu_rect.width;
+				tu_ratio = Math.max(0, Math.min(1, tu_ratio));
+				var tu_t = tu_tracks[tu_state.idx];
+				tu_state.time = tu_ratio * tu_t.dur;
+				tu_paintProgress();
+			});
+
+			/* 搜索与心情筛选 */
+			tu_el('tu_searchInput').addEventListener('input', tu_filterTracks);
+			tu_qsa('.tu_chip').forEach(function (tu_c) {
+				tu_c.addEventListener('click', function () {
+					tu_qsa('.tu_chip').forEach(function (tu_x) {
+						tu_x.classList.toggle('tu_on', tu_x === tu_c);
+					});
+					tu_filterTracks();
+				});
+			});
+
+			/* 头像回到「我的」 */
+			tu_el('tu_avatarBtn').addEventListener('click', function () {
+				tu_switchView('mine');
+			});
+		}
+
+		/* ================= 初始化 ================= */
+		function tu_init() {
+			var tu_hour = new Date().getHours();
+			var tu_greet = '下午好';
+			if (tu_hour < 6) {
+				tu_greet = '夜深了';
+			} else if (tu_hour < 12) {
+				tu_greet = '早上好';
+			} else if (tu_hour < 18) {
+				tu_greet = '下午好';
+			} else {
+				tu_greet = '晚上好';
+			}
+			tu_el('tu_helloSub').textContent = tu_greet + '，涂玮轩';
+
+			tu_renderPlaylists();
+			tu_renderLib();
+			tu_renderList(tu_el('tu_homeList'), tu_tracks.slice(0, 6));
+			tu_filterTracks();
+			tu_renderRecent();
+			tu_paintPlayer();
+
+			var tu_repeat = tu_el('tu_repeatBtn');
+			tu_repeat.classList.toggle('tu_on', tu_state.repeat);
+
+			tu_bind();
+		}
+
+		tu_init();
+	})();
+</script>
+</body>
+</html>

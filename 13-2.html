@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lucide SVG 图标</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: radial-gradient(ellipse at 50% -10%, #0f2a25 0%, #0a1714 55%, #060d0b 100%);
+			color: #d7e7e1;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 44px 0 34px;
+			background: linear-gradient(135deg, #022c22 0%, #065f46 58%, #0d9488 100%);
+			border-radius: 0 0 28px 28px;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.14);
+			border: 1px solid rgba(255, 255, 255, 0.42);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 160ms ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 8px;
+			color: #6ee7b7;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 4px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: clamp(26px, 4vw, 38px);
+			font-weight: 700;
+			letter-spacing: 1px;
+		}
+
+		.tu_hl {
+			color: #6ee7b7;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 14px 0 0;
+			color: #c4e5db;
+			font-size: 15px;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: rgba(255, 255, 255, 0.14);
+			color: #a7f3d0;
+			font-family: Consolas, monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 18px 0 0;
+			color: #ffe6a1;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 1px;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+			padding: 36px 0 16px;
+		}
+
+		section {
+			margin-bottom: 42px;
+		}
+
+		h2 {
+			display: flex;
+			align-items: baseline;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 21px;
+		}
+
+		h2::before {
+			content: "";
+			width: 6px;
+			height: 20px;
+			border-radius: 3px;
+			background: #10b981;
+			transform: translateY(3px);
+		}
+
+		.tu_sub {
+			color: #7f9d94;
+			font-size: 13px;
+			font-weight: 400;
+		}
+
+		.tu_split {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 18px;
+		}
+
+		.tu_panel {
+			padding: 18px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 14px;
+		}
+
+		.tu_code {
+			margin: 0;
+			padding: 14px 16px;
+			overflow-x: auto;
+			background: #04100d;
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			border-radius: 12px;
+			color: #a7f3d0;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			line-height: 1.85;
+			white-space: pre;
+		}
+
+		.tu_code code {
+			font-family: inherit;
+		}
+
+		.tu_note {
+			margin: 12px 0 0;
+			color: #9cb6ae;
+			font-size: 13px;
+		}
+
+		.tu_note code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: rgba(255, 255, 255, 0.08);
+			color: #6ee7b7;
+			font-family: Consolas, monospace;
+		}
+
+		.tu_warn {
+			display: none;
+			margin: 0 0 24px;
+			padding: 12px 16px;
+			background: rgba(251, 191, 36, 0.12);
+			border: 1px solid rgba(251, 191, 36, 0.45);
+			border-radius: 12px;
+			color: #fcd34d;
+			font-size: 13px;
+		}
+
+		.tu_js-off .tu_warn {
+			display: block;
+		}
+
+		.tu_grid-icons {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_cell {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 16px 8px 12px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 12px;
+			color: #6ee7b7;
+			transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+		}
+
+		.tu_cell:hover {
+			transform: translateY(-4px);
+			border-color: rgba(16, 185, 129, 0.75);
+			background: rgba(16, 185, 129, 0.1);
+			box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+		}
+
+		.tu_cell svg {
+			width: 26px;
+			height: 26px;
+			transition: transform 160ms ease;
+		}
+
+		.tu_cell:hover svg {
+			transform: scale(1.18) rotate(6deg);
+		}
+
+		.tu_cell-name {
+			color: #93aca4;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+			word-break: break-all;
+			text-align: center;
+		}
+
+		.tu_swatches {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_swatch {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 18px 10px 12px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 12px;
+		}
+
+		.tu_swatch svg {
+			width: 30px;
+			height: 30px;
+		}
+
+		.tu_swatch span {
+			color: #93aca4;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_c-emerald svg { color: #34d399; }
+		.tu_c-teal svg { color: #2dd4bf; }
+		.tu_c-sky svg { color: #38bdf8; }
+		.tu_c-amber svg { color: #fbbf24; }
+		.tu_c-rose svg { color: #fb7185; }
+		.tu_c-violet svg { color: #a78bfa; }
+
+		.tu_rows {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-end;
+			gap: 26px;
+			padding: 20px 18px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 14px;
+			color: #6ee7b7;
+		}
+
+		.tu_sz {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.tu_sz span {
+			color: #93aca4;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_row-sz16 svg { width: 16px; height: 16px; }
+		.tu_row-sz24 svg { width: 24px; height: 24px; }
+		.tu_row-sz32 svg { width: 32px; height: 32px; }
+		.tu_row-sz48 svg { width: 48px; height: 48px; }
+		.tu_row-sz64 svg { width: 64px; height: 64px; }
+		.tu_row-sz96 svg { width: 96px; height: 96px; }
+
+		.tu_sws {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_sw {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 18px 10px 12px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 12px;
+			color: #6ee7b7;
+		}
+
+		.tu_sw svg {
+			width: 28px;
+			height: 28px;
+		}
+
+		.tu_sw span {
+			color: #93aca4;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_sw-1 svg { stroke-width: 1; }
+		.tu_sw-1-5 svg { stroke-width: 1.5; }
+		.tu_sw-2 svg { stroke-width: 2; }
+		.tu_sw-2-5 svg { stroke-width: 2.5; }
+		.tu_sw-3 svg { stroke-width: 3; }
+		.tu_sw-4 svg { stroke-width: 4; }
+
+		.tu_anims {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_anim {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 8px;
+			padding: 20px 10px 14px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 12px;
+			color: #6ee7b7;
+		}
+
+		.tu_anim svg {
+			width: 32px;
+			height: 32px;
+		}
+
+		.tu_anim span {
+			color: #93aca4;
+			font-family: Consolas, monospace;
+			font-size: 12px;
+		}
+
+		.tu_spin svg { animation: tu_spin 2.8s linear infinite; }
+		.tu_beat svg { animation: tu_beat 1.4s ease-in-out infinite; }
+		.tu_launch svg { animation: tu_launch 1.8s ease-in-out infinite; }
+		.tu_swing svg { animation: tu_swing 1.9s ease-in-out infinite; }
+
+		@keyframes tu_spin {
+			to { transform: rotate(360deg); }
+		}
+
+		@keyframes tu_beat {
+			0%, 100% { transform: scale(1); }
+			25% { transform: scale(1.22); }
+			45% { transform: scale(0.96); }
+			60% { transform: scale(1.1); }
+		}
+
+		@keyframes tu_launch {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-12px); }
+		}
+
+		@keyframes tu_swing {
+			0%, 100% { transform: rotate(-14deg); }
+			50% { transform: rotate(14deg); }
+		}
+
+		.tu_inline-demo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 26px;
+			padding: 26px 18px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 14px;
+			color: #34d399;
+		}
+
+		.tu_inline-demo svg {
+			width: 56px;
+			height: 56px;
+		}
+
+		.tu_table-wrap {
+			overflow-x: auto;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 14px;
+		}
+
+		table {
+			width: 100%;
+			min-width: 560px;
+			border-collapse: collapse;
+			font-size: 14px;
+		}
+
+		th,
+		td {
+			padding: 12px 16px;
+			text-align: left;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			vertical-align: top;
+		}
+
+		thead th {
+			background: rgba(16, 185, 129, 0.14);
+			color: #a7f3d0;
+			font-size: 13px;
+			letter-spacing: 0.5px;
+		}
+
+		tbody tr:last-child th,
+		tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		tbody tr:nth-child(even) {
+			background: rgba(255, 255, 255, 0.03);
+		}
+
+		tbody th {
+			color: #b6d8ce;
+			font-weight: 600;
+			white-space: nowrap;
+		}
+
+		th code,
+		td code {
+			padding: 1px 5px;
+			border-radius: 5px;
+			background: rgba(255, 255, 255, 0.08);
+			color: #a7f3d0;
+			font-family: Consolas, monospace;
+			font-size: 13px;
+		}
+
+		.tu_list {
+			margin: 0;
+			padding: 18px 20px 18px 40px;
+			background: rgba(255, 255, 255, 0.045);
+			border: 1px solid rgba(255, 255, 255, 0.09);
+			border-radius: 14px;
+			font-size: 14px;
+		}
+
+		.tu_list li {
+			margin: 7px 0;
+		}
+
+		.tu_list code {
+			padding: 1px 6px;
+			border-radius: 6px;
+			background: rgba(255, 255, 255, 0.08);
+			color: #6ee7b7;
+			font-family: Consolas, monospace;
+			font-size: 13px;
+		}
+
+		footer {
+			padding: 22px 24px 36px;
+			text-align: center;
+			color: #7f9d94;
+			font-size: 13px;
+		}
+
+		footer a {
+			color: #6ee7b7;
+		}
+
+		.tu_count {
+			color: #6ee7b7;
+			font-family: Consolas, monospace;
+		}
+
+		@media (max-width: 480px) {
+			.tu_hero {
+				padding-top: 32px;
+			}
+
+			h2 {
+				font-size: 18px;
+			}
+
+			.tu_rows {
+				gap: 18px;
+			}
+
+			.tu_row-sz96 svg {
+				width: 64px;
+				height: 64px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.tu_cell,
+			.tu_cell svg {
+				transition: none;
+			}
+
+			.tu_spin svg,
+			.tu_beat svg,
+			.tu_launch svg,
+			.tu_swing svg {
+				animation: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">LESSON 13-2 · LUCIDE</p>
+			<h1>线性图标：<span class="tu_hl">Lucide（SVG）</span></h1>
+			<p class="tu_lead">这里的每一个图标都是页面里<strong>真实的 <code>&lt;svg&gt;</code> 节点</strong>：24×24 的视口、描边用 <code>currentColor</code>、粗细由 <code>stroke-width</code> 控制。写完 <code>&lt;i data-lucide="star"&gt;</code> 后由本地脚本替换成 SVG。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<p class="tu_warn">⚠ 本地脚本 <code>cdn/lucide/lucide.min.js</code> 没有加载成功，图标无法渲染。请确认文件存在（见页面底部说明）——这正体现了 SVG 方案对 JS 的依赖。</p>
+
+		<section aria-labelledby="tu_how-title">
+			<h2 id="tu_how-title">原理：JS 把占位标签换成 SVG <span class="tu_sub">图标本体是一段矢量路径</span></h2>
+			<div class="tu_split">
+				<div class="tu_panel">
+					<pre class="tu_code"><code>&lt;!-- 你写的：一个占位标签 --&gt;
+&lt;i data-lucide="star"&gt;&lt;/i&gt;
+
+&lt;!-- 脚本跑完后，DOM 里变成这样 --&gt;
+&lt;svg class="lucide lucide-star" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;path d="M11.5 2.3a.5.5 0 0 1 .95 0l2.3 4.7…"&gt;&lt;/path&gt;
+&lt;/svg&gt;</code></pre>
+					<p class="tu_note">页面底部加载 <code>cdn/lucide/lucide.min.js</code>（Lucide 1.59.0 UMD 版），再调用 <code>lucide.createIcons()</code> 完成替换。当前页共渲染出 <span class="tu_count" id="tu_svg-count">—</span> 个 SVG。</p>
+				</div>
+				<div class="tu_panel">
+					<div class="tu_inline-demo">
+						<i data-lucide="star"></i>
+						<i data-lucide="heart"></i>
+						<i data-lucide="zap"></i>
+					</div>
+					<p class="tu_note">右键 → 检查，可以看到它们是 <code>&lt;svg&gt;&lt;path&gt;</code>，不是字体字形。所以能用 CSS 单独控制描边宽度、线条端点和填充。</p>
+				</div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_grid-title">
+			<h2 id="tu_grid-title">常用图标 <span class="tu_sub">每个标签都写着对应的 data-lucide 名称</span></h2>
+			<div class="tu_grid-icons">
+				<div class="tu_cell" title="data-lucide=&quot;star&quot;"><i data-lucide="star"></i><span class="tu_cell-name">star</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;heart&quot;"><i data-lucide="heart"></i><span class="tu_cell-name">heart</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;user&quot;"><i data-lucide="user"></i><span class="tu_cell-name">user</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;house&quot;"><i data-lucide="house"></i><span class="tu_cell-name">house</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;search&quot;"><i data-lucide="search"></i><span class="tu_cell-name">search</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;settings&quot;"><i data-lucide="settings"></i><span class="tu_cell-name">settings</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;bell&quot;"><i data-lucide="bell"></i><span class="tu_cell-name">bell</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;mail&quot;"><i data-lucide="mail"></i><span class="tu_cell-name">mail</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;calendar&quot;"><i data-lucide="calendar"></i><span class="tu_cell-name">calendar</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;camera&quot;"><i data-lucide="camera"></i><span class="tu_cell-name">camera</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;cloud&quot;"><i data-lucide="cloud"></i><span class="tu_cell-name">cloud</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;download&quot;"><i data-lucide="download"></i><span class="tu_cell-name">download</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;trash-2&quot;"><i data-lucide="trash-2"></i><span class="tu_cell-name">trash-2</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;book&quot;"><i data-lucide="book"></i><span class="tu_cell-name">book</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;music&quot;"><i data-lucide="music"></i><span class="tu_cell-name">music</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;image&quot;"><i data-lucide="image"></i><span class="tu_cell-name">image</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;message-circle&quot;"><i data-lucide="message-circle"></i><span class="tu_cell-name">message-circle</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;thumbs-up&quot;"><i data-lucide="thumbs-up"></i><span class="tu_cell-name">thumbs-up</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;zap&quot;"><i data-lucide="zap"></i><span class="tu_cell-name">zap</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;rocket&quot;"><i data-lucide="rocket"></i><span class="tu_cell-name">rocket</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;trophy&quot;"><i data-lucide="trophy"></i><span class="tu_cell-name">trophy</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;shield&quot;"><i data-lucide="shield"></i><span class="tu_cell-name">shield</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;code&quot;"><i data-lucide="code"></i><span class="tu_cell-name">code</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;palette&quot;"><i data-lucide="palette"></i><span class="tu_cell-name">palette</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;sun&quot;"><i data-lucide="sun"></i><span class="tu_cell-name">sun</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;moon&quot;"><i data-lucide="moon"></i><span class="tu_cell-name">moon</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;coffee&quot;"><i data-lucide="coffee"></i><span class="tu_cell-name">coffee</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;clock&quot;"><i data-lucide="clock"></i><span class="tu_cell-name">clock</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;map-pin&quot;"><i data-lucide="map-pin"></i><span class="tu_cell-name">map-pin</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;gift&quot;"><i data-lucide="gift"></i><span class="tu_cell-name">gift</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;graduation-cap&quot;"><i data-lucide="graduation-cap"></i><span class="tu_cell-name">graduation-cap</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;lightbulb&quot;"><i data-lucide="lightbulb"></i><span class="tu_cell-name">lightbulb</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;flame&quot;"><i data-lucide="flame"></i><span class="tu_cell-name">flame</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;leaf&quot;"><i data-lucide="leaf"></i><span class="tu_cell-name">leaf</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;globe&quot;"><i data-lucide="globe"></i><span class="tu_cell-name">globe</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;lock&quot;"><i data-lucide="lock"></i><span class="tu_cell-name">lock</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;key&quot;"><i data-lucide="key"></i><span class="tu_cell-name">key</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;wifi&quot;"><i data-lucide="wifi"></i><span class="tu_cell-name">wifi</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;folder&quot;"><i data-lucide="folder"></i><span class="tu_cell-name">folder</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;file-text&quot;"><i data-lucide="file-text"></i><span class="tu_cell-name">file-text</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;chart-line&quot;"><i data-lucide="chart-line"></i><span class="tu_cell-name">chart-line</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;database&quot;"><i data-lucide="database"></i><span class="tu_cell-name">database</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;server&quot;"><i data-lucide="server"></i><span class="tu_cell-name">server</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;terminal&quot;"><i data-lucide="terminal"></i><span class="tu_cell-name">terminal</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;cpu&quot;"><i data-lucide="cpu"></i><span class="tu_cell-name">cpu</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;gamepad-2&quot;"><i data-lucide="gamepad-2"></i><span class="tu_cell-name">gamepad-2</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;headphones&quot;"><i data-lucide="headphones"></i><span class="tu_cell-name">headphones</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;umbrella&quot;"><i data-lucide="umbrella"></i><span class="tu_cell-name">umbrella</span></div>
+				<div class="tu_cell" title="data-lucide=&quot;laptop&quot;"><i data-lucide="laptop"></i><span class="tu_cell-name">laptop</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_stroke-title">
+			<h2 id="tu_stroke-title">描边粗细 <span class="tu_sub">同一份路径，只改 stroke-width</span></h2>
+			<div class="tu_sws">
+				<div class="tu_sw tu_sw-1"><i data-lucide="star"></i><span>stroke-width: 1</span></div>
+				<div class="tu_sw tu_sw-1-5"><i data-lucide="star"></i><span>stroke-width: 1.5</span></div>
+				<div class="tu_sw tu_sw-2"><i data-lucide="star"></i><span>stroke-width: 2</span></div>
+				<div class="tu_sw tu_sw-2-5"><i data-lucide="star"></i><span>stroke-width: 2.5</span></div>
+				<div class="tu_sw tu_sw-3"><i data-lucide="star"></i><span>stroke-width: 3</span></div>
+				<div class="tu_sw tu_sw-4"><i data-lucide="star"></i><span>stroke-width: 4</span></div>
+			</div>
+			<p class="tu_note">这是字体图标做不到的：字体只有固定字重，而 SVG 的描边是节点属性，可以被 CSS 覆盖成任意数值。</p>
+		</section>
+
+		<section aria-labelledby="tu_color-title">
+			<h2 id="tu_color-title">颜色 <span class="tu_sub">描边用 currentColor，跟着父级 color 走</span></h2>
+			<div class="tu_swatches">
+				<div class="tu_swatch tu_c-emerald"><i data-lucide="leaf"></i><span>#34d399</span></div>
+				<div class="tu_swatch tu_c-teal"><i data-lucide="droplets"></i><span>#2dd4bf</span></div>
+				<div class="tu_swatch tu_c-sky"><i data-lucide="cloud"></i><span>#38bdf8</span></div>
+				<div class="tu_swatch tu_c-amber"><i data-lucide="sun"></i><span>#fbbf24</span></div>
+				<div class="tu_swatch tu_c-rose"><i data-lucide="heart"></i><span>#fb7185</span></div>
+				<div class="tu_swatch tu_c-violet"><i data-lucide="palette"></i><span>#a78bfa</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_size-title">
+			<h2 id="tu_size-title">尺寸 <span class="tu_sub">改 width / height，24 的视口会等比缩放</span></h2>
+			<div class="tu_rows">
+				<span class="tu_sz tu_row-sz16"><i data-lucide="star"></i><span>16px</span></span>
+				<span class="tu_sz tu_row-sz24"><i data-lucide="star"></i><span>24px</span></span>
+				<span class="tu_sz tu_row-sz32"><i data-lucide="star"></i><span>32px</span></span>
+				<span class="tu_sz tu_row-sz48"><i data-lucide="star"></i><span>48px</span></span>
+				<span class="tu_sz tu_row-sz64"><i data-lucide="star"></i><span>64px</span></span>
+				<span class="tu_sz tu_row-sz96"><i data-lucide="star"></i><span>96px</span></span>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_anim-title">
+			<h2 id="tu_anim-title">动效 <span class="tu_sub">SVG 节点同样能用 transform 动画</span></h2>
+			<div class="tu_anims">
+				<div class="tu_anim tu_spin"><i data-lucide="settings"></i><span>旋转 tu_spin</span></div>
+				<div class="tu_anim tu_beat"><i data-lucide="heart"></i><span>心跳 tu_beat</span></div>
+				<div class="tu_anim tu_launch"><i data-lucide="rocket"></i><span>上浮 tu_launch</span></div>
+				<div class="tu_anim tu_swing"><i data-lucide="bell"></i><span>摇摆 tu_swing</span></div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_inline-title">
+			<h2 id="tu_inline-title">手写内联 SVG <span class="tu_sub">不依赖任何脚本，最“纯”的用法</span></h2>
+			<div class="tu_split">
+				<div class="tu_panel">
+					<pre class="tu_code"><code>&lt;svg viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;circle cx="12" cy="12" r="9"&gt;&lt;/circle&gt;
+  &lt;circle cx="12" cy="12" r="4"&gt;&lt;/circle&gt;
+  &lt;path d="M12 3v3M12 18v3M3 12h3M18 12h3"&gt;&lt;/path&gt;
+&lt;/svg&gt;</code></pre>
+					<p class="tu_note">自己写 <code>path</code> 的好处：完全可控、可离线、不需要 JS、也不增加额外请求。缺点是图形得自己画。</p>
+				</div>
+				<div class="tu_panel">
+					<div class="tu_inline-demo">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<circle cx="12" cy="12" r="9"></circle>
+							<circle cx="12" cy="12" r="4"></circle>
+							<path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path>
+						</svg>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M3 17l5-6 4 4 3-3 6 7"></path>
+							<circle cx="7" cy="7" r="2.5"></circle>
+						</svg>
+					</div>
+					<p class="tu_note">上面两个图形是纯静态写在 HTML 里的，即使脚本被禁用也照样显示。</p>
+				</div>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_diff-title">
+			<h2 id="tu_diff-title">和字体图标对比 <span class="tu_sub">13-1 页用的是 Font Awesome 字体方案</span></h2>
+			<div class="tu_table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th scope="col">维度</th>
+							<th scope="col">Font Awesome（字体图标，见 13-1）</th>
+							<th scope="col">Lucide（SVG，本页）</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">图标本体</th>
+							<td>字体文件里的一个字形，靠 <code>--fa</code> 编码映射</td>
+							<td>DOM 里的 <code>&lt;svg&gt;</code> + <code>&lt;path&gt;</code> 路径</td>
+						</tr>
+						<tr>
+							<th scope="row">引入方式</th>
+							<td>一个 CSS + 字体文件，纯静态</td>
+							<td>一个 JS 脚本，运行时替换成 SVG</td>
+						</tr>
+						<tr>
+							<th scope="row">依赖脚本</th>
+							<td>不依赖</td>
+							<td>依赖，脚本失败图标就不出现</td>
+						</tr>
+						<tr>
+							<th scope="row">上色</th>
+							<td><code>color</code></td>
+							<td><code>color</code>（<code>currentColor</code>）</td>
+						</tr>
+						<tr>
+							<th scope="row">描边粗细</th>
+							<td>不可调，只有固定字重</td>
+							<td>任意，<code>stroke-width</code> 实时生效</td>
+						</tr>
+						<tr>
+							<th scope="row">品牌图标</th>
+							<td>有（github / weixin / bilibili 等）</td>
+							<td>1.x 版本已移除，只做 UI 线性图标</td>
+						</tr>
+						<tr>
+							<th scope="row">本地体积</th>
+							<td>4 个字体子集约 0.3 MB</td>
+							<td>单个 UMD 脚本约 0.45 MB</td>
+						</tr>
+						<tr>
+							<th scope="row">单独取出</th>
+							<td>只能复制字符，拿不到图形</td>
+							<td>右键复制整个 SVG 就能带走</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section aria-labelledby="tu_limit-title">
+			<h2 id="tu_limit-title">本页说明与局限 <span class="tu_sub">用 SVG 方案的注意点</span></h2>
+			<ul class="tu_list">
+				<li>脚本已下载到本地 <code>cdn/lucide/lucide.min.js</code>（Lucide 1.59.0，ISC 许可），断网可用；页面底部先引脚本、再调用 <code>lucide.createIcons()</code>。</li>
+				<li><code>createIcons()</code> 是「一次性」的：之后用 JS 动态插入的 <code>&lt;i data-lucide&gt;</code> 需要再调用一次，否则不会变成 SVG。</li>
+				<li>图标名找不到时，替换函数会跳过并在控制台给出警告，页面上只剩空标签。</li>
+				<li>Lucide 1.x 不再包含品牌 Logo（github、twitter 等），这类需求仍需 Font Awesome 的 <code>fa-brands</code>。</li>
+				<li>若只用到十几个图标，生产环境建议按需打包（或用 sprite 内联），不要整包引入 0.45 MB。</li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 第 13 课：图标方案对比</p>
+		<p>图标由 <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide 1.59.0</a> 提供（ISC 许可），脚本已本地化至 <code>cdn/lucide/</code>；每个图标都是真实的内联 SVG。</p>
+	</footer>
+
+	<script src="cdn/lucide/lucide.min.js"></script>
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_lucide = window.lucide;
+			var tu_counter = document.getElementById('tu_svg-count');
+
+			if (!tu_lucide || typeof tu_lucide.createIcons !== 'function') {
+				document.body.classList.add('tu_js-off');
+				return;
+			}
+
+			tu_lucide.createIcons({
+				icons: tu_lucide.icons,
+				attrs: { 'stroke-width': 2 }
+			});
+
+			var tu_svgTotal = document.querySelectorAll('svg.lucide').length;
+			if (tu_counter) {
+				tu_counter.textContent = String(tu_svgTotal);
+			}
+		})();
+	</script>
+</body>
+</html>
