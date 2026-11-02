@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JS 定时器 · setTimeout 与 setInterval</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[hidden] {
+			display: none !important;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f5f2fb;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #2e1065 0%, #7c3aed 56%, #db2777 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.78;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 720px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			background: rgba(255, 255, 255, 0.18);
+			border-radius: 6px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.72;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(46, 16, 101, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #2e1065;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			align-self: center;
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#7c3aed, #db2777);
+		}
+
+		.tu_sub {
+			color: #9b8fb8;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			font-weight: 400;
+		}
+
+		.tu_row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_select {
+			padding: 8px 14px;
+			background: #f8f5ff;
+			border: 1px solid #ddd0f2;
+			border-radius: 999px;
+			color: #2e1065;
+			font-family: inherit;
+			font-size: 14px;
+		}
+
+		.tu_select:focus {
+			outline: 2px solid #c4b5fd;
+			border-color: #7c3aed;
+		}
+
+		.tu_btn {
+			display: inline-block;
+			padding: 8px 18px;
+			background: linear-gradient(135deg, #7c3aed, #db2777);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 13.5px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(124, 58, 237, 0.32);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.5;
+			cursor: not-allowed;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_btn-ghost {
+			background: #f3e8ff;
+			border: 1px solid #e9d5ff;
+			color: #6b21a8;
+		}
+
+		.tu_bar-track {
+			position: relative;
+			height: 12px;
+			margin: 18px 0 0;
+			overflow: hidden;
+			background: #f1eafd;
+			border-radius: 999px;
+		}
+
+		.tu_bar-fill {
+			width: 0;
+			height: 100%;
+			background: linear-gradient(90deg, #7c3aed, #db2777);
+			border-radius: 999px;
+		}
+
+		.tu_status {
+			margin: 14px 0 0;
+			color: #6b5f7a;
+			font-size: 14px;
+		}
+
+		.tu_status code {
+			padding: 1px 6px;
+			background: #f3e8ff;
+			border-radius: 6px;
+			color: #7c3aed;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		.tu_fire {
+			color: #db2777;
+			font-weight: 600;
+		}
+
+		.tu_clock {
+			margin: 6px 0 0;
+			color: #2e1065;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: clamp(34px, 8vw, 58px);
+			font-variant-numeric: tabular-nums;
+			letter-spacing: 0.06em;
+			line-height: 1.2;
+		}
+
+		.tu_stats {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin: 14px 0 0;
+		}
+
+		.tu_stat {
+			padding: 8px 16px;
+			background: #f8f5ff;
+			border: 1px solid #ece0fd;
+			border-radius: 12px;
+			color: #6b5f7a;
+			font-size: 13px;
+		}
+
+		.tu_stat b {
+			margin-left: 6px;
+			color: #7c3aed;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 15px;
+		}
+
+		.tu_order-log {
+			display: grid;
+			gap: 8px;
+			margin: 14px 0 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.tu_order-item {
+			padding: 9px 14px;
+			background: #f8f5ff;
+			border: 1px solid #ece0fd;
+			border-radius: 10px;
+			color: #4c3d63;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_order-item b {
+			color: #7c3aed;
+		}
+
+		.tu_compare {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13.5px;
+			overflow: hidden;
+			border: 1px solid #ece3f7;
+			border-radius: 14px;
+		}
+
+		.tu_compare th,
+		.tu_compare td {
+			padding: 10px 14px;
+			text-align: left;
+			border-bottom: 1px solid #f3edfb;
+			vertical-align: top;
+		}
+
+		.tu_compare thead th {
+			background: #f3e8ff;
+			color: #4c1d95;
+			white-space: nowrap;
+		}
+
+		.tu_compare tbody th {
+			background: #fbf9ff;
+			color: #6b5f7a;
+			font-weight: 500;
+			white-space: nowrap;
+		}
+
+		.tu_compare tbody tr:last-child th,
+		.tu_compare tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.tu_compare code {
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			color: #9d174d;
+		}
+
+		.tu_snippet {
+			margin: 0;
+			padding: 16px 18px;
+			overflow: auto;
+			background: #1e1033;
+			border-radius: 12px;
+			color: #e9e2f7;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.75;
+			white-space: pre;
+		}
+
+		.tu_note-list {
+			margin: 0;
+			padding-left: 20px;
+			color: #4b4157;
+			font-size: 14px;
+		}
+
+		.tu_note-list li {
+			margin-bottom: 8px;
+		}
+
+		.tu_note-list code {
+			padding: 1px 6px;
+			background: #f3e8ff;
+			border-radius: 6px;
+			color: #7c3aed;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		footer {
+			width: min(100% - 48px, 1080px);
+			margin: 6px auto 40px;
+			color: #8a7fa0;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_compare th,
+			.tu_compare td {
+				padding: 9px 10px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-5 · Timers</p>
+			<h1>JS 的两种定时器</h1>
+			<p class="tu_lead"><code>setTimeout</code> 到点执行一次，<code>setInterval</code> 每隔一段时间执行一次；两个都会返回一个 ID，交给 <code>clearTimeout</code> / <code>clearInterval</code> 就能取消。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_timeout-title">
+			<h2 id="tu_timeout-title">一、setTimeout <span class="tu_sub">只执行一次</span></h2>
+
+			<div class="tu_row">
+				<select class="tu_select" id="tu_delay" aria-label="延迟时间">
+					<option value="1000">1 秒后执行</option>
+					<option value="2000" selected>2 秒后执行</option>
+					<option value="3000">3 秒后执行</option>
+				</select>
+				<button class="tu_btn" id="tu_start" type="button">开始计时</button>
+				<button class="tu_btn tu_btn-ghost" id="tu_clear" type="button" disabled>取消（clearTimeout）</button>
+			</div>
+
+			<div class="tu_bar-track" aria-hidden="true">
+				<div class="tu_bar-fill" id="tu_bar"></div>
+			</div>
+
+			<p class="tu_status" id="tu_timeout-status" role="status">还没开始。选中延迟后点「开始计时」。</p>
+
+			<div class="tu_stats">
+				<span class="tu_stat">回调执行次数<b id="tu_runs">0</b></span>
+				<span class="tu_stat">定时器 ID<b id="tu_timeout-id">—</b></span>
+			</div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_interval-title">
+			<h2 id="tu_interval-title">二、setInterval <span class="tu_sub">每隔一秒执行一次</span></h2>
+
+			<p class="tu_clock" id="tu_clock">--:--:--</p>
+
+			<div class="tu_row">
+				<button class="tu_btn" id="tu_interval-start" type="button">开始计时</button>
+				<button class="tu_btn tu_btn-ghost" id="tu_interval-pause" type="button" disabled>暂停（clearInterval）</button>
+				<button class="tu_btn tu_btn-ghost" id="tu_interval-reset" type="button" disabled>清零</button>
+			</div>
+
+			<p class="tu_status" id="tu_interval-status" role="status">未启动。点「开始计时」，时钟每秒走一格。</p>
+
+			<div class="tu_stats">
+				<span class="tu_stat">已经走了<b id="tu_ticks">0</b>秒</span>
+				<span class="tu_stat">定时器 ID<b id="tu_interval-id">—</b></span>
+			</div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_order-title">
+			<h2 id="tu_order-title">三、顺带看看执行顺序 <span class="tu_sub">同步 → 微任务 → 宏任务</span></h2>
+			<p class="tu_status">同步代码先跑；Promise 的 <code>.then</code> 是微任务，紧跟其后；<code>setTimeout(fn, 0)</code> 是宏任务，排在最后——哪怕写的是 0 毫秒。</p>
+			<button class="tu_btn" id="tu_order-run" type="button">跑一次，看输出顺序</button>
+			<ul class="tu_order-log" id="tu_order-log"></ul>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_compare-title">
+			<h2 id="tu_compare-title">四、两者对比</h2>
+			<table class="tu_compare">
+				<thead>
+					<tr>
+						<th scope="col">对比项</th>
+						<th scope="col">setTimeout</th>
+						<th scope="col">setInterval</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">执行次数</th>
+						<td>只执行 <b>一次</b></td>
+						<td>一直重复，直到被清除</td>
+					</tr>
+					<tr>
+						<th scope="row">返回值</th>
+						<td>数字 ID（浏览器里从 1 开始递增）</td>
+						<td>数字 ID</td>
+					</tr>
+					<tr>
+						<th scope="row">停止方式</th>
+						<td><code>clearTimeout(id)</code></td>
+						<td><code>clearInterval(id)</code></td>
+					</tr>
+					<tr>
+						<th scope="row">时间含义</th>
+						<td>等多久之后执行</td>
+						<td>每两次执行之间隔多久</td>
+					</tr>
+					<tr>
+						<th scope="row">典型用途</th>
+						<td>延迟提示、防抖、失败后重试、动画收尾</td>
+						<td>时钟、倒计时、轮播、进度轮询</td>
+					</tr>
+					<tr>
+						<th scope="row">要注意</th>
+						<td>写 0 也不是立刻执行，是「尽快」排进任务队列</td>
+						<td>页面切到后台会被浏览器限速；回调里报错也不会自动停</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_code-title">
+			<h2 id="tu_code-title">五、核心代码</h2>
+			<pre class="tu_snippet">// 一次性：2 秒后执行，返回 ID 可以取消
+var id = setTimeout(function () {
+  console.log('时间到');
+}, 2000);
+clearTimeout(id);
+
+// 周期性：每 1 秒执行一次
+var clockId = setInterval(function () {
+  clock.textContent = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+}, 1000);
+clearInterval(clockId);</pre>
+			<ul class="tu_note-list">
+				<li>定时器的计时并不精确：主线程忙时，回调只能排队等着，所以实际触发时间往往比设定值晚一点。</li>
+				<li><code>setInterval</code> 的回调执行时间会比间隔长吗？会——如果一次回调耗时 1.2 秒，而间隔是 1 秒，队列里就会堆积，这时用「<code>setTimeout</code> 里再排一个 <code>setTimeout</code>」更稳。</li>
+				<li>两个定时器都不阻止页面继续执行，它们是异步的：代码先往下走，时间到了才回来执行回调。</li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-5 · setTimeout 与 setInterval</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			/* ---------------- 一、setTimeout ---------------- */
+			var tu_delay = document.getElementById('tu_delay');
+			var tu_start = document.getElementById('tu_start');
+			var tu_clear = document.getElementById('tu_clear');
+			var tu_bar = document.getElementById('tu_bar');
+			var tu_timeoutStatus = document.getElementById('tu_timeout-status');
+			var tu_runs = document.getElementById('tu_runs');
+			var tu_timeoutIdView = document.getElementById('tu_timeout-id');
+
+			var tu_timeoutId = null;
+			var tu_runCount = 0;
+
+			function tu_resetBar() {
+				tu_bar.style.transition = 'none';
+				tu_bar.style.width = '0%';
+			}
+
+			function tu_startTimeout() {
+				if (tu_timeoutId !== null) {
+					window.clearTimeout(tu_timeoutId);
+					tu_timeoutId = null;
+				}
+
+				var tu_ms = Number(tu_delay.value);
+				tu_runCount = 0;
+				tu_runs.textContent = '0';
+
+				tu_timeoutId = window.setTimeout(function () {
+					tu_runCount = tu_runCount + 1;
+					tu_runs.textContent = String(tu_runCount);
+					tu_timeoutIdView.textContent = '—';
+					tu_timeoutId = null;
+					tu_clear.disabled = true;
+					tu_timeoutStatus.textContent = '到点！回调执行完毕（' + new Date().toLocaleTimeString('zh-CN', { hour12: false }) + '），次数停在 1 —— setTimeout 不会再来第二次。';
+					tu_timeoutStatus.className = 'tu_status tu_fire';
+					tu_resetBar();
+				}, tu_ms);
+
+				tu_timeoutIdView.textContent = String(tu_timeoutId);
+				tu_clear.disabled = false;
+				tu_timeoutStatus.className = 'tu_status';
+				tu_timeoutStatus.textContent = '已安排：setTimeout 返回 ID ' + tu_timeoutId + '，' + (tu_ms / 1000) + ' 秒后执行一次。';
+
+				/* 进度条只是视觉提示：用 CSS transition 走完这段延迟 */
+				tu_bar.style.transition = 'none';
+				tu_bar.style.width = '100%';
+				void tu_bar.offsetWidth;
+				tu_bar.style.transition = 'width ' + tu_ms + 'ms linear';
+				tu_bar.style.width = '0%';
+			}
+
+			function tu_cancelTimeout() {
+				if (tu_timeoutId === null) {
+					return;
+				}
+				window.clearTimeout(tu_timeoutId);
+				tu_timeoutId = null;
+				tu_timeoutIdView.textContent = '—';
+				tu_clear.disabled = true;
+				tu_timeoutStatus.className = 'tu_status';
+				tu_timeoutStatus.textContent = '已取消：clearTimeout 之后，那个回调永远不会执行，次数保持 0。';
+				tu_resetBar();
+			}
+
+			tu_start.addEventListener('click', tu_startTimeout);
+			tu_clear.addEventListener('click', tu_cancelTimeout);
+
+			/* ---------------- 二、setInterval ---------------- */
+			var tu_clock = document.getElementById('tu_clock');
+			var tu_intervalStart = document.getElementById('tu_interval-start');
+			var tu_intervalPause = document.getElementById('tu_interval-pause');
+			var tu_intervalReset = document.getElementById('tu_interval-reset');
+			var tu_intervalStatus = document.getElementById('tu_interval-status');
+			var tu_ticks = document.getElementById('tu_ticks');
+			var tu_intervalIdView = document.getElementById('tu_interval-id');
+
+			var tu_intervalId = null;
+			var tu_tickCount = 0;
+
+			function tu_nowText() {
+				return new Date().toLocaleTimeString('zh-CN', { hour12: false });
+			}
+
+			function tu_tick() {
+				tu_tickCount = tu_tickCount + 1;
+				tu_clock.textContent = tu_nowText();
+				tu_ticks.textContent = String(tu_tickCount);
+			}
+
+			function tu_startInterval() {
+				if (tu_intervalId !== null) {
+					return;
+				}
+				tu_tick();
+				tu_intervalId = window.setInterval(tu_tick, 1000);
+
+				tu_intervalIdView.textContent = String(tu_intervalId);
+				tu_intervalStart.disabled = true;
+				tu_intervalPause.disabled = false;
+				tu_intervalReset.disabled = false;
+				tu_intervalStatus.textContent = '运行中：setInterval 返回 ID ' + tu_intervalId + '，每 1000 毫秒自动执行一次回调。';
+			}
+
+			function tu_pauseInterval() {
+				if (tu_intervalId === null) {
+					return;
+				}
+				window.clearInterval(tu_intervalId);
+				tu_intervalId = null;
+				tu_intervalIdView.textContent = '—';
+				tu_intervalStart.disabled = false;
+				tu_intervalStart.textContent = '继续计时';
+				tu_intervalPause.disabled = true;
+				tu_intervalStatus.textContent = '已暂停：clearInterval 停掉了它，时钟停在 ' + tu_clock.textContent + '，走过的 ' + tu_tickCount + ' 秒会保留。';
+			}
+
+			function tu_resetInterval() {
+				if (tu_intervalId !== null) {
+					window.clearInterval(tu_intervalId);
+					tu_intervalId = null;
+				}
+				tu_tickCount = 0;
+				tu_ticks.textContent = '0';
+				tu_clock.textContent = '--:--:--';
+				tu_intervalIdView.textContent = '—';
+				tu_intervalStart.disabled = false;
+				tu_intervalStart.textContent = '开始计时';
+				tu_intervalPause.disabled = true;
+				tu_intervalReset.disabled = true;
+				tu_intervalStatus.textContent = '已清零。再点「开始计时」会重新 setInterval。';
+			}
+
+			tu_intervalStart.addEventListener('click', tu_startInterval);
+			tu_intervalPause.addEventListener('click', tu_pauseInterval);
+			tu_intervalReset.addEventListener('click', tu_resetInterval);
+
+			/* ---------------- 三、执行顺序 ---------------- */
+			var tu_orderLog = document.getElementById('tu_order-log');
+			var tu_orderRun = document.getElementById('tu_order-run');
+			var tu_orderCount = 0;
+
+			function tu_orderLine(tu_text, tu_mark) {
+				var tu_item = document.createElement('li');
+				tu_item.className = 'tu_order-item';
+
+				var tu_time = document.createElement('b');
+				tu_time.textContent = tu_nowText() + ' ';
+				tu_item.appendChild(tu_time);
+				tu_item.appendChild(document.createTextNode(tu_text));
+				if (tu_mark) {
+					tu_item.appendChild(document.createTextNode('  ← ' + tu_mark));
+				}
+
+				tu_orderLog.appendChild(tu_item);
+			}
+
+			tu_orderRun.addEventListener('click', function () {
+				tu_orderCount = tu_orderCount + 1;
+				tu_orderLog.innerHTML = '';
+
+				tu_orderLine('第 ' + tu_orderCount + ' 次：同步代码（最先执行）');
+				Promise.resolve().then(function () {
+					tu_orderLine('Promise.then 回调（微任务）', '排在同步代码之后');
+				});
+				window.setTimeout(function () {
+					tu_orderLine('setTimeout 回调（宏任务，延迟 0 毫秒）', '排在微任务之后');
+				}, 0);
+			});
+		})();
+	</script>
+</body>
+</html>

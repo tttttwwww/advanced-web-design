@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>商品列表 · dummyjson 接口</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[hidden] {
+			display: none !important;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f7f4f0;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #1c1917 0%, #9a3412 58%, #f59e0b 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1120px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.78;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 720px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			background: rgba(255, 255, 255, 0.18);
+			border-radius: 6px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.72;
+		}
+
+		main {
+			width: min(100% - 48px, 1120px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(28, 25, 23, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #292524;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#9a3412, #f59e0b);
+		}
+
+		.tu_toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: flex-end;
+			gap: 12px;
+			padding-bottom: 16px;
+			border-bottom: 1px dashed #e7e0d8;
+		}
+
+		.tu_field {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.tu_label {
+			color: #8a7f74;
+			font-size: 12.5px;
+		}
+
+		.tu_input,
+		.tu_select {
+			padding: 8px 14px;
+			background: #faf8f5;
+			border: 1px solid #e2d9cd;
+			border-radius: 999px;
+			color: #292524;
+			font-family: inherit;
+			font-size: 14px;
+		}
+
+		.tu_input {
+			width: min(260px, 100%);
+		}
+
+		.tu_input:focus,
+		.tu_select:focus {
+			outline: 2px solid #fcd34d;
+			border-color: #b45309;
+		}
+
+		.tu_btn {
+			display: inline-block;
+			padding: 8px 18px;
+			background: linear-gradient(135deg, #9a3412, #f59e0b);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 13.5px;
+			text-decoration: none;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(154, 52, 18, 0.3);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.6;
+			cursor: progress;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_btn-ghost {
+			background: #f5efe7;
+			border: 1px solid #e2d9cd;
+			color: #9a3412;
+		}
+
+		.tu_status {
+			margin: 14px 0 0;
+			color: #7a6f66;
+			font-size: 13px;
+		}
+
+		.tu_status code {
+			color: #9a3412;
+			font-family: Consolas, "Courier New", monospace;
+			word-break: break-all;
+		}
+
+		.tu_grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 16px;
+			margin-top: 16px;
+		}
+
+		.tu_card {
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			background: #fff;
+			border: 1px solid #ece3d8;
+			border-radius: 18px;
+			color: inherit;
+			text-decoration: none;
+			transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+		}
+
+		.tu_card:hover {
+			transform: translateY(-4px);
+			border-color: #f3c98b;
+			box-shadow: 0 16px 30px rgba(154, 52, 18, 0.16);
+		}
+
+		.tu_card:focus-visible {
+			outline: 3px solid #f59e0b;
+			outline-offset: 2px;
+		}
+
+		.tu_thumb {
+			position: relative;
+			aspect-ratio: 4 / 3;
+			background: #fff8ef;
+		}
+
+		.tu_thumb-img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			padding: 10px;
+			object-fit: contain;
+		}
+
+		.tu_thumb-broken {
+			display: grid;
+			place-items: center;
+			width: 100%;
+			height: 100%;
+			padding: 10px;
+			color: #b45309;
+			font-size: 12.5px;
+			text-align: center;
+		}
+
+		.tu_id {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			padding: 2px 8px;
+			background: rgba(28, 25, 23, 0.72);
+			border-radius: 999px;
+			color: #fff;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 11.5px;
+		}
+
+		.tu_off {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			padding: 2px 8px;
+			background: #dc2626;
+			border-radius: 999px;
+			color: #fff;
+			font-size: 11.5px;
+			font-weight: 600;
+		}
+
+		.tu_body {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			gap: 6px;
+			padding: 14px 16px 16px;
+		}
+
+		.tu_cat {
+			margin: 0;
+			color: #b45309;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 11.5px;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+		}
+
+		.tu_pdt-title {
+			display: -webkit-box;
+			min-height: 44px;
+			margin: 0;
+			overflow: hidden;
+			color: #292524;
+			font-size: 14.5px;
+			line-height: 1.5;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+		}
+
+		.tu_brand {
+			margin: 0;
+			color: #8a7f74;
+			font-size: 12.5px;
+		}
+
+		.tu_rate {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			color: #8a7f74;
+			font-size: 12.5px;
+		}
+
+		.tu_stars {
+			color: #f59e0b;
+			letter-spacing: 1px;
+		}
+
+		.tu_price-row {
+			display: flex;
+			align-items: baseline;
+			gap: 8px;
+			margin-top: 2px;
+		}
+
+		.tu_price {
+			color: #b45309;
+			font-size: 20px;
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.tu_old {
+			color: #a8a29e;
+			font-size: 12.5px;
+			text-decoration: line-through;
+		}
+
+		.tu_foot {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-top: 6px;
+			padding-top: 10px;
+			border-top: 1px dashed #efe6da;
+			color: #8a7f74;
+			font-size: 12.5px;
+		}
+
+		.tu_go {
+			color: #9a3412;
+			font-weight: 600;
+		}
+
+		.tu_skeleton {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 16px;
+			margin-top: 16px;
+		}
+
+		.tu_sk {
+			overflow: hidden;
+			background: #fff;
+			border: 1px solid #ece3d8;
+			border-radius: 18px;
+		}
+
+		.tu_sk-img {
+			display: block;
+			aspect-ratio: 4 / 3;
+			background: linear-gradient(90deg, #f5efe7 25%, #faf8f5 37%, #f5efe7 63%);
+			background-size: 400% 100%;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-lines {
+			display: grid;
+			gap: 10px;
+			padding: 16px;
+		}
+
+		.tu_sk-line {
+			display: block;
+			width: 100%;
+			height: 12px;
+			background: linear-gradient(90deg, #f5efe7 25%, #faf8f5 37%, #f5efe7 63%);
+			background-size: 400% 100%;
+			border-radius: 6px;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-line-lg {
+			height: 16px;
+			width: 70%;
+		}
+
+		.tu_sk-line-sm {
+			width: 45%;
+		}
+
+		@keyframes tu_shimmer {
+			0% {
+				background-position: 100% 0;
+			}
+
+			100% {
+				background-position: 0 0;
+			}
+		}
+
+		.tu_hint {
+			margin: 12px 0 0;
+			color: #8a7f74;
+			font-size: 13px;
+		}
+
+		.tu_error {
+			margin-top: 16px;
+			padding: 20px 22px;
+			background: #fff5f5;
+			border: 1px solid #fbd5d5;
+			border-radius: 16px;
+		}
+
+		.tu_error-title {
+			margin: 0 0 6px;
+			color: #b91c1c;
+			font-size: 15px;
+			font-weight: 600;
+		}
+
+		.tu_error-text {
+			margin: 0 0 14px;
+			color: #7f1d1d;
+			font-size: 13.5px;
+		}
+
+		.tu_empty {
+			margin-top: 16px;
+			padding: 32px 20px;
+			background: #fffaf3;
+			border: 1px dashed #ecd9bd;
+			border-radius: 16px;
+			color: #8a6d4b;
+			font-size: 14px;
+			text-align: center;
+		}
+
+		.tu_raw {
+			margin-top: 18px;
+			overflow: hidden;
+			background: #faf8f5;
+			border: 1px solid #ece3d8;
+			border-radius: 14px;
+		}
+
+		.tu_raw > summary {
+			padding: 12px 16px;
+			color: #9a3412;
+			font-size: 13.5px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		.tu_raw[open] > summary {
+			border-bottom: 1px solid #ece3d8;
+		}
+
+		.tu_raw-code {
+			margin: 0;
+			padding: 16px;
+			max-height: 340px;
+			overflow: auto;
+			background: #1c1917;
+			color: #e7e5e4;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.7;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.tu_note-list {
+			margin: 0;
+			padding-left: 20px;
+			color: #4b4540;
+			font-size: 14px;
+		}
+
+		.tu_note-list li {
+			margin-bottom: 8px;
+		}
+
+		.tu_note-list code {
+			padding: 1px 6px;
+			background: #f5efe7;
+			border-radius: 6px;
+			color: #9a3412;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		.tu_snippet {
+			margin: 14px 0 0;
+			padding: 16px 18px;
+			overflow: auto;
+			background: #1c1917;
+			border-radius: 12px;
+			color: #e7e5e4;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.75;
+			white-space: pre;
+		}
+
+		footer {
+			width: min(100% - 48px, 1120px);
+			margin: 6px auto 40px;
+			color: #8b8178;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_input {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-3 · Product List</p>
+			<h1>商品列表</h1>
+			<p class="tu_lead">用 <code>fetch</code> 从 <code>dummyjson.com/products?limit=8</code> 取回八件商品，点卡片进入详情页，地址栏会带上 <code>?id=</code>。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_list-title">
+			<h2 id="tu_list-title">接口返回的商品</h2>
+
+			<div class="tu_toolbar">
+				<div class="tu_field">
+					<label class="tu_label" for="tu_search">搜索（标题 / 品牌 / 分类）</label>
+					<input class="tu_input" id="tu_search" type="search" placeholder="比如 beauty、Essence、mascara" autocomplete="off">
+				</div>
+
+				<div class="tu_field">
+					<label class="tu_label" for="tu_sort">排序</label>
+					<select class="tu_select" id="tu_sort">
+						<option value="default">接口默认顺序</option>
+						<option value="price-asc">价格从低到高</option>
+						<option value="price-desc">价格从高到低</option>
+						<option value="rating-desc">评分从高到低</option>
+					</select>
+				</div>
+
+				<button class="tu_btn" id="tu_reload" type="button">重新请求</button>
+			</div>
+
+			<p class="tu_status" id="tu_status" role="status">正在请求接口…</p>
+
+			<div id="tu_result" aria-live="polite"></div>
+
+			<details class="tu_raw">
+				<summary>接口原始 JSON（前 8 条商品）</summary>
+				<pre class="tu_raw-code" id="tu_raw-code">等待请求…</pre>
+			</details>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_note-title">
+			<h2 id="tu_note-title">列表页的关键几行</h2>
+			<ul class="tu_note-list">
+				<li><code>fetch('https://dummyjson.com/products?limit=8')</code> 拿回一个对象，商品在 <code>data.products</code> 里，<code>data.total</code> 是全部 194 件。</li>
+				<li>每张卡片的 <code>href</code> 拼成 <code>17-3-detail.html?id=商品id</code>，详情页用 <code>URLSearchParams</code> 把 id 读回来。</li>
+				<li>搜索和排序都在本地对已取回的 8 条数据做，不会重复请求接口。</li>
+			</ul>
+			<pre class="tu_snippet">var res = await fetch('https://dummyjson.com/products?limit=8');
+var data = await res.json();
+data.products.forEach(function (p) {
+  // p.id / p.title / p.thumbnail / p.price ...
+});</pre>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-3 · 商品列表（dummyjson 接口）</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_API = 'https://dummyjson.com/products?limit=8';
+
+			var tu_rawProducts = [];
+			var tu_total = 0;
+
+			var tu_search = document.getElementById('tu_search');
+			var tu_sort = document.getElementById('tu_sort');
+			var tu_reloadBtn = document.getElementById('tu_reload');
+			var tu_status = document.getElementById('tu_status');
+			var tu_result = document.getElementById('tu_result');
+			var tu_rawCode = document.getElementById('tu_raw-code');
+
+			function tu_el(tu_tag, tu_className, tu_text) {
+				var tu_node = document.createElement(tu_tag);
+				if (tu_className) {
+					tu_node.className = tu_className;
+				}
+				if (tu_text !== undefined && tu_text !== null) {
+					tu_node.textContent = String(tu_text);
+				}
+				return tu_node;
+			}
+
+			function tu_money(tu_value) {
+				return '$' + Number(tu_value).toFixed(2);
+			}
+
+			/* 把 2.56 这种分数变成 ★★★☆☆ 这种五格评分 */
+			function tu_stars(tu_rating) {
+				var tu_score = Math.max(0, Math.min(5, Number(tu_rating) || 0));
+				var tu_full = Math.round(tu_score);
+				return '★★★★★'.slice(0, tu_full) + '☆☆☆☆☆'.slice(0, 5 - tu_full);
+			}
+
+			function tu_oldPrice(tu_price, tu_discount) {
+				var tu_rate = Number(tu_discount) || 0;
+				if (tu_rate <= 0 || tu_rate >= 100) {
+					return null;
+				}
+				return Number(tu_price) / (1 - tu_rate / 100);
+			}
+
+			function tu_showSkeleton() {
+				tu_result.innerHTML = '';
+
+				var tu_wrap = tu_el('div', 'tu_skeleton');
+				for (var tu_i = 0; tu_i < 8; tu_i++) {
+					var tu_card = tu_el('div', 'tu_sk');
+					tu_card.appendChild(tu_el('span', 'tu_sk-img'));
+					var tu_lines = tu_el('div', 'tu_sk-lines');
+					tu_lines.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-lg'));
+					tu_lines.appendChild(tu_el('span', 'tu_sk-line'));
+					tu_lines.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-sm'));
+					tu_card.appendChild(tu_lines);
+					tu_wrap.appendChild(tu_card);
+				}
+
+				tu_result.appendChild(tu_wrap);
+			}
+
+			function tu_showError(tu_message) {
+				tu_result.innerHTML = '';
+
+				var tu_box = tu_el('div', 'tu_error');
+				tu_box.appendChild(tu_el('p', 'tu_error-title', '列表没取回来'));
+				tu_box.appendChild(tu_el('p', 'tu_error-text', tu_message));
+
+				var tu_btn = tu_el('button', 'tu_btn', '再试一次');
+				tu_btn.type = 'button';
+				tu_btn.addEventListener('click', function () {
+					tu_load();
+				});
+				tu_box.appendChild(tu_btn);
+
+				tu_result.appendChild(tu_box);
+				tu_rawCode.textContent = '—';
+			}
+
+			function tu_card(tu_product) {
+				var tu_link = document.createElement('a');
+				tu_link.className = 'tu_card';
+				tu_link.href = '17-3-detail.html?id=' + encodeURIComponent(tu_product.id);
+
+				var tu_thumb = tu_el('div', 'tu_thumb');
+				var tu_img = document.createElement('img');
+				tu_img.className = 'tu_thumb-img';
+				tu_img.src = tu_product.thumbnail;
+				tu_img.alt = tu_product.title;
+				tu_img.loading = 'lazy';
+				tu_img.addEventListener('error', function () {
+					tu_img.replaceWith(tu_el('span', 'tu_thumb-broken', '图片加载失败（接口给的是 ' + (tu_product.thumbnail ? 'cdn.dummyjson.com 的地址' : '空地址') + '）'));
+				});
+				tu_thumb.appendChild(tu_img);
+				tu_thumb.appendChild(tu_el('span', 'tu_id', '#' + tu_product.id));
+
+				var tu_discount = Number(tu_product.discountPercentage) || 0;
+				if (tu_discount > 0) {
+					tu_thumb.appendChild(tu_el('span', 'tu_off', '-' + tu_discount.toFixed(0) + '%'));
+				}
+				tu_link.appendChild(tu_thumb);
+
+				var tu_body = tu_el('div', 'tu_body');
+				tu_body.appendChild(tu_el('p', 'tu_cat', tu_product.category || '未分类'));
+				tu_body.appendChild(tu_el('h3', 'tu_pdt-title', tu_product.title));
+
+				var tu_meta = tu_product.brand ? tu_product.brand : '无品牌信息';
+				tu_body.appendChild(tu_el('p', 'tu_brand', tu_meta + ' · ' + (tu_product.sku || '无 SKU')));
+
+				var tu_rate = tu_el('div', 'tu_rate');
+				tu_rate.appendChild(tu_el('span', 'tu_stars', tu_stars(tu_product.rating)));
+				tu_rate.appendChild(tu_el('span', null, Number(tu_product.rating).toFixed(2)));
+				tu_body.appendChild(tu_rate);
+
+				var tu_priceRow = tu_el('div', 'tu_price-row');
+				tu_priceRow.appendChild(tu_el('span', 'tu_price', tu_money(tu_product.price)));
+				var tu_old = tu_oldPrice(tu_product.price, tu_product.discountPercentage);
+				if (tu_old) {
+					tu_priceRow.appendChild(tu_el('span', 'tu_old', tu_money(tu_old)));
+				}
+				tu_body.appendChild(tu_priceRow);
+
+				var tu_foot = tu_el('div', 'tu_foot');
+				tu_foot.appendChild(tu_el('span', null, '库存 ' + tu_product.stock));
+				tu_foot.appendChild(tu_el('span', 'tu_go', '查看详情 →'));
+				tu_body.appendChild(tu_foot);
+
+				tu_link.appendChild(tu_body);
+				return tu_link;
+			}
+
+			function tu_render(tu_list) {
+				tu_result.innerHTML = '';
+
+				if (!tu_list.length) {
+					var tu_empty = tu_el('div', 'tu_empty');
+					tu_empty.appendChild(tu_el('p', null, '没有匹配的商品，换个关键词试试。'));
+					var tu_clear = tu_el('button', 'tu_btn tu_btn-ghost', '清空搜索');
+					tu_clear.type = 'button';
+					tu_clear.addEventListener('click', function () {
+						tu_search.value = '';
+						tu_apply();
+					});
+					tu_empty.appendChild(tu_clear);
+					tu_result.appendChild(tu_empty);
+					return;
+				}
+
+				var tu_grid = tu_el('div', 'tu_grid');
+				tu_list.forEach(function (tu_product) {
+					tu_grid.appendChild(tu_card(tu_product));
+				});
+				tu_result.appendChild(tu_grid);
+			}
+
+			/* 本地筛选 + 排序，不重新请求接口 */
+			function tu_apply() {
+				var tu_query = tu_search.value.trim().toLowerCase();
+				var tu_list = tu_rawProducts.filter(function (tu_product) {
+					if (!tu_query) {
+						return true;
+					}
+					var tu_haystack = [tu_product.title, tu_product.brand, tu_product.category, tu_product.sku].join(' ').toLowerCase();
+					return tu_haystack.indexOf(tu_query) !== -1;
+				});
+
+				var tu_mode = tu_sort.value;
+				tu_list.sort(function (tu_a, tu_b) {
+					if (tu_mode === 'price-asc') {
+						return tu_a.price - tu_b.price;
+					}
+					if (tu_mode === 'price-desc') {
+						return tu_b.price - tu_a.price;
+					}
+					if (tu_mode === 'rating-desc') {
+						return tu_b.rating - tu_a.rating;
+					}
+					return 0;
+				});
+
+				tu_render(tu_list);
+
+				var tu_text = '接口共 ' + tu_total + ' 件商品，本次请求取回 ' + tu_rawProducts.length + ' 条（?limit=8）';
+				if (tu_query) {
+					tu_text += ' · 搜索「' + tu_search.value.trim() + '」后 ' + tu_list.length + ' 条';
+				}
+				tu_status.textContent = tu_text;
+			}
+
+			async function tu_load() {
+				tu_reloadBtn.disabled = true;
+				tu_status.textContent = '正在请求 ' + tu_API + ' …';
+				tu_showSkeleton();
+
+				if (typeof fetch !== 'function') {
+					tu_status.textContent = '当前浏览器不支持 fetch';
+					tu_showError('请换用新版 Chrome 或 Edge。');
+					tu_reloadBtn.disabled = false;
+					return;
+				}
+
+				var tu_controller = new AbortController();
+				var tu_timer = window.setTimeout(function () {
+					tu_controller.abort();
+				}, 10000);
+
+				try {
+					var tu_response = await fetch(tu_API, {
+						cache: 'no-store',
+						signal: tu_controller.signal
+					});
+					var tu_data = await tu_response.json();
+
+					if (!tu_response.ok) {
+						throw new Error('接口返回 HTTP ' + tu_response.status);
+					}
+
+					tu_rawProducts = Array.isArray(tu_data.products) ? tu_data.products : [];
+					tu_total = typeof tu_data.total === 'number' ? tu_data.total : tu_rawProducts.length;
+					tu_rawCode.textContent = JSON.stringify(tu_data, null, 2);
+
+					/* 接口地址只取前 8 条，页面默认就是这么展示的 */
+					tu_apply();
+				} catch (tu_error) {
+					var tu_message;
+					if (tu_error && tu_error.name === 'AbortError') {
+						tu_message = '请求超过 10 秒没有返回，已自动中止。检查网络后再试。';
+					} else if (tu_error instanceof TypeError) {
+						tu_message = '网络请求被拦下了：可能断网，或接口没有允许跨域（响应头缺少 Access-Control-Allow-Origin）。';
+					} else {
+						tu_message = (tu_error && tu_error.message) ? tu_error.message : '未知错误。';
+					}
+					tu_showError(tu_message);
+					tu_status.textContent = '请求失败';
+				} finally {
+					window.clearTimeout(tu_timer);
+					tu_reloadBtn.disabled = false;
+				}
+			}
+
+			tu_search.addEventListener('input', tu_apply);
+			tu_sort.addEventListener('change', tu_apply);
+			tu_reloadBtn.addEventListener('click', tu_load);
+
+			tu_load();
+		})();
+	</script>
+</body>
+</html>

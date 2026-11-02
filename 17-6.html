@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>包饺子 · Promise 与 async 异步演示</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[hidden] {
+			display: none !important;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f7f5ef;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #3b1d0f 0%, #b45309 55%, #f43f5e 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1080px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.8;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 760px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.94;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 6px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.75;
+		}
+
+		main {
+			width: min(100% - 48px, 1080px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(59, 29, 15, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #3b1d0f;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			align-self: center;
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#b45309, #f43f5e);
+		}
+
+		.tu_sub {
+			color: #a89383;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			font-weight: 400;
+		}
+
+		.tu_controls {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_select {
+			padding: 8px 14px;
+			background: #fdf9f3;
+			border: 1px solid #ecdccb;
+			border-radius: 999px;
+			color: #3b1d0f;
+			font-family: inherit;
+			font-size: 14px;
+		}
+
+		.tu_select:focus {
+			outline: 2px solid #fdba74;
+			border-color: #b45309;
+		}
+
+		.tu_btn {
+			display: inline-block;
+			padding: 9px 20px;
+			background: linear-gradient(135deg, #b45309, #f43f5e);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 14px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(180, 83, 9, 0.32);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.55;
+			cursor: not-allowed;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_btn-ghost {
+			background: #fdf1e6;
+			border: 1px solid #f0dcc6;
+			color: #9a3412;
+		}
+
+		.tu_status {
+			margin: 14px 0 0;
+			color: #6f6157;
+			font-size: 14px;
+		}
+
+		.tu_flow {
+			display: grid;
+			gap: 12px;
+			margin-top: 6px;
+		}
+
+		.tu_step {
+			padding: 14px 18px;
+			background: #fdfbf7;
+			border: 1px solid #efe6d8;
+			border-radius: 16px;
+			transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.tu_step[data-state="doing"] {
+			background: #fff7f2;
+			border-color: #fb923c;
+			box-shadow: 0 10px 22px rgba(251, 146, 60, 0.18);
+		}
+
+		.tu_step[data-state="done"] {
+			background: #f6fdf8;
+			border-color: #86efac;
+		}
+
+		.tu_step-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_step-index {
+			display: grid;
+			place-items: center;
+			flex: none;
+			width: 26px;
+			height: 26px;
+			background: #f3e5d3;
+			border-radius: 50%;
+			color: #9a3412;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			font-weight: 700;
+		}
+
+		.tu_step[data-state="doing"] .tu_step-index {
+			background: #fb923c;
+			color: #fff;
+		}
+
+		.tu_step[data-state="done"] .tu_step-index {
+			background: #34d399;
+			color: #064e3b;
+		}
+
+		.tu_step-name {
+			color: #3b1d0f;
+			font-size: 15px;
+			font-weight: 600;
+		}
+
+		.tu_step-status {
+			margin-left: auto;
+			padding: 2px 12px;
+			background: #f5ede2;
+			border-radius: 999px;
+			color: #8a7565;
+			font-size: 12.5px;
+			white-space: nowrap;
+		}
+
+		.tu_step[data-state="doing"] .tu_step-status {
+			background: #ffedd5;
+			color: #c2410c;
+		}
+
+		.tu_step[data-state="done"] .tu_step-status {
+			background: #dcfce7;
+			color: #15803d;
+		}
+
+		.tu_step-detail {
+			margin: 6px 0 0;
+			color: #8a7565;
+			font-size: 12.5px;
+		}
+
+		.tu_step-track {
+			height: 8px;
+			margin-top: 10px;
+			overflow: hidden;
+			background: #f5ede2;
+			border-radius: 999px;
+		}
+
+		.tu_step-fill {
+			display: block;
+			width: 0;
+			height: 100%;
+			background: linear-gradient(90deg, #fb923c, #f43f5e);
+			border-radius: 999px;
+		}
+
+		.tu_step[data-state="done"] .tu_step-fill {
+			background: linear-gradient(90deg, #34d399, #10b981);
+		}
+
+		.tu_parallel {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+			padding: 12px;
+			background: #fdf6ee;
+			border: 1px dashed #eed9c0;
+			border-radius: 18px;
+		}
+
+		.tu_parallel-label {
+			grid-column: 1 / -1;
+			margin: 0;
+			color: #9a3412;
+			font-size: 12.5px;
+		}
+
+		.tu_parallel-label code {
+			padding: 1px 6px;
+			background: #fce7d6;
+			border-radius: 6px;
+			color: #c2410c;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12px;
+		}
+
+		.tu_log {
+			display: grid;
+			gap: 6px;
+			max-height: 300px;
+			margin: 0;
+			padding: 0;
+			overflow: auto;
+			list-style: none;
+		}
+
+		.tu_log-item {
+			display: flex;
+			gap: 10px;
+			padding: 8px 12px;
+			background: #fdfbf7;
+			border-left: 3px solid #fcd34d;
+			border-radius: 8px;
+			color: #4b3a2c;
+			font-size: 13px;
+		}
+
+		.tu_log-time {
+			flex: none;
+			color: #b45309;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12px;
+			min-width: 72px;
+		}
+
+		.tu_result {
+			margin-top: 16px;
+			padding: 18px 20px;
+			background: #fff7ed;
+			border: 1px solid #fed7aa;
+			border-radius: 16px;
+		}
+
+		.tu_result h3 {
+			margin: 0 0 4px;
+			color: #9a3412;
+			font-size: 17px;
+		}
+
+		.tu_result-main {
+			margin: 0;
+			color: #6f6157;
+			font-size: 14px;
+		}
+
+		.tu_result-main b {
+			color: #c2410c;
+			font-size: 22px;
+			font-family: Consolas, "Courier New", monospace;
+		}
+
+		.tu_result-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 10px;
+			margin: 14px 0 0;
+		}
+
+		.tu_result-card {
+			padding: 10px 14px;
+			background: #fffdf9;
+			border: 1px solid #f6e3cd;
+			border-radius: 12px;
+			color: #8a7565;
+			font-size: 12.5px;
+		}
+
+		.tu_result-card b {
+			display: block;
+			margin-top: 2px;
+			color: #b45309;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 18px;
+		}
+
+		.tu_result-note {
+			margin: 12px 0 0;
+			color: #8a7565;
+			font-size: 12.5px;
+		}
+
+		.tu_snippet {
+			margin: 0;
+			padding: 16px 18px;
+			overflow: auto;
+			background: #1f1209;
+			border-radius: 12px;
+			color: #f6ece1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.8;
+			white-space: pre;
+		}
+
+		.tu_note-list {
+			margin: 14px 0 0;
+			padding-left: 20px;
+			color: #4b3a2c;
+			font-size: 14px;
+		}
+
+		.tu_note-list li {
+			margin-bottom: 8px;
+		}
+
+		.tu_note-list code {
+			padding: 1px 6px;
+			background: #fdf1e6;
+			border-radius: 6px;
+			color: #9a3412;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		footer {
+			width: min(100% - 48px, 1080px);
+			margin: 6px auto 40px;
+			color: #94867a;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 640px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_parallel {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-6 · Promise &amp; async</p>
+			<h1>包饺子的异步流程</h1>
+			<p class="tu_lead">先买原料，原料到手后<strong>同时</strong>和面、和馅（<code>Promise.all</code>），再依次擀皮、包饺子、煮饺子——每一步都是一个 <code>Promise</code>，整条流程用 <code>async / await</code> 串起来。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_run-title">
+			<h2 id="tu_run-title">开始动手 <span class="tu_sub">每一步都真的在等</span></h2>
+
+			<div class="tu_controls">
+				<button class="tu_btn" id="tu_start" type="button">开始包饺子</button>
+				<button class="tu_btn tu_btn-ghost" id="tu_reset" type="button">重来</button>
+				<label class="tu_sub" for="tu_speed">演示速度</label>
+				<select class="tu_select" id="tu_speed" aria-label="演示速度">
+					<option value="1">1×（真实节奏）</option>
+					<option value="2" selected>2×（快一点）</option>
+					<option value="4">4×（很快）</option>
+				</select>
+			</div>
+
+			<p class="tu_status" id="tu_status" role="status">还没开始。点「开始包饺子」，先出门买原料。</p>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_flow-title">
+			<h2 id="tu_flow-title">流程 <span class="tu_sub">① 买原料 → ② 同时和面 / 和馅 → ③ 擀皮 → ④ 包 → ⑤ 煮</span></h2>
+
+			<div class="tu_flow">
+				<div class="tu_step" id="tu_step-buy" data-state="idle">
+					<div class="tu_step-head">
+						<span class="tu_step-index">1</span>
+						<span class="tu_step-name">买原料</span>
+						<span class="tu_step-status" id="tu_state-buy">等待</span>
+					</div>
+					<p class="tu_step-detail">面粉、猪肉、白菜、调料 —— 大约 1.2 秒</p>
+					<div class="tu_step-track">
+						<span class="tu_step-fill" id="tu_fill-buy"></span>
+					</div>
+				</div>
+
+				<div class="tu_parallel">
+					<p class="tu_parallel-label">② 原料到手后，这两件事<strong>同时进行</strong>：<code>await Promise.all([和面, 和馅])</code></p>
+
+					<div class="tu_step" id="tu_step-dough" data-state="idle">
+						<div class="tu_step-head">
+							<span class="tu_step-index">2</span>
+							<span class="tu_step-name">和面</span>
+							<span class="tu_step-status" id="tu_state-dough">等待</span>
+						</div>
+						<p class="tu_step-detail">面粉加水揉成团 —— 大约 2 秒</p>
+						<div class="tu_step-track">
+							<span class="tu_step-fill" id="tu_fill-dough"></span>
+						</div>
+					</div>
+
+					<div class="tu_step" id="tu_step-filling" data-state="idle">
+						<div class="tu_step-head">
+							<span class="tu_step-index">3</span>
+							<span class="tu_step-name">和馅</span>
+							<span class="tu_step-status" id="tu_state-filling">等待</span>
+						</div>
+						<p class="tu_step-detail">猪肉白菜剁碎调味 —— 大约 1.6 秒</p>
+						<div class="tu_step-track">
+							<span class="tu_step-fill" id="tu_fill-filling"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="tu_step" id="tu_step-roll" data-state="idle">
+					<div class="tu_step-head">
+						<span class="tu_step-index">4</span>
+						<span class="tu_step-name">擀皮</span>
+						<span class="tu_step-status" id="tu_state-roll">等待</span>
+					</div>
+					<p class="tu_step-detail">面醒好了，擀成圆皮 —— 大约 1.8 秒</p>
+					<div class="tu_step-track">
+						<span class="tu_step-fill" id="tu_fill-roll"></span>
+					</div>
+				</div>
+
+				<div class="tu_step" id="tu_step-wrap" data-state="idle">
+					<div class="tu_step-head">
+						<span class="tu_step-index">5</span>
+						<span class="tu_step-name">包饺子</span>
+						<span class="tu_step-status" id="tu_state-wrap">等待</span>
+					</div>
+					<p class="tu_step-detail">一张皮一勺馅，捏紧边 —— 大约 2.6 秒</p>
+					<div class="tu_step-track">
+						<span class="tu_step-fill" id="tu_fill-wrap"></span>
+					</div>
+				</div>
+
+				<div class="tu_step" id="tu_step-boil" data-state="idle">
+					<div class="tu_step-head">
+						<span class="tu_step-index">6</span>
+						<span class="tu_step-name">煮饺子</span>
+						<span class="tu_step-status" id="tu_state-boil">等待</span>
+					</div>
+					<p class="tu_step-detail">水开下锅，点三次凉水 —— 大约 2.2 秒</p>
+					<div class="tu_step-track">
+						<span class="tu_step-fill" id="tu_fill-boil"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="tu_result" id="tu_result" hidden>
+				<h3>饺子煮好了</h3>
+				<p class="tu_result-main">总用时 <b id="tu_total">—</b> 秒</p>
+				<div class="tu_result-grid">
+					<div class="tu_result-card">如果全部串行<span>需要 <b id="tu_serial">—</b> 秒</span></div>
+					<div class="tu_result-card">同时和面 + 和馅<span>省下 <b id="tu_saved">—</b> 秒</span></div>
+					<div class="tu_result-card">并行的那一步<span>取最长 <b id="tu_longest">—</b> 秒</span></div>
+				</div>
+				<p class="tu_result-note">和面（2 秒）与和馅（1.6 秒）同时开始，总时间只算较长的那一个，所以比一步一步做要快。</p>
+			</div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_log-title">
+			<h2 id="tu_log-title">运行日志 <span class="tu_sub">每行前面的数字是从开始到现在过了多久</span></h2>
+			<ul class="tu_log" id="tu_log"></ul>
+			<p class="tu_status" id="tu_log-empty">还没有日志，点上面的「开始包饺子」。</p>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_code-title">
+			<h2 id="tu_code-title">对应的代码</h2>
+			<pre class="tu_snippet">async function cookDumplings() {
+  await buyIngredients();                            // 先买原料
+  await Promise.all([kneadDough(), mixFilling()]);   // 同时和面、和馅
+  await rollWrappers();                              // 擀皮
+  await wrapDumplings();                             // 包饺子
+  await boilDumplings();                             // 煮饺子
+  console.log('开吃！');
+}
+
+// 每个步骤都是一个「会晚点完成」的 Promise
+function kneadDough() {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, 2000);   // 和面要 2 秒
+  });
+}</pre>
+			<ul class="tu_note-list">
+				<li><code>await</code> 会暂停 <code>cookDumplings</code> 这个函数，但不会卡住整个页面：等待期间按钮、滚动、动画都还能用。</li>
+				<li><code>Promise.all</code> 里两个 Promise 同时启动，全部完成才算完成，耗时取最长的那一个。</li>
+				<li>页面上的「重来」会作废正在跑的那一轮（用一个自增的令牌判断），已经排进队列的定时器不会乱改界面。</li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-6 · Promise + async 包饺子</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			/* 每步的基础耗时（毫秒），演示速度会把它除小 */
+			var tu_BASE = {
+				buy: 1200,
+				dough: 2000,
+				filling: 1600,
+				roll: 1800,
+				wrap: 2600,
+				boil: 2200
+			};
+
+			var tu_NAMES = {
+				buy: '买原料',
+				dough: '和面',
+				filling: '和馅',
+				roll: '擀皮',
+				wrap: '包饺子',
+				boil: '煮饺子'
+			};
+
+			var tu_startBtn = document.getElementById('tu_start');
+			var tu_resetBtn = document.getElementById('tu_reset');
+			var tu_speedSelect = document.getElementById('tu_speed');
+			var tu_status = document.getElementById('tu_status');
+			var tu_log = document.getElementById('tu_log');
+			var tu_logEmpty = document.getElementById('tu_log-empty');
+			var tu_result = document.getElementById('tu_result');
+			var tu_total = document.getElementById('tu_total');
+			var tu_serial = document.getElementById('tu_serial');
+			var tu_saved = document.getElementById('tu_saved');
+			var tu_longest = document.getElementById('tu_longest');
+
+			var tu_running = false;
+			var tu_token = 0;
+			var tu_runStart = 0;
+			var tu_runSpeed = 1;
+
+			function tu_refs(tu_key) {
+				return {
+					box: document.getElementById('tu_step-' + tu_key),
+					state: document.getElementById('tu_state-' + tu_key),
+					fill: document.getElementById('tu_fill-' + tu_key)
+				};
+			}
+
+			function tu_logLine(tu_text) {
+				var tu_ms = Math.round(((window.performance && window.performance.now) ? window.performance.now() : Date.now()) - tu_runStart);
+
+				var tu_item = document.createElement('li');
+				tu_item.className = 'tu_log-item';
+
+				var tu_time = document.createElement('span');
+				tu_time.className = 'tu_log-time';
+				tu_time.textContent = '+' + tu_ms + ' ms';
+
+				var tu_textEl = document.createElement('span');
+				tu_textEl.className = 'tu_log-text';
+				tu_textEl.textContent = tu_text;
+
+				tu_item.appendChild(tu_time);
+				tu_item.appendChild(tu_textEl);
+				tu_log.appendChild(tu_item);
+				tu_log.scrollTop = tu_log.scrollHeight;
+			}
+
+			function tu_setStep(tu_key, tu_state, tu_label) {
+				var tu_item = tu_refs(tu_key);
+				tu_item.box.setAttribute('data-state', tu_state);
+				tu_item.state.textContent = tu_label;
+			}
+
+			function tu_resetSteps() {
+				Object.keys(tu_BASE).forEach(function (tu_key) {
+					var tu_item = tu_refs(tu_key);
+					tu_item.box.setAttribute('data-state', 'idle');
+					tu_item.state.textContent = '等待';
+					tu_item.fill.style.transition = 'none';
+					tu_item.fill.style.width = '0';
+				});
+				tu_result.hidden = true;
+			}
+
+			/* —— 核心：一个步骤 = 一个 Promise —— */
+			function tu_step(tu_key, tu_tokenAtStart) {
+				var tu_item = tu_refs(tu_key);
+				var tu_ms = Math.round(tu_BASE[tu_key] / tu_runSpeed);
+
+				tu_setStep(tu_key, 'doing', '进行中');
+
+				/* 进度条：CSS transition 走完这段时间 */
+				tu_item.fill.style.transition = 'none';
+				tu_item.fill.style.width = '0';
+				void tu_item.fill.offsetWidth;
+				tu_item.fill.style.transition = 'width ' + tu_ms + 'ms linear';
+				tu_item.fill.style.width = '100%';
+
+				return new Promise(function (tu_resolve) {
+					window.setTimeout(function () {
+						if (tu_tokenAtStart !== tu_token) {
+							/* 这一轮已经被「重来」作废，只收尾、不动界面 */
+							tu_resolve();
+							return;
+						}
+						tu_item.fill.style.transition = 'none';
+						tu_item.fill.style.width = '100%';
+						tu_setStep(tu_key, 'done', '完成（' + (tu_ms / 1000).toFixed(1) + ' 秒）');
+						tu_logLine(tu_NAMES[tu_key] + '完成，用了 ' + (tu_ms / 1000).toFixed(1) + ' 秒');
+						tu_resolve();
+					}, tu_ms);
+				});
+			}
+
+			async function tu_cook() {
+				if (tu_running) {
+					return;
+				}
+
+				tu_running = true;
+				tu_token = tu_token + 1;
+
+				var tu_myToken = tu_token;
+				tu_runSpeed = Number(tu_speedSelect.value) || 1;
+				tu_runStart = (window.performance && window.performance.now) ? window.performance.now() : Date.now();
+
+				tu_startBtn.disabled = true;
+				tu_speedSelect.disabled = true;
+				tu_resetSteps();
+				tu_log.innerHTML = '';
+				tu_logEmpty.hidden = true;
+				tu_status.textContent = '出门买原料…';
+
+				tu_logLine('开始：先买原料（await buyIngredients）');
+				await tu_step('buy', tu_myToken);
+				if (tu_myToken !== tu_token) {
+					return;
+				}
+				tu_status.textContent = '原料买回来了，接下来同时和面、和馅。';
+				tu_logLine('原料到手。现在同时开始两件事：和面 + 和馅（Promise.all）');
+
+				await Promise.all([
+					tu_step('dough', tu_myToken),
+					tu_step('filling', tu_myToken)
+				]);
+				if (tu_myToken !== tu_token) {
+					return;
+				}
+				tu_status.textContent = '面醒好了、馅调好了，开始擀皮。';
+				tu_logLine('和面与和馅都完成，Promise.all 结束，流程继续往下走');
+
+				await tu_step('roll', tu_myToken);
+				if (tu_myToken !== tu_token) {
+					return;
+				}
+				tu_status.textContent = '皮擀好了，开始包。';
+				tu_logLine('开始包饺子');
+
+				await tu_step('wrap', tu_myToken);
+				if (tu_myToken !== tu_token) {
+					return;
+				}
+				tu_status.textContent = '包好了，下锅煮。';
+				tu_logLine('饺子包完了，烧水下锅');
+
+				await tu_step('boil', tu_myToken);
+				if (tu_myToken !== tu_token) {
+					return;
+				}
+
+				var tu_ms = Math.round(((window.performance && window.performance.now) ? window.performance.now() : Date.now()) - tu_runStart);
+				var tu_seconds = tu_ms / 1000;
+
+				/* 串行是「和面 + 和馅」都算进去；并行只取较长的那一个 */
+				var tu_serialBase = tu_BASE.buy + tu_BASE.dough + tu_BASE.filling + tu_BASE.roll + tu_BASE.wrap + tu_BASE.boil;
+				var tu_parallelBase = tu_BASE.buy + Math.max(tu_BASE.dough, tu_BASE.filling) + tu_BASE.roll + tu_BASE.wrap + tu_BASE.boil;
+				var tu_serialSeconds = tu_serialBase / tu_runSpeed / 1000;
+				var tu_savedSeconds = (tu_serialBase - tu_parallelBase) / tu_runSpeed / 1000;
+
+				tu_total.textContent = tu_seconds.toFixed(1);
+				tu_serial.textContent = tu_serialSeconds.toFixed(1);
+				tu_saved.textContent = tu_savedSeconds.toFixed(1);
+				tu_longest.textContent = (Math.max(tu_BASE.dough, tu_BASE.filling) / tu_runSpeed / 1000).toFixed(1);
+				tu_result.hidden = false;
+
+				tu_logLine('饺子出锅！整条流程用了 ' + tu_seconds.toFixed(1) + ' 秒（串行要 ' + tu_serialSeconds.toFixed(1) + ' 秒）');
+				tu_status.textContent = '完成：一共 ' + tu_seconds.toFixed(1) + ' 秒。点「重来」可以再跑一遍。';
+
+				tu_running = false;
+				tu_startBtn.disabled = false;
+				tu_speedSelect.disabled = false;
+			}
+
+			function tu_reset() {
+				/* 令牌自增：正在跑的链条作废，已排队的定时器不会再改界面 */
+				tu_token = tu_token + 1;
+				tu_running = false;
+				tu_startBtn.disabled = false;
+				tu_speedSelect.disabled = false;
+				tu_resetSteps();
+				tu_log.innerHTML = '';
+				tu_logEmpty.hidden = false;
+				tu_status.textContent = '已经重置。点「开始包饺子」重新来一遍。';
+			}
+
+			tu_startBtn.addEventListener('click', function () {
+				tu_cook();
+			});
+
+			tu_resetBtn.addEventListener('click', tu_reset);
+
+			tu_speedSelect.addEventListener('change', function () {
+				if (!tu_running) {
+					tu_status.textContent = '速度已改为 ' + tu_speedSelect.value + '×，下次开始时生效。';
+				}
+			});
+		})();
+	</script>
+</body>
+</html>

@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>接口测试台 · GET / POST 调试</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[hidden] {
+			display: none !important;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #eef2f9;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #0b1220 0%, #1e3a8a 58%, #0891b2 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1120px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.78;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 720px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			background: rgba(255, 255, 255, 0.18);
+			border-radius: 6px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.72;
+		}
+
+		main {
+			width: min(100% - 48px, 1120px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #0f172a;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#1d4ed8, #0891b2);
+		}
+
+		.tu_row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+		}
+
+		.tu_select,
+		.tu_input,
+		.tu_textarea {
+			padding: 9px 14px;
+			background: #f8fafc;
+			border: 1px solid #cfdbf3;
+			border-radius: 12px;
+			color: #0f172a;
+			font-family: inherit;
+			font-size: 14px;
+		}
+
+		.tu_select {
+			border-radius: 999px;
+			font-family: Consolas, "Courier New", monospace;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+		}
+
+		.tu_input {
+			flex: 1;
+			min-width: 240px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_select:focus,
+		.tu_input:focus,
+		.tu_textarea:focus {
+			outline: 2px solid #93c5fd;
+			border-color: #1d4ed8;
+		}
+
+		.tu_textarea {
+			width: 100%;
+			min-height: 130px;
+			border-radius: 12px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			line-height: 1.7;
+			resize: vertical;
+		}
+
+		.tu_btn {
+			display: inline-block;
+			padding: 9px 20px;
+			background: linear-gradient(135deg, #1d4ed8, #0891b2);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 14px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(29, 78, 216, 0.3);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.55;
+			cursor: progress;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_btn-ghost {
+			background: #eef2f9;
+			border: 1px solid #cfdbf3;
+			color: #1d4ed8;
+		}
+
+		.tu_presets {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin: 14px 0 0;
+		}
+
+		.tu_preset {
+			padding: 5px 14px;
+			background: #f1f5fb;
+			border: 1px solid #dbe3f0;
+			border-radius: 999px;
+			color: #1e3a8a;
+			font-family: inherit;
+			font-size: 13px;
+			cursor: pointer;
+			transition: background 0.16s ease, border-color 0.16s ease;
+		}
+
+		.tu_preset:hover {
+			background: #e0ecff;
+			border-color: #93c5fd;
+		}
+
+		.tu_body-wrap {
+			margin: 16px 0 0;
+			overflow: hidden;
+			background: #f8fafc;
+			border: 1px solid #dbe3f0;
+			border-radius: 14px;
+		}
+
+		.tu_body-wrap > summary {
+			padding: 11px 16px;
+			color: #1d4ed8;
+			font-size: 13.5px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		.tu_body-wrap[open] > summary {
+			border-bottom: 1px solid #dbe3f0;
+		}
+
+		.tu_body-inner {
+			padding: 14px 16px;
+		}
+
+		.tu_hint {
+			margin: 12px 0 0;
+			color: #64748b;
+			font-size: 13px;
+		}
+
+		.tu_meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px 24px;
+			margin: 0 0 16px;
+			padding: 12px 16px;
+			background: #f7f8fd;
+			border: 1px solid #e6e8f5;
+			border-radius: 12px;
+			color: #6b7090;
+			font-size: 13px;
+		}
+
+		.tu_meta b {
+			color: #1e1b4b;
+			font-weight: 600;
+		}
+
+		.tu_meta code {
+			color: #4338ca;
+			font-family: Consolas, "Courier New", monospace;
+			word-break: break-all;
+		}
+
+		.tu_status {
+			color: #64748b;
+			font-size: 14px;
+		}
+
+		.tu_out-head {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 12px;
+		}
+
+		.tu_code {
+			padding: 3px 12px;
+			border-radius: 999px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			font-weight: 700;
+		}
+
+		.tu_ok {
+			background: #dcfce7;
+			color: #15803d;
+		}
+
+		.tu_warn {
+			background: #fef3c7;
+			color: #b45309;
+		}
+
+		.tu_bad {
+			background: #fee2e2;
+			color: #b91c1c;
+		}
+
+		.tu_out-meta {
+			color: #64748b;
+			font-size: 12.5px;
+		}
+
+		.tu_tabs {
+			display: inline-flex;
+			gap: 4px;
+			padding: 4px;
+			margin-bottom: 12px;
+			background: #eef2f9;
+			border-radius: 999px;
+		}
+
+		.tu_tab {
+			padding: 6px 16px;
+			background: transparent;
+			border: none;
+			border-radius: 999px;
+			color: #5b6b8c;
+			font-family: inherit;
+			font-size: 13px;
+			cursor: pointer;
+		}
+
+		.tu_tab[aria-selected="true"] {
+			background: #fff;
+			color: #1d4ed8;
+			font-weight: 600;
+			box-shadow: 0 2px 8px rgba(29, 78, 216, 0.16);
+		}
+
+		.tu_view {
+			display: none;
+		}
+
+		.tu_view.tu_on {
+			display: block;
+		}
+
+		.tu_data {
+			margin: 0;
+			padding: 16px 18px;
+			max-height: 420px;
+			overflow: auto;
+			background: #0b1220;
+			border-radius: 14px;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			line-height: 1.75;
+			white-space: pre-wrap;
+			word-break: break-word;
+		}
+
+		.tu_data .tu_k {
+			color: #7dd3fc;
+		}
+
+		.tu_data .tu_s {
+			color: #86efac;
+		}
+
+		.tu_data .tu_m {
+			color: #fcd34d;
+		}
+
+		.tu_data .tu_b {
+			color: #c4b5fd;
+		}
+
+		.tu_data .tu_n {
+			color: #fca5a5;
+		}
+
+		.tu_data .tu_p {
+			color: #64748b;
+		}
+
+		.tu_headers {
+			width: 100%;
+			border-collapse: collapse;
+			overflow: hidden;
+			border: 1px solid #e2e8f0;
+			border-radius: 12px;
+			font-size: 13px;
+		}
+
+		.tu_headers th,
+		.tu_headers td {
+			padding: 8px 14px;
+			text-align: left;
+			border-bottom: 1px solid #eef2f7;
+			word-break: break-all;
+		}
+
+		.tu_headers th {
+			background: #f1f5fb;
+			color: #1e3a8a;
+			font-weight: 600;
+			white-space: nowrap;
+		}
+
+		.tu_headers td {
+			color: #475569;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		.tu_headers tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.tu_loading {
+			display: grid;
+			gap: 10px;
+			padding: 20px;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 14px;
+		}
+
+		.tu_sk-line {
+			display: block;
+			height: 13px;
+			border-radius: 6px;
+			background: linear-gradient(90deg, #eef2f9 25%, #f8fafc 37%, #eef2f9 63%);
+			background-size: 400% 100%;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-line-lg {
+			height: 20px;
+			width: 55%;
+		}
+
+		.tu_sk-line-sm {
+			width: 35%;
+		}
+
+		@keyframes tu_shimmer {
+			0% {
+				background-position: 100% 0;
+			}
+
+			100% {
+				background-position: 0 0;
+			}
+		}
+
+		.tu_error {
+			padding: 18px 20px;
+			background: #fff5f5;
+			border: 1px solid #fbd5d5;
+			border-radius: 14px;
+		}
+
+		.tu_error-title {
+			margin: 0 0 6px;
+			color: #b91c1c;
+			font-size: 15px;
+			font-weight: 600;
+		}
+
+		.tu_error-text {
+			margin: 0;
+			color: #7f1d1d;
+			font-size: 13.5px;
+			white-space: pre-line;
+		}
+
+		.tu_note {
+			margin: 12px 0 0;
+			padding: 10px 14px;
+			background: #fffbeb;
+			border: 1px solid #fde68a;
+			border-radius: 12px;
+			color: #92400e;
+			font-size: 13px;
+		}
+
+		.tu_raw {
+			margin-top: 16px;
+			overflow: hidden;
+			background: #f8fafc;
+			border: 1px solid #dbe3f0;
+			border-radius: 14px;
+		}
+
+		.tu_raw > summary {
+			padding: 11px 16px;
+			color: #1d4ed8;
+			font-size: 13.5px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		.tu_raw[open] > summary {
+			border-bottom: 1px solid #dbe3f0;
+		}
+
+		.tu_raw-code {
+			margin: 0;
+			padding: 14px 16px;
+			background: #0b1220;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.7;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.tu_note-list {
+			margin: 0;
+			padding-left: 20px;
+			color: #4b5563;
+			font-size: 14px;
+		}
+
+		.tu_note-list li {
+			margin-bottom: 8px;
+		}
+
+		.tu_note-list code {
+			padding: 1px 6px;
+			background: #eef2f9;
+			border-radius: 6px;
+			color: #1d4ed8;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		footer {
+			width: min(100% - 48px, 1120px);
+			margin: 6px auto 40px;
+			color: #8792b3;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_input {
+				min-width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-4 · API Tester</p>
+			<h1>接口测试台</h1>
+			<p class="tu_lead">选方法、填地址、发请求：GET 拿数据，POST / PUT / PATCH 带着 JSON 请求体发出去，成功失败都把它显示出来。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_req-title">
+			<h2 id="tu_req-title">请求</h2>
+
+			<div class="tu_row">
+				<select class="tu_select" id="tu_method" aria-label="请求方法">
+					<option value="GET">GET</option>
+					<option value="POST">POST</option>
+					<option value="PUT">PUT</option>
+					<option value="PATCH">PATCH</option>
+					<option value="DELETE">DELETE</option>
+				</select>
+				<input class="tu_input" id="tu_url" type="url" spellcheck="false" aria-label="接口地址" value="https://jsonplaceholder.typicode.com/posts">
+				<button class="tu_btn" id="tu_send" type="button">发送</button>
+				<button class="tu_btn tu_btn-ghost" id="tu_cancel" type="button" hidden>取消</button>
+			</div>
+
+			<div class="tu_presets" id="tu_presets"></div>
+
+			<details class="tu_body-wrap" id="tu_body-wrap" open>
+				<summary>请求体（JSON）</summary>
+				<div class="tu_body-inner">
+					<textarea class="tu_textarea" id="tu_body" spellcheck="false" aria-label="JSON 请求体">{
+  "title": "17-4 接口测试",
+  "body": "这条数据是 POST 发出去的",
+  "userId": 1
+}</textarea>
+					<p class="tu_hint">GET / DELETE 不需要请求体；POST / PUT / PATCH 会把这段 JSON 放进 body，并自动加 <code>Content-Type: application/json</code>。</p>
+				</div>
+			</details>
+
+			<details class="tu_raw">
+				<summary>本次请求发送了什么</summary>
+				<pre class="tu_raw-code" id="tu_request">还没有发过请求。</pre>
+			</details>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_res-title">
+			<h2 id="tu_res-title">接口返回</h2>
+
+			<div class="tu_meta">
+				<span>方法：<b id="tu_method-view">—</b></span>
+				<span>状态：<b id="tu_status">未发送</b></span>
+				<span>耗时：<b id="tu_time">—</b></span>
+				<span>大小：<b id="tu_size">—</b></span>
+			</div>
+
+			<div id="tu_result" aria-live="polite">
+				<p class="tu_status">填好地址，点「发送」试试。蓝色预设按钮会直接填好并发送。</p>
+			</div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_help-title">
+			<h2 id="tu_help-title">几个容易踩的坑</h2>
+			<ul class="tu_note-list">
+				<li><code>fetch</code> 只在**网络层失败**时抛异常（断网、域名不存在、被 CORS 拦下）；404、500 这类是「服务器答复了，但状态是错误」，<code>fetch</code> 不会抛错，要看 <code>res.ok</code> 或 <code>res.status</code>。</li>
+				<li>POST 要和 <code>Content-Type: application/json</code> 一起发，服务端才知道 body 是 JSON 而不是表单。</li>
+				<li>jsonplaceholder 是假接口：POST 会返回 201 和一条带 <code>id: 101</code> 的假数据，DELETE 返回空对象，都不会真的改动服务器。</li>
+				<li>浏览器里读不到全部响应头：只有 CORS 允许暴露（<code>Access-Control-Expose-Headers</code>）的头才可见，所以「响应头」标签里看到的是可见部分。</li>
+			</ul>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-4 · 接口测试台（GET / POST / PUT / PATCH / DELETE）</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_method = document.getElementById('tu_method');
+			var tu_url = document.getElementById('tu_url');
+			var tu_body = document.getElementById('tu_body');
+			var tu_send = document.getElementById('tu_send');
+			var tu_cancel = document.getElementById('tu_cancel');
+			var tu_status = document.getElementById('tu_status');
+			var tu_timeView = document.getElementById('tu_time');
+			var tu_sizeView = document.getElementById('tu_size');
+			var tu_methodView = document.getElementById('tu_method-view');
+			var tu_result = document.getElementById('tu_result');
+			var tu_presets = document.getElementById('tu_presets');
+			var tu_request = document.getElementById('tu_request');
+			var tu_bodyWrap = document.getElementById('tu_body-wrap');
+
+			var tu_controller = null;
+			var tu_timedOut = false;
+			var tu_busy = false;
+
+			var tu_presetList = [
+				{
+					label: 'GET 列表',
+					method: 'GET',
+					url: 'https://jsonplaceholder.typicode.com/posts?_limit=3',
+					body: ''
+				},
+				{
+					label: 'GET 单条',
+					method: 'GET',
+					url: 'https://jsonplaceholder.typicode.com/posts/1',
+					body: ''
+				},
+				{
+					label: 'POST 新建',
+					method: 'POST',
+					url: 'https://jsonplaceholder.typicode.com/posts',
+					body: '{\n  "title": "17-4 接口测试",\n  "body": "这条数据是 POST 发出去的",\n  "userId": 1\n}'
+				},
+				{
+					label: 'PUT 更新',
+					method: 'PUT',
+					url: 'https://jsonplaceholder.typicode.com/posts/1',
+					body: '{\n  "id": 1,\n  "title": "改过的标题",\n  "body": "PUT 会覆盖整条记录",\n  "userId": 1\n}'
+				},
+				{
+					label: 'PATCH 局部',
+					method: 'PATCH',
+					url: 'https://jsonplaceholder.typicode.com/posts/1',
+					body: '{\n  "title": "只改标题"\n}'
+				},
+				{
+					label: 'DELETE 删除',
+					method: 'DELETE',
+					url: 'https://jsonplaceholder.typicode.com/posts/1',
+					body: ''
+				},
+				{
+					label: '404 错误示例',
+					method: 'GET',
+					url: 'https://jsonplaceholder.typicode.com/posts/9999',
+					body: ''
+				},
+				{
+					label: '域名不存在',
+					method: 'GET',
+					url: 'https://api.example.invalid/users',
+					body: ''
+				}
+			];
+
+			function tu_el(tu_tag, tu_className, tu_text) {
+				var tu_node = document.createElement(tu_tag);
+				if (tu_className) {
+					tu_node.className = tu_className;
+				}
+				if (tu_text !== undefined && tu_text !== null) {
+					tu_node.textContent = String(tu_text);
+				}
+				return tu_node;
+			}
+
+			function tu_bytes(tu_text) {
+				try {
+					return new Blob([tu_text]).size;
+				} catch (tu_error) {
+					return tu_text.length;
+				}
+			}
+
+			function tu_escape(tu_text) {
+				return tu_text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			}
+
+			/* 给返回的 JSON 上色 */
+			function tu_highlight(tu_text) {
+				return tu_escape(tu_text).replace(
+					/("(?:\\u[0-9a-fA-F]{4}|\\[^u]|[^\\"])*"\s*:?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+					function (tu_match) {
+						if (tu_match.charAt(0) === '"') {
+							if (/:\s*$/.test(tu_match)) {
+								return '<span class="tu_k">' + tu_match.replace(/:\s*$/, '') + '</span><span class="tu_p">:</span>';
+							}
+							return '<span class="tu_s">' + tu_match + '</span>';
+						}
+						if (tu_match === 'true' || tu_match === 'false') {
+							return '<span class="tu_b">' + tu_match + '</span>';
+						}
+						if (tu_match === 'null') {
+							return '<span class="tu_n">' + tu_match + '</span>';
+						}
+						return '<span class="tu_m">' + tu_match + '</span>';
+					}
+				);
+			}
+
+			function tu_statusClass(tu_code) {
+				if (tu_code >= 200 && tu_code < 300) {
+					return 'tu_ok';
+				}
+				if (tu_code >= 300 && tu_code < 400) {
+					return 'tu_warn';
+				}
+				return 'tu_bad';
+			}
+
+			function tu_showLoading() {
+				tu_result.innerHTML = '';
+
+				var tu_box = tu_el('div', 'tu_loading');
+				tu_box.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-lg'));
+				tu_box.appendChild(tu_el('span', 'tu_sk-line'));
+				tu_box.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-sm'));
+				tu_result.appendChild(tu_box);
+				tu_result.appendChild(tu_el('p', 'tu_hint', '正在等待接口回应…'));
+			}
+
+			function tu_showError(tu_title, tu_message) {
+				tu_result.innerHTML = '';
+
+				var tu_box = tu_el('div', 'tu_error');
+				tu_box.appendChild(tu_el('p', 'tu_error-title', tu_title));
+				tu_box.appendChild(tu_el('p', 'tu_error-text', tu_message));
+				tu_result.appendChild(tu_box);
+
+				tu_status.textContent = '失败';
+				tu_timeView.textContent = '—';
+				tu_sizeView.textContent = '—';
+			}
+
+			function tu_headerTable(tu_headers) {
+				var tu_table = document.createElement('table');
+				tu_table.className = 'tu_headers';
+
+				var tu_thead = document.createElement('thead');
+				var tu_tr = document.createElement('tr');
+				tu_tr.appendChild(tu_el('th', null, '响应头'));
+				tu_tr.appendChild(tu_el('th', null, '值'));
+				tu_thead.appendChild(tu_tr);
+				tu_table.appendChild(tu_thead);
+
+				var tu_tbody = document.createElement('tbody');
+				tu_headers.forEach(function (tu_pair) {
+					var tu_line = document.createElement('tr');
+					tu_line.appendChild(tu_el('td', null, tu_pair[0]));
+					tu_line.appendChild(tu_el('td', null, tu_pair[1]));
+					tu_tbody.appendChild(tu_line);
+				});
+
+				if (!tu_headers.length) {
+					var tu_empty = document.createElement('tr');
+					var tu_cell = tu_el('td', null, '浏览器没有暴露任何响应头（跨域时只暴露白名单里的头）。');
+					tu_cell.colSpan = 2;
+					tu_empty.appendChild(tu_cell);
+					tu_tbody.appendChild(tu_empty);
+				}
+
+				tu_table.appendChild(tu_tbody);
+				return tu_table;
+			}
+
+			function tu_renderResponse(tu_response, tu_text, tu_ms, tu_sent) {
+				tu_result.innerHTML = '';
+
+				tu_methodView.textContent = tu_sent.method;
+				tu_status.textContent = tu_response.status + ' ' + (tu_response.statusText || '');
+				tu_timeView.textContent = tu_ms + ' ms';
+				tu_sizeView.textContent = tu_bytes(tu_text) + ' B';
+
+				var tu_head = tu_el('div', 'tu_out-head');
+				tu_head.appendChild(tu_el('span', 'tu_code ' + tu_statusClass(tu_response.status), tu_response.status + ' ' + (tu_response.statusText || '')));
+				tu_head.appendChild(tu_el('span', 'tu_out-meta', (tu_response.headers.get('content-type') || '未知类型') + ' · ' + tu_bytes(tu_text) + ' 字节 · ' + tu_ms + ' ms'));
+				tu_result.appendChild(tu_head);
+
+				if (!tu_response.ok) {
+					var tu_note = tu_el('p', 'tu_note', 'HTTP ' + tu_response.status + ' 说明服务器确实回应了，只是状态是错误；fetch 本身不会抛异常，要靠 res.ok / res.status 判断。下面的响应体仍然照原样展示。');
+					tu_result.appendChild(tu_note);
+				}
+
+				var tu_tabs = tu_el('div', 'tu_tabs');
+				var tu_tabData = tu_el('button', 'tu_tab', '响应数据');
+				tu_tabData.type = 'button';
+				tu_tabData.setAttribute('aria-selected', 'true');
+				var tu_tabHeaders = tu_el('button', 'tu_tab', '响应头（' + Array.from(tu_response.headers.keys()).length + '）');
+				tu_tabHeaders.type = 'button';
+				tu_tabHeaders.setAttribute('aria-selected', 'false');
+				tu_tabs.appendChild(tu_tabData);
+				tu_tabs.appendChild(tu_tabHeaders);
+				tu_result.appendChild(tu_tabs);
+
+				var tu_viewData = tu_el('div', 'tu_view tu_on');
+				var tu_viewHeaders = tu_el('div', 'tu_view');
+
+				var tu_data = document.createElement('pre');
+				tu_data.className = 'tu_data';
+				if (!tu_text) {
+					tu_data.textContent = '（空响应体）';
+				} else {
+					var tu_parsed = null;
+					try {
+						tu_parsed = JSON.parse(tu_text);
+					} catch (tu_parseError) {
+						tu_parsed = null;
+					}
+					if (tu_parsed !== null) {
+						tu_data.innerHTML = tu_highlight(JSON.stringify(tu_parsed, null, 2));
+					} else {
+						tu_data.textContent = tu_text;
+					}
+				}
+				tu_viewData.appendChild(tu_data);
+
+				var tu_headerPairs = [];
+				tu_response.headers.forEach(function (tu_value, tu_name) {
+					tu_headerPairs.push([tu_name, tu_value]);
+				});
+				tu_viewHeaders.appendChild(tu_headerTable(tu_headerPairs));
+
+				tu_result.appendChild(tu_viewData);
+				tu_result.appendChild(tu_viewHeaders);
+
+				function tu_switch(tu_showData) {
+					tu_viewData.classList.toggle('tu_on', tu_showData);
+					tu_viewHeaders.classList.toggle('tu_on', !tu_showData);
+					tu_tabData.setAttribute('aria-selected', tu_showData ? 'true' : 'false');
+					tu_tabHeaders.setAttribute('aria-selected', tu_showData ? 'false' : 'true');
+				}
+
+				tu_tabData.addEventListener('click', function () {
+					tu_switch(true);
+				});
+				tu_tabHeaders.addEventListener('click', function () {
+					tu_switch(false);
+				});
+			}
+
+			function tu_setBusy(tu_busy) {
+				tu_send.disabled = tu_busy;
+				tu_cancel.hidden = !tu_busy;
+			}
+
+			async function tu_sendRequest() {
+				if (tu_busy) {
+					return;
+				}
+
+				var tu_methodValue = tu_method.value;
+				var tu_urlValue = tu_url.value.trim();
+
+				if (!tu_urlValue) {
+					tu_showError('地址是空的', '先填一个接口地址，比如 https://jsonplaceholder.typicode.com/posts');
+					return;
+				}
+
+				var tu_bodyValue = tu_body.value.trim();
+				var tu_sendBody = tu_bodyValue !== '' && tu_methodValue !== 'GET' && tu_methodValue !== 'HEAD';
+
+				if (tu_sendBody) {
+					try {
+						JSON.parse(tu_bodyValue);
+					} catch (tu_jsonError) {
+						tu_showError('请求体不是合法 JSON', 'JSON.parse 报错：' + tu_jsonError.message + '。改好再发。');
+						return;
+					}
+				}
+
+				var tu_headers = {};
+				if (tu_sendBody) {
+					tu_headers['Content-Type'] = 'application/json';
+				}
+				tu_headers['Accept'] = 'application/json';
+
+				var tu_options = {
+					method: tu_methodValue,
+					headers: tu_headers,
+					cache: 'no-store'
+				};
+				if (tu_sendBody) {
+					tu_options.body = tu_bodyValue;
+				}
+
+				tu_request.textContent =
+					tu_methodValue + ' ' + tu_urlValue + '\n' +
+					'--- 请求头 ---\n' +
+					Object.keys(tu_headers).map(function (tu_name) {
+						return tu_name + ': ' + tu_headers[tu_name];
+					}).join('\n') +
+					'\n--- 请求体 ---\n' +
+					(tu_sendBody ? tu_bodyValue : '（没有请求体）');
+
+				tu_methodView.textContent = tu_methodValue;
+				tu_status.textContent = '请求中…';
+				tu_timeView.textContent = '—';
+				tu_sizeView.textContent = '—';
+				tu_setBusy(true);
+				tu_busy = true;
+				tu_showLoading();
+
+				tu_controller = new AbortController();
+				tu_timedOut = false;
+				tu_options.signal = tu_controller.signal;
+
+				var tu_start = (window.performance && window.performance.now) ? window.performance.now() : Date.now();
+				var tu_timer = window.setTimeout(function () {
+					tu_timedOut = true;
+					tu_controller.abort();
+				}, 10000);
+
+				try {
+					var tu_response = await fetch(tu_urlValue, tu_options);
+					var tu_text = await tu_response.text();
+					var tu_end = (window.performance && window.performance.now) ? window.performance.now() : Date.now();
+					tu_renderResponse(tu_response, tu_text, Math.round(tu_end - tu_start), {
+						method: tu_methodValue,
+						url: tu_urlValue,
+						headers: tu_headers,
+						body: tu_sendBody ? tu_bodyValue : ''
+					});
+				} catch (tu_error) {
+					var tu_message;
+					if (tu_error && tu_error.name === 'AbortError') {
+						tu_message = tu_timedOut ? '请求超过 10 秒没有回应，已超时中止。' : '请求被手动取消（abort），所以不会有响应。';
+					} else if (tu_error instanceof TypeError) {
+						tu_message = '网络层就失败了：域名不存在、断网，或者这个接口不允许跨域（响应头缺少 Access-Control-Allow-Origin）。浏览器的控制台里会有更详细的一条记录。';
+					} else {
+						tu_message = (tu_error && tu_error.message) ? tu_error.message : '未知错误。';
+					}
+					tu_showError('请求没有成功', tu_message + '\n\n注意：404 / 500 这类状态码不会走到这里，它们会正常渲染在上面的响应区。');
+				} finally {
+					window.clearTimeout(tu_timer);
+					tu_controller = null;
+					tu_busy = false;
+					tu_setBusy(false);
+				}
+			}
+
+			/* —— 预设按钮 —— */
+			tu_presetList.forEach(function (tu_preset) {
+				var tu_btn = tu_el('button', 'tu_preset', tu_preset.label);
+				tu_btn.type = 'button';
+				tu_btn.addEventListener('click', function () {
+					tu_method.value = tu_preset.method;
+					tu_url.value = tu_preset.url;
+					tu_body.value = tu_preset.body;
+					if (tu_preset.method !== 'GET') {
+						tu_bodyWrap.open = true;
+					}
+					tu_sendRequest();
+				});
+				tu_presets.appendChild(tu_btn);
+			});
+
+			tu_send.addEventListener('click', function () {
+				tu_sendRequest();
+			});
+
+			tu_cancel.addEventListener('click', function () {
+				if (tu_controller) {
+					tu_controller.abort();
+				}
+			});
+
+			tu_url.addEventListener('keydown', function (tu_event) {
+				if (tu_event.key === 'Enter') {
+					tu_sendRequest();
+				}
+			});
+
+			tu_method.addEventListener('change', function () {
+				tu_bodyWrap.open = tu_method.value !== 'GET';
+			});
+		})();
+	</script>
+</body>
+</html>

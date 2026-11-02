@@ -179,3 +179,76 @@ githup新建高级网页设计仓库把所有项目传到里面
 ```
 
 ---
+
+## 2026-11-02 13:44:37
+
+- **时间**：2026-11-02 13:44:37
+- **模型**：DeepSeek Flash（provider: deepseek-official，model: deepseek-flash）
+- **提示词**：
+
+```
+[图片] 教室投影屏照片：资源管理器 F:\高级网页设计 目录，记事本 json.txt 中写着两条作业，屏上还有 dog.ceo 与 jsonplaceholder 接口地址：
+1、完成17-1.html，展示json。
+2、完成17-2.html 获取一个接口的数据并展示。接口可以跨域访问。
+```
+
+---
+
+## 2026-11-02 13:54:48
+
+- **时间**：2026-11-02 13:54:48
+- **模型**：DeepSeek Flash（provider: deepseek-official，model: deepseek-flash）
+- **提示词**：
+
+```
+[图片] 教室投影屏照片，记事本 json.txt 续写第 3 条（屏上原样，域名写作 dummjson，实际为 dummyjson）：
+1、完成17-1.html，展示json。
+2、完成17-2.html 获取一个接口的数据并展示。接口可以跨域访问。
+3、完成17-3.html 和 17-3-detail.html,显示列表和列表详情，数据来源于接口，使用fetch和原生代码实现。
+列表：https://dummjson.com/products?limit=8，默认商品列表。
+详情：https://dummjson.com/products/1，根据 ID 获取单个商品。
+```
+
+---
+---
+
+## 2026-11-02 14:23:22
+
+- **时间**：2026-11-02 14:23:22
+- **模型**：DeepSeek Flash（provider: deepseek-official，model: deepseek-flash）
+- **提示词**：
+
+```
+安装这三个插件（dsh-builtin-browser-0.4.14.tgz、dsh-dafeiyu-pet-0.2.0.tgz、dsh-prompt-pilot-1.2.3.tgz）
+```
+
+---
+
+## 2026-11-02 14:31:27
+
+- **时间**：2026-11-02 14:31:27
+- **模型**：DeepSeek Flash（provider: deepseek-official，model: deepseek-flash）
+- **提示词**：
+
+```
+[图片] 教室投影屏照片，记事本 json.txt 续写第 4–6 条（第 6 条在截图里被截断）：
+4、完成17-4.html，对远程数据接口进行测试，支持get、post等，显示返回的数据和错误提示信息，
+示例post接口：https://jsonplaceholder.typicode.com/posts
+5、完成17-5.html ，展示javascript的两种定时器。
+6、完成17-6.html，使用promise和async完成异步操作的演示包饺子的流程。先买原料，买完原料之后同时和面、和馅……
+（截图到这里被截断，按「买原料 → 同时和面/和馅 → 擀皮 → 包饺子 → 煮饺子」实现）
+```
+
+---
+
+## 2026-11-02 14:41:25
+
+- **时间**：2026-11-02 14:41:25
+- **模型**：DeepSeek Flash（provider: deepseek-official，model: deepseek-flash）
+- **提示词**：
+
+```
+传到githup
+```
+
+---

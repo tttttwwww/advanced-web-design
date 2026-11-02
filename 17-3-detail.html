@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>商品详情 · dummyjson 接口</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[hidden] {
+			display: none !important;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f7f4f0;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #1c1917 0%, #9a3412 58%, #f59e0b 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1120px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.78;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 720px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_lead code {
+			padding: 1px 6px;
+			background: rgba(255, 255, 255, 0.18);
+			border-radius: 6px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.72;
+		}
+
+		main {
+			width: min(100% - 48px, 1120px);
+			margin: 24px auto 0;
+		}
+
+		.tu_crumb {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+			margin: 0 0 16px;
+			color: #8a7f74;
+			font-size: 13px;
+		}
+
+		.tu_crumb a {
+			color: #9a3412;
+			text-decoration: none;
+		}
+
+		.tu_crumb a:hover {
+			text-decoration: underline;
+		}
+
+		.tu_sep {
+			color: #c9beb2;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(28, 25, 23, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #292524;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#9a3412, #f59e0b);
+		}
+
+		.tu_notice {
+			margin: 0 0 14px;
+			padding: 10px 16px;
+			background: #fffbeb;
+			border: 1px solid #fde68a;
+			border-radius: 12px;
+			color: #92400e;
+			font-size: 13px;
+		}
+
+		.tu_detail {
+			display: grid;
+			grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+			gap: 28px;
+			align-items: start;
+		}
+
+		.tu_main {
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			aspect-ratio: 1 / 1;
+			background: #fff8ef;
+			border: 1px solid #f0e4d4;
+			border-radius: 18px;
+		}
+
+		.tu_main-img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			padding: 18px;
+			object-fit: contain;
+		}
+
+		.tu_thumbs {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 12px;
+		}
+
+		.tu_thumb-btn {
+			width: 76px;
+			height: 76px;
+			padding: 6px;
+			background: #fff8ef;
+			border: 2px solid transparent;
+			border-radius: 12px;
+			cursor: pointer;
+			transition: border-color 0.16s ease, background 0.16s ease;
+		}
+
+		.tu_thumb-btn:hover {
+			border-color: #fcd34d;
+		}
+
+		.tu_thumb-btn.tu_on {
+			background: #fff;
+			border-color: #f59e0b;
+		}
+
+		.tu_thumb-btn img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+
+		.tu_info {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			min-width: 0;
+		}
+
+		.tu_cat {
+			margin: 0;
+			color: #b45309;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		.tu_pdt-title {
+			margin: 0;
+			color: #1c1917;
+			font-size: clamp(20px, 2.4vw, 26px);
+			line-height: 1.35;
+		}
+
+		.tu_brand {
+			margin: 0;
+			color: #8a7f74;
+			font-size: 13px;
+		}
+
+		.tu_rate {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+			color: #8a7f74;
+			font-size: 13px;
+		}
+
+		.tu_stars {
+			color: #f59e0b;
+			letter-spacing: 1px;
+		}
+
+		.tu_score {
+			color: #292524;
+			font-weight: 600;
+		}
+
+		.tu_reviews-count {
+			color: #a8a29e;
+		}
+
+		.tu_buy {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: 10px;
+			margin: 4px 0 0;
+		}
+
+		.tu_price {
+			color: #b45309;
+			font-size: 32px;
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+			line-height: 1.2;
+		}
+
+		.tu_old {
+			color: #a8a29e;
+			font-size: 14px;
+			text-decoration: line-through;
+		}
+
+		.tu_off {
+			padding: 2px 10px;
+			background: #fee2e2;
+			border-radius: 999px;
+			color: #b91c1c;
+			font-size: 12.5px;
+			font-weight: 600;
+		}
+
+		.tu_stock {
+			margin: 0;
+			font-size: 13px;
+			font-weight: 600;
+		}
+
+		.tu_stock-in {
+			color: #15803d;
+		}
+
+		.tu_stock-out {
+			color: #b91c1c;
+		}
+
+		.tu_desc {
+			margin: 4px 0 0;
+			color: #4b4540;
+			font-size: 14px;
+			line-height: 1.75;
+		}
+
+		.tu_tags {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin: 4px 0 0;
+		}
+
+		.tu_tag {
+			padding: 3px 12px;
+			background: #f5efe7;
+			border: 1px solid #ece0d1;
+			border-radius: 999px;
+			color: #7c5a3c;
+			font-size: 12.5px;
+		}
+
+		.tu_actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 10px;
+			padding-top: 14px;
+			border-top: 1px dashed #efe6da;
+		}
+
+		.tu_btn {
+			display: inline-block;
+			padding: 8px 18px;
+			background: linear-gradient(135deg, #9a3412, #f59e0b);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 13.5px;
+			text-decoration: none;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(154, 52, 18, 0.3);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.55;
+			cursor: not-allowed;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_btn-ghost {
+			background: #f5efe7;
+			border: 1px solid #e2d9cd;
+			color: #9a3412;
+		}
+
+		.tu_hint {
+			margin: 8px 0 0;
+			color: #a8a29e;
+			font-size: 12.5px;
+		}
+
+		.tu_specs {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+			gap: 12px;
+			margin: 0;
+		}
+
+		.tu_spec {
+			padding: 12px 16px;
+			background: #faf8f5;
+			border: 1px solid #f0e8dd;
+			border-radius: 12px;
+		}
+
+		.tu_spec dt {
+			color: #8a7f74;
+			font-size: 12.5px;
+		}
+
+		.tu_spec dd {
+			margin: 4px 0 0;
+			color: #292524;
+			font-size: 14px;
+			word-break: break-word;
+		}
+
+		.tu_reviews {
+			display: grid;
+			gap: 12px;
+		}
+
+		.tu_review {
+			padding: 14px 16px;
+			background: #fffaf3;
+			border: 1px solid #f2e6d3;
+			border-radius: 14px;
+		}
+
+		.tu_review-head {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.tu_review-name {
+			color: #292524;
+			font-size: 13.5px;
+			font-weight: 600;
+		}
+
+		.tu_review-date {
+			margin-left: auto;
+			color: #a8a29e;
+			font-size: 12px;
+		}
+
+		.tu_review-text {
+			margin: 6px 0 0;
+			color: #4b4540;
+			font-size: 13.5px;
+		}
+
+		.tu_raw {
+			overflow: hidden;
+			background: #faf8f5;
+			border: 1px solid #ece3d8;
+			border-radius: 14px;
+		}
+
+		.tu_raw > summary {
+			padding: 12px 16px;
+			color: #9a3412;
+			font-size: 13.5px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		.tu_raw[open] > summary {
+			border-bottom: 1px solid #ece3d8;
+		}
+
+		.tu_raw-code {
+			margin: 0;
+			padding: 16px;
+			max-height: 340px;
+			overflow: auto;
+			background: #1c1917;
+			color: #e7e5e4;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.7;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.tu_skeleton {
+			display: grid;
+			grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+			gap: 28px;
+		}
+
+		.tu_sk-img {
+			display: block;
+			aspect-ratio: 1 / 1;
+			background: linear-gradient(90deg, #f5efe7 25%, #faf8f5 37%, #f5efe7 63%);
+			background-size: 400% 100%;
+			border-radius: 18px;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-lines {
+			display: grid;
+			gap: 12px;
+			align-content: start;
+			padding-top: 6px;
+		}
+
+		.tu_sk-line {
+			display: block;
+			width: 100%;
+			height: 14px;
+			background: linear-gradient(90deg, #f5efe7 25%, #faf8f5 37%, #f5efe7 63%);
+			background-size: 400% 100%;
+			border-radius: 7px;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-line-lg {
+			height: 24px;
+			width: 65%;
+		}
+
+		.tu_sk-line-sm {
+			width: 40%;
+		}
+
+		@keyframes tu_shimmer {
+			0% {
+				background-position: 100% 0;
+			}
+
+			100% {
+				background-position: 0 0;
+			}
+		}
+
+		.tu_error {
+			padding: 22px 24px;
+			background: #fff5f5;
+			border: 1px solid #fbd5d5;
+			border-radius: 16px;
+		}
+
+		.tu_error-title {
+			margin: 0 0 6px;
+			color: #b91c1c;
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		.tu_error-text {
+			margin: 0 0 14px;
+			color: #7f1d1d;
+			font-size: 13.5px;
+		}
+
+		footer {
+			width: min(100% - 48px, 1120px);
+			margin: 6px auto 40px;
+			color: #8b8178;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 860px) {
+			.tu_detail,
+			.tu_skeleton {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-3 · Product Detail</p>
+			<h1>商品详情</h1>
+			<p class="tu_lead">地址栏带上 <code>?id=7</code>，页面就从 <code>dummyjson.com/products/7</code> 把那一件商品取回来；没带 id 时先按 1 号展示。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<nav class="tu_crumb" aria-label="面包屑">
+			<a href="index.html">首页</a>
+			<span class="tu_sep">/</span>
+			<a href="17-3.html">商品列表</a>
+			<span class="tu_sep">/</span>
+			<span id="tu_crumb-name">详情</span>
+		</nav>
+
+		<div class="tu_panel" id="tu_loading">
+			<div class="tu_skeleton">
+				<span class="tu_sk-img"></span>
+				<div class="tu_sk-lines">
+					<span class="tu_sk-line tu_sk-line-lg"></span>
+					<span class="tu_sk-line"></span>
+					<span class="tu_sk-line tu_sk-line-sm"></span>
+					<span class="tu_sk-line"></span>
+					<span class="tu_sk-line tu_sk-line-sm"></span>
+				</div>
+			</div>
+			<p class="tu_hint" id="tu_loading-text">正在请求接口…</p>
+		</div>
+
+		<div class="tu_panel" id="tu_error" hidden>
+			<div class="tu_error">
+				<p class="tu_error-title">这件商品没取回来</p>
+				<p class="tu_error-text" id="tu_error-text"></p>
+				<div class="tu_actions">
+					<button class="tu_btn" id="tu_retry" type="button">再试一次</button>
+					<a class="tu_btn tu_btn-ghost" href="17-3.html">返回列表</a>
+				</div>
+			</div>
+		</div>
+
+		<div id="tu_content" hidden>
+			<p class="tu_notice" id="tu_notice" hidden></p>
+
+			<article class="tu_panel tu_detail" aria-labelledby="tu_pdt-title">
+				<div class="tu_gallery">
+					<div class="tu_main">
+						<img class="tu_main-img" id="tu_main" src="" alt="">
+					</div>
+					<div class="tu_thumbs" id="tu_thumbs"></div>
+				</div>
+
+				<div class="tu_info">
+					<p class="tu_cat" id="tu_cat"></p>
+					<h3 class="tu_pdt-title" id="tu_pdt-title"></h3>
+					<p class="tu_brand" id="tu_brand"></p>
+
+					<div class="tu_rate">
+						<span class="tu_stars" id="tu_stars"></span>
+						<span class="tu_score" id="tu_score"></span>
+						<span class="tu_reviews-count" id="tu_reviews-count"></span>
+					</div>
+
+					<div class="tu_buy">
+						<span class="tu_price" id="tu_price"></span>
+						<span class="tu_old" id="tu_old"></span>
+						<span class="tu_off" id="tu_off"></span>
+					</div>
+
+					<p class="tu_stock" id="tu_stock"></p>
+					<p class="tu_desc" id="tu_desc"></p>
+					<div class="tu_tags" id="tu_tags"></div>
+
+					<div class="tu_actions">
+						<a class="tu_btn" href="17-3.html">← 返回列表</a>
+						<button class="tu_btn tu_btn-ghost" id="tu_prev" type="button">上一个</button>
+						<button class="tu_btn tu_btn-ghost" id="tu_next" type="button">下一个</button>
+					</div>
+					<p class="tu_hint" id="tu_page-info"></p>
+				</div>
+			</article>
+
+			<section class="tu_panel" aria-labelledby="tu_specs-title">
+				<h2 id="tu_specs-title">规格与售后</h2>
+				<dl class="tu_specs" id="tu_specs"></dl>
+			</section>
+
+			<section class="tu_panel" aria-labelledby="tu_reviews-title">
+				<h2 id="tu_reviews-title">用户评价</h2>
+				<div class="tu_reviews" id="tu_reviews"></div>
+			</section>
+
+			<section class="tu_panel" aria-labelledby="tu_raw-title">
+				<h2 id="tu_raw-title">接口返回的原始数据</h2>
+				<details class="tu_raw">
+					<summary>展开这件商品的 JSON</summary>
+					<pre class="tu_raw-code" id="tu_raw-code"></pre>
+				</details>
+			</section>
+		</div>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-3-detail · 根据 ID 取单件商品</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_API = 'https://dummyjson.com/products/';
+
+			/* —— 从地址栏读 id：17-3-detail.html?id=7 —— */
+			var tu_rawId = new URLSearchParams(window.location.search).get('id');
+			var tu_parsedId = parseInt(tu_rawId, 10);
+			var tu_defaulted = false;
+			var tu_id;
+
+			if (!tu_rawId || isNaN(tu_parsedId) || tu_parsedId < 1) {
+				tu_id = 1;
+				tu_defaulted = true;
+			} else {
+				tu_id = tu_parsedId;
+			}
+
+			var tu_total = null;
+
+			var tu_loading = document.getElementById('tu_loading');
+			var tu_loadingText = document.getElementById('tu_loading-text');
+			var tu_errorBox = document.getElementById('tu_error');
+			var tu_errorText = document.getElementById('tu_error-text');
+			var tu_retry = document.getElementById('tu_retry');
+			var tu_content = document.getElementById('tu_content');
+			var tu_notice = document.getElementById('tu_notice');
+
+			var tu_main = document.getElementById('tu_main');
+			var tu_thumbs = document.getElementById('tu_thumbs');
+			var tu_cat = document.getElementById('tu_cat');
+			var tu_pdtTitle = document.getElementById('tu_pdt-title');
+			var tu_brand = document.getElementById('tu_brand');
+			var tu_starsEl = document.getElementById('tu_stars');
+			var tu_score = document.getElementById('tu_score');
+			var tu_reviewsCount = document.getElementById('tu_reviews-count');
+			var tu_price = document.getElementById('tu_price');
+			var tu_old = document.getElementById('tu_old');
+			var tu_off = document.getElementById('tu_off');
+			var tu_stock = document.getElementById('tu_stock');
+			var tu_desc = document.getElementById('tu_desc');
+			var tu_tags = document.getElementById('tu_tags');
+			var tu_specs = document.getElementById('tu_specs');
+			var tu_reviews = document.getElementById('tu_reviews');
+			var tu_rawCode = document.getElementById('tu_raw-code');
+			var tu_prev = document.getElementById('tu_prev');
+			var tu_next = document.getElementById('tu_next');
+			var tu_pageInfo = document.getElementById('tu_page-info');
+			var tu_crumbName = document.getElementById('tu_crumb-name');
+
+			function tu_el(tu_tag, tu_className, tu_text) {
+				var tu_node = document.createElement(tu_tag);
+				if (tu_className) {
+					tu_node.className = tu_className;
+				}
+				if (tu_text !== undefined && tu_text !== null) {
+					tu_node.textContent = String(tu_text);
+				}
+				return tu_node;
+			}
+
+			function tu_money(tu_value) {
+				return '$' + Number(tu_value).toFixed(2);
+			}
+
+			function tu_starsOf(tu_rating) {
+				var tu_score = Math.max(0, Math.min(5, Number(tu_rating) || 0));
+				var tu_full = Math.round(tu_score);
+				return '★★★★★'.slice(0, tu_full) + '☆☆☆☆☆'.slice(0, 5 - tu_full);
+			}
+
+			function tu_oldPrice(tu_value, tu_discount) {
+				var tu_rate = Number(tu_discount) || 0;
+				if (tu_rate <= 0 || tu_rate >= 100) {
+					return null;
+				}
+				return Number(tu_value) / (1 - tu_rate / 100);
+			}
+
+			function tu_shortDate(tu_iso) {
+				if (!tu_iso) {
+					return '—';
+				}
+				return String(tu_iso).slice(0, 10);
+			}
+
+			function tu_setState(tu_state) {
+				tu_loading.hidden = tu_state !== 'loading';
+				tu_errorBox.hidden = tu_state !== 'error';
+				tu_content.hidden = tu_state !== 'ready';
+			}
+
+			function tu_showError(tu_message) {
+				tu_errorText.textContent = tu_message;
+				tu_setState('error');
+			}
+
+			/* —— 画图册：主图 + 缩略图切换 —— */
+			function tu_renderGallery(tu_product) {
+				var tu_images = Array.isArray(tu_product.images) && tu_product.images.length ? tu_product.images : [tu_product.thumbnail];
+				tu_main.src = tu_images[0] || '';
+				tu_main.alt = tu_product.title;
+
+				tu_thumbs.innerHTML = '';
+				if (tu_images.length <= 1) {
+					tu_thumbs.hidden = true;
+					return;
+				}
+				tu_thumbs.hidden = false;
+
+				tu_images.forEach(function (tu_src, tu_index) {
+					var tu_btn = document.createElement('button');
+					tu_btn.type = 'button';
+					tu_btn.className = 'tu_thumb-btn' + (tu_index === 0 ? ' tu_on' : '');
+					tu_btn.setAttribute('aria-label', '查看第 ' + (tu_index + 1) + ' 张图片');
+
+					var tu_img = document.createElement('img');
+					tu_img.src = tu_src;
+					tu_img.alt = tu_product.title + ' 第 ' + (tu_index + 1) + ' 张';
+					tu_img.loading = 'lazy';
+					tu_btn.appendChild(tu_img);
+
+					tu_btn.addEventListener('click', function () {
+						tu_main.src = tu_src;
+						Array.prototype.forEach.call(tu_thumbs.querySelectorAll('.tu_thumb-btn'), function (tu_other) {
+							tu_other.classList.toggle('tu_on', tu_other === tu_btn);
+						});
+					});
+
+					tu_thumbs.appendChild(tu_btn);
+				});
+			}
+
+			/* —— 规格表 —— */
+			function tu_renderSpecs(tu_product) {
+				var tu_dims = tu_product.dimensions || {};
+				var tu_meta = tu_product.meta || {};
+				var tu_rows = [
+					['重量', tu_product.weight ? tu_product.weight + ' g' : '—'],
+					['尺寸（宽 × 高 × 深）', (tu_dims.width || '—') + ' × ' + (tu_dims.height || '—') + ' × ' + (tu_dims.depth || '—')],
+					['最小起订量', tu_product.minimumOrderQuantity ? tu_product.minimumOrderQuantity + ' 件' : '—'],
+					['库存状态', tu_product.availabilityStatus || '—'],
+					['保修', tu_product.warrantyInformation || '—'],
+					['发货', tu_product.shippingInformation || '—'],
+					['退货', tu_product.returnPolicy || '—'],
+					['条码', tu_meta.barcode || '—'],
+					['录入时间', tu_shortDate(tu_meta.createdAt)],
+					['更新时间', tu_shortDate(tu_meta.updatedAt)]
+				];
+
+				tu_specs.innerHTML = '';
+				tu_rows.forEach(function (tu_row) {
+					var tu_item = tu_el('div', 'tu_spec');
+					tu_item.appendChild(tu_el('dt', null, tu_row[0]));
+					tu_item.appendChild(tu_el('dd', null, tu_row[1]));
+					tu_specs.appendChild(tu_item);
+				});
+			}
+
+			/* —— 评价 —— */
+			function tu_renderReviews(tu_product) {
+				var tu_list = Array.isArray(tu_product.reviews) ? tu_product.reviews : [];
+
+				tu_reviews.innerHTML = '';
+				if (!tu_list.length) {
+					tu_reviews.appendChild(tu_el('p', 'tu_hint', '这件商品还没有评价。'));
+					return;
+				}
+
+				tu_list.forEach(function (tu_review) {
+					var tu_card = tu_el('div', 'tu_review');
+
+					var tu_head = tu_el('div', 'tu_review-head');
+					tu_head.appendChild(tu_el('span', 'tu_review-name', tu_review.reviewerName || '匿名用户'));
+					tu_head.appendChild(tu_el('span', 'tu_stars', tu_starsOf(tu_review.rating)));
+					tu_head.appendChild(tu_el('span', 'tu_review-date', tu_shortDate(tu_review.date)));
+					tu_card.appendChild(tu_head);
+
+					tu_card.appendChild(tu_el('p', 'tu_review-text', tu_review.comment || '（无内容）'));
+					tu_reviews.appendChild(tu_card);
+				});
+			}
+
+			function tu_updateNav() {
+				tu_prev.disabled = tu_id <= 1;
+				tu_next.disabled = tu_total !== null && tu_id >= tu_total;
+
+				var tu_text = tu_total !== null ? '第 ' + tu_id + ' / ' + tu_total + ' 件商品' : '商品 ID：' + tu_id;
+				if (tu_id <= 1) {
+					tu_text += ' · 已是第一件';
+				}
+				if (tu_total !== null && tu_id >= tu_total) {
+					tu_text += ' · 已是最后一件';
+				}
+				tu_pageInfo.textContent = tu_text;
+			}
+
+			function tu_render(tu_product) {
+				document.title = tu_product.title + ' · 商品详情';
+
+				tu_crumbName.textContent = tu_product.title;
+				tu_cat.textContent = tu_product.category || '未分类';
+				tu_pdtTitle.textContent = tu_product.title;
+				tu_brand.textContent = (tu_product.brand ? '品牌 ' + tu_product.brand : '无品牌信息') + (tu_product.sku ? ' · SKU ' + tu_product.sku : '');
+
+				var tu_reviewTotal = Array.isArray(tu_product.reviews) ? tu_product.reviews.length : 0;
+				tu_starsEl.textContent = tu_starsOf(tu_product.rating);
+				tu_score.textContent = Number(tu_product.rating).toFixed(2) + ' 分';
+				tu_reviewsCount.textContent = '· ' + tu_reviewTotal + ' 条评价';
+
+				tu_price.textContent = tu_money(tu_product.price);
+				var tu_oldValue = tu_oldPrice(tu_product.price, tu_product.discountPercentage);
+				if (tu_oldValue) {
+					tu_old.hidden = false;
+					tu_off.hidden = false;
+					tu_old.textContent = tu_money(tu_oldValue);
+					tu_off.textContent = '省 ' + Number(tu_product.discountPercentage).toFixed(2) + '%';
+				} else {
+					tu_old.hidden = true;
+					tu_off.hidden = true;
+				}
+
+				tu_stock.textContent = '库存 ' + tu_product.stock + ' 件 · ' + (tu_product.availabilityStatus || '状态未知');
+				tu_stock.className = 'tu_stock ' + (Number(tu_product.stock) > 0 ? 'tu_stock-in' : 'tu_stock-out');
+
+				tu_desc.textContent = tu_product.description || '这件商品没有写描述。';
+
+				tu_tags.innerHTML = '';
+				(Array.isArray(tu_product.tags) ? tu_product.tags : []).forEach(function (tu_tag) {
+					tu_tags.appendChild(tu_el('span', 'tu_tag', '#' + tu_tag));
+				});
+				if (!tu_tags.children.length) {
+					tu_tags.hidden = true;
+				}
+
+				tu_renderGallery(tu_product);
+				tu_renderSpecs(tu_product);
+				tu_renderReviews(tu_product);
+				tu_rawCode.textContent = JSON.stringify(tu_product, null, 2);
+				tu_updateNav();
+				tu_setState('ready');
+			}
+
+			/* —— 翻页边界：再取一次 total（只要 total 字段）—— */
+			async function tu_loadTotal() {
+				try {
+					var tu_response = await fetch('https://dummyjson.com/products?limit=1&select=id', { cache: 'no-store' });
+					if (!tu_response.ok) {
+						return;
+					}
+					var tu_data = await tu_response.json();
+					if (typeof tu_data.total === 'number') {
+						tu_total = tu_data.total;
+						tu_updateNav();
+					}
+				} catch (tu_error) {
+					/* 拿不到总数就算了，翻页按钮退化为始终可用 */
+				}
+			}
+
+			async function tu_load() {
+				tu_setState('loading');
+				tu_loadingText.textContent = '正在请求 ' + tu_API + tu_id + ' …';
+				document.getElementById('tu_error').hidden = true;
+
+				if (typeof fetch !== 'function') {
+					tu_showError('当前浏览器不支持 fetch，请换用新版 Chrome 或 Edge。');
+					return;
+				}
+
+				var tu_controller = new AbortController();
+				var tu_timer = window.setTimeout(function () {
+					tu_controller.abort();
+				}, 10000);
+
+				try {
+					var tu_response = await fetch(tu_API + tu_id, {
+						cache: 'no-store',
+						signal: tu_controller.signal
+					});
+					var tu_data = await tu_response.json();
+
+					if (!tu_response.ok) {
+						throw new Error(tu_data && tu_data.message ? tu_data.message : '接口返回 HTTP ' + tu_response.status);
+					}
+
+					tu_render(tu_data);
+
+					if (tu_defaulted) {
+						tu_notice.textContent = '地址里没有带 id 参数，先按 1 号商品展示。在地址后面加 ?id=7 就能看别的商品。';
+						tu_notice.hidden = false;
+					}
+
+					tu_loadTotal();
+				} catch (tu_error) {
+					var tu_message;
+					if (tu_error && tu_error.name === 'AbortError') {
+						tu_message = '请求超过 10 秒没有返回，已自动中止。检查网络后再试。';
+					} else if (tu_error instanceof TypeError) {
+						tu_message = '网络请求被拦下了：可能断网，或接口没有允许跨域。';
+					} else {
+						tu_message = (tu_error && tu_error.message) ? tu_error.message : '未知错误。';
+					}
+					tu_message += '（当前请求的是 id = ' + tu_id + '，dummyjson 的商品 id 在 1 到 ' + (tu_total === null ? '194' : tu_total) + ' 之间）';
+					tu_showError(tu_message);
+				} finally {
+					window.clearTimeout(tu_timer);
+				}
+			}
+
+			function tu_go(tu_delta) {
+				var tu_target = tu_id + tu_delta;
+				if (tu_target < 1 || (tu_total !== null && tu_target > tu_total)) {
+					return;
+				}
+				window.location.href = '17-3-detail.html?id=' + tu_target;
+			}
+
+			tu_prev.addEventListener('click', function () {
+				tu_go(-1);
+			});
+
+			tu_next.addEventListener('click', function () {
+				tu_go(1);
+			});
+
+			tu_retry.addEventListener('click', function () {
+				tu_load();
+			});
+
+			tu_load();
+		})();
+	</script>
+</body>
+</html>

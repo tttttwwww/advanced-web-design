@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>接口数据展示 · fetch 跨域请求</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #f4f5fb;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #111827 0%, #4338ca 58%, #db2777 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1100px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.78;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 700px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.72;
+		}
+
+		main {
+			width: min(100% - 48px, 1100px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 14px;
+			font-size: 18px;
+			color: #1e1b4b;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#4338ca, #db2777);
+		}
+
+		.tu_toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding-bottom: 16px;
+			border-bottom: 1px dashed #e1e4f2;
+		}
+
+		.tu_tabs {
+			display: inline-flex;
+			gap: 4px;
+			padding: 4px;
+			background: #eef0fa;
+			border-radius: 999px;
+		}
+
+		.tu_tab {
+			padding: 7px 16px;
+			background: transparent;
+			border: none;
+			border-radius: 999px;
+			color: #5f6385;
+			font-family: inherit;
+			font-size: 14px;
+			cursor: pointer;
+			transition: background 0.18s ease, color 0.18s ease;
+		}
+
+		.tu_tab:hover {
+			color: #4338ca;
+		}
+
+		.tu_tab[aria-selected="true"],
+		.tu_tab.tu_on {
+			background: #fff;
+			color: #4338ca;
+			font-weight: 600;
+			box-shadow: 0 2px 8px rgba(67, 56, 202, 0.18);
+		}
+
+		.tu_btn {
+			padding: 8px 18px;
+			background: linear-gradient(135deg, #4338ca, #db2777);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 13.5px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(67, 56, 202, 0.32);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn[disabled] {
+			opacity: 0.6;
+			cursor: progress;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.tu_meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px 24px;
+			margin: 16px 0;
+			padding: 12px 16px;
+			background: #f7f8fd;
+			border: 1px solid #e6e8f5;
+			border-radius: 12px;
+			color: #6b7090;
+			font-size: 13px;
+		}
+
+		.tu_meta code {
+			color: #4338ca;
+			font-family: Consolas, "Courier New", monospace;
+			word-break: break-all;
+		}
+
+		.tu_meta b {
+			color: #1e1b4b;
+			font-weight: 600;
+		}
+
+		.tu_items {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+			gap: 14px;
+		}
+
+		.tu_item {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			padding: 16px 18px;
+			background: #fbfbff;
+			border: 1px solid #e6e8f5;
+			border-radius: 16px;
+			transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+		}
+
+		.tu_item:hover {
+			transform: translateY(-3px);
+			border-color: #c7c9f5;
+			box-shadow: 0 12px 24px rgba(67, 56, 202, 0.14);
+		}
+
+		.tu_item-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.tu_item-main {
+			min-width: 0;
+		}
+
+		.tu_item-title {
+			margin: 0;
+			color: #1e1b4b;
+			font-size: 15px;
+			line-height: 1.5;
+		}
+
+		.tu_item-sub {
+			margin: 0;
+			color: #8a90b8;
+			font-size: 12.5px;
+		}
+
+		.tu_item-text {
+			margin: 0;
+			color: #4b5563;
+			font-size: 13px;
+			line-height: 1.65;
+		}
+
+		.tu_pill {
+			margin-left: auto;
+			padding: 2px 10px;
+			background: #eef0fa;
+			border-radius: 999px;
+			color: #4338ca;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12px;
+			white-space: nowrap;
+		}
+
+		.tu_avatar {
+			display: grid;
+			place-items: center;
+			flex: none;
+			width: 38px;
+			height: 38px;
+			background: linear-gradient(135deg, #4338ca, #db2777);
+			border-radius: 12px;
+			color: #fff;
+			font-size: 16px;
+			font-weight: 700;
+		}
+
+		.tu_info {
+			display: grid;
+			gap: 6px;
+			margin: 0;
+			font-size: 13px;
+		}
+
+		.tu_pair {
+			display: grid;
+			grid-template-columns: 56px 1fr;
+			gap: 8px;
+		}
+
+		.tu_pair dt {
+			color: #8a90b8;
+		}
+
+		.tu_pair dd {
+			margin: 0;
+			color: #334155;
+			word-break: break-word;
+		}
+
+		.tu_dog {
+			display: grid;
+			gap: 12px;
+			justify-items: center;
+			padding: 6px 0;
+		}
+
+		.tu_dog-img {
+			display: block;
+			width: min(100%, 520px);
+			border-radius: 18px;
+			box-shadow: 0 16px 32px rgba(17, 24, 39, 0.16);
+		}
+
+		.tu_dog-cap {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			margin: 0;
+			color: #6b7090;
+			font-size: 13px;
+			word-break: break-all;
+		}
+
+		.tu_skeleton {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+			gap: 14px;
+		}
+
+		.tu_sk {
+			display: grid;
+			gap: 10px;
+			padding: 18px;
+			background: #fbfbff;
+			border: 1px solid #e6e8f5;
+			border-radius: 16px;
+		}
+
+		.tu_sk-line {
+			display: block;
+			height: 12px;
+			background: linear-gradient(90deg, #eef0fa 25%, #f7f8fd 37%, #eef0fa 63%);
+			background-size: 400% 100%;
+			border-radius: 6px;
+			animation: tu_shimmer 1.4s ease infinite;
+		}
+
+		.tu_sk-line-lg {
+			height: 18px;
+			width: 60%;
+		}
+
+		.tu_sk-line-sm {
+			width: 40%;
+		}
+
+		@keyframes tu_shimmer {
+			0% {
+				background-position: 100% 0;
+			}
+
+			100% {
+				background-position: 0 0;
+			}
+		}
+
+		.tu_hint {
+			margin: 12px 0 0;
+			color: #8a90b8;
+			font-size: 13px;
+		}
+
+		.tu_error {
+			padding: 20px 22px;
+			background: #fff5f5;
+			border: 1px solid #fbd5d5;
+			border-radius: 16px;
+		}
+
+		.tu_error-title {
+			margin: 0 0 6px;
+			color: #b91c1c;
+			font-size: 15px;
+			font-weight: 600;
+		}
+
+		.tu_error-text {
+			margin: 0 0 14px;
+			color: #7f1d1d;
+			font-size: 13.5px;
+			line-height: 1.7;
+		}
+
+		.tu_raw {
+			margin-top: 18px;
+			overflow: hidden;
+			background: #fbfbff;
+			border: 1px solid #e6e8f5;
+			border-radius: 14px;
+		}
+
+		.tu_raw > summary {
+			padding: 12px 16px;
+			color: #4338ca;
+			font-size: 13.5px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+
+		.tu_raw[open] > summary {
+			border-bottom: 1px solid #e6e8f5;
+		}
+
+		.tu_raw-code {
+			margin: 0;
+			padding: 16px;
+			max-height: 340px;
+			overflow: auto;
+			background: #0b1220;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.7;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		.tu_note-list {
+			margin: 0;
+			padding-left: 20px;
+			color: #4b5563;
+			font-size: 14px;
+		}
+
+		.tu_note-list li {
+			margin-bottom: 8px;
+		}
+
+		.tu_note-list code {
+			padding: 1px 6px;
+			background: #eef0fa;
+			border-radius: 6px;
+			color: #4338ca;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+		}
+
+		.tu_snippet {
+			margin: 14px 0 0;
+			padding: 16px 18px;
+			overflow: auto;
+			background: #0b1220;
+			border-radius: 12px;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 12.5px;
+			line-height: 1.75;
+			white-space: pre;
+		}
+
+		footer {
+			width: min(100% - 48px, 1100px);
+			margin: 6px auto 40px;
+			color: #8792b3;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_tab {
+				padding: 6px 12px;
+				font-size: 13px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-2 · Fetch &amp; CORS</p>
+			<h1>接口数据展示</h1>
+			<p class="tu_lead">用 fetch 向允许跨域的公开接口要一份 JSON，再把它变成页面上看得见的内容——同时把加载中、成功、失败三种状态都画出来。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_api-title">
+			<h2 id="tu_api-title">选一个接口，点它</h2>
+
+			<div class="tu_toolbar">
+				<div class="tu_tabs" role="tablist" aria-label="接口选择">
+					<button class="tu_tab tu_on" type="button" role="tab" aria-selected="true" data-api="users">用户列表</button>
+					<button class="tu_tab" type="button" role="tab" aria-selected="false" data-api="posts">文章列表</button>
+					<button class="tu_tab" type="button" role="tab" aria-selected="false" data-api="dog">随机狗图</button>
+				</div>
+
+				<button class="tu_btn" id="tu_reload" type="button">重新请求</button>
+			</div>
+
+			<div class="tu_meta">
+				<span>接口：<code id="tu_url">—</code></span>
+				<span>状态：<b id="tu_status">待请求</b></span>
+				<span>耗时：<b id="tu_time">—</b></span>
+				<span>条数：<b id="tu_count">—</b></span>
+			</div>
+
+			<div class="tu_result" id="tu_result" aria-live="polite"></div>
+
+			<details class="tu_raw">
+				<summary>原始 JSON 响应</summary>
+				<pre class="tu_raw-code" id="tu_raw-code">等待请求…</pre>
+			</details>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_why-title">
+			<h2 id="tu_why-title">为什么这三个接口能跨域</h2>
+			<ul class="tu_note-list">
+				<li>页面是从本地 <code>file://</code> 或 Live Server 打开的，域名和接口的域名完全不同，这是标准的跨域请求。</li>
+				<li>浏览器肯放行的原因是响应头里带了 <code>Access-Control-Allow-Origin</code>：JSONPlaceholder 会把你页面的 Origin 原样回写（用 <code>file://</code> 直接打开时回写的是 <code>null</code>），Dog CEO 则直接给 <code>*</code>，表示谁都给。</li>
+				<li>JSONPlaceholder（用户 / 文章）和 Dog CEO（随机狗图）都是教学用的公开接口，不注册、不带密钥，直接 <code>fetch</code> 即可。</li>
+				<li>请求失败时页面会显示原因：断网、超时，或者那个接口没有返回跨域响应头。</li>
+			</ul>
+			<pre class="tu_snippet">fetch('https://jsonplaceholder.typicode.com/users')
+  .then(function (res) { return res.json(); })
+  .then(function (data) { console.log(data); });
+
+// 本页用的是 async / await 写法，外加 10 秒超时和错误提示</pre>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-2 · fetch 获取接口数据</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			var tu_sources = {
+				users: {
+					label: '用户列表',
+					url: 'https://jsonplaceholder.typicode.com/users',
+					render: tu_renderUsers
+				},
+				posts: {
+					label: '文章列表',
+					url: 'https://jsonplaceholder.typicode.com/posts?_limit=12',
+					render: tu_renderPosts
+				},
+				dog: {
+					label: '随机狗图',
+					url: 'https://dog.ceo/api/breeds/image/random',
+					render: tu_renderDog
+				}
+			};
+
+			var tu_current = 'users';
+
+			var tu_resultEl = document.getElementById('tu_result');
+			var tu_urlEl = document.getElementById('tu_url');
+			var tu_statusEl = document.getElementById('tu_status');
+			var tu_timeEl = document.getElementById('tu_time');
+			var tu_countEl = document.getElementById('tu_count');
+			var tu_rawEl = document.getElementById('tu_raw-code');
+			var tu_reloadBtn = document.getElementById('tu_reload');
+
+			function tu_el(tu_tag, tu_className, tu_text) {
+				var tu_node = document.createElement(tu_tag);
+				if (tu_className) {
+					tu_node.className = tu_className;
+				}
+				if (tu_text !== undefined && tu_text !== null) {
+					tu_node.textContent = String(tu_text);
+				}
+				return tu_node;
+			}
+
+			function tu_firstChar(tu_name) {
+				var tu_text = (tu_name || '?').trim();
+				return tu_text.charAt(0).toUpperCase();
+			}
+
+			function tu_pair(tu_label, tu_value) {
+				var tu_row = tu_el('div', 'tu_pair');
+				var tu_empty = tu_value === undefined || tu_value === null || tu_value === '';
+				tu_row.appendChild(tu_el('dt', null, tu_label));
+				tu_row.appendChild(tu_el('dd', null, tu_empty ? '—' : tu_value));
+				return tu_row;
+			}
+
+			/* —— 加载中：骨架屏 —— */
+			function tu_showLoading() {
+				tu_resultEl.innerHTML = '';
+
+				var tu_wrap = tu_el('div', 'tu_skeleton');
+				for (var tu_i = 0; tu_i < 3; tu_i++) {
+					var tu_card = tu_el('div', 'tu_sk');
+					tu_card.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-lg'));
+					tu_card.appendChild(tu_el('span', 'tu_sk-line'));
+					tu_card.appendChild(tu_el('span', 'tu_sk-line tu_sk-line-sm'));
+					tu_wrap.appendChild(tu_card);
+				}
+
+				tu_resultEl.appendChild(tu_wrap);
+				tu_resultEl.appendChild(tu_el('p', 'tu_hint', '正在请求接口，等它把 JSON 送回来…'));
+			}
+
+			/* —— 失败状态 —— */
+			function tu_showError(tu_message) {
+				tu_resultEl.innerHTML = '';
+
+				var tu_box = tu_el('div', 'tu_error');
+				tu_box.appendChild(tu_el('p', 'tu_error-title', '请求没有成功'));
+				tu_box.appendChild(tu_el('p', 'tu_error-text', tu_message));
+
+				var tu_btn = tu_el('button', 'tu_btn', '再试一次');
+				tu_btn.type = 'button';
+				tu_btn.addEventListener('click', function () {
+					tu_load();
+				});
+				tu_box.appendChild(tu_btn);
+
+				tu_resultEl.appendChild(tu_box);
+				tu_rawEl.textContent = '—';
+			}
+
+			/* —— 用户列表 —— */
+			function tu_renderUsers(tu_list) {
+				var tu_grid = tu_el('div', 'tu_items');
+
+				tu_list.forEach(function (tu_user) {
+					var tu_card = tu_el('article', 'tu_item');
+
+					var tu_head = tu_el('div', 'tu_item-head');
+					tu_head.appendChild(tu_el('span', 'tu_avatar', tu_firstChar(tu_user.name)));
+
+					var tu_main = tu_el('div', 'tu_item-main');
+					tu_main.appendChild(tu_el('h3', 'tu_item-title', tu_user.name));
+					tu_main.appendChild(tu_el('p', 'tu_item-sub', '@' + tu_user.username));
+					tu_head.appendChild(tu_main);
+					tu_head.appendChild(tu_el('span', 'tu_pill', '#' + tu_user.id));
+					tu_card.appendChild(tu_head);
+
+					var tu_info = tu_el('dl', 'tu_info');
+					tu_info.appendChild(tu_pair('邮箱', tu_user.email));
+					tu_info.appendChild(tu_pair('电话', tu_user.phone));
+					tu_info.appendChild(tu_pair('城市', tu_user.address && tu_user.address.city));
+					tu_info.appendChild(tu_pair('公司', tu_user.company && tu_user.company.name));
+					tu_card.appendChild(tu_info);
+
+					tu_grid.appendChild(tu_card);
+				});
+
+				tu_resultEl.appendChild(tu_grid);
+			}
+
+			/* —— 文章列表 —— */
+			function tu_renderPosts(tu_list) {
+				var tu_grid = tu_el('div', 'tu_items');
+
+				tu_list.forEach(function (tu_post) {
+					var tu_card = tu_el('article', 'tu_item');
+
+					var tu_head = tu_el('div', 'tu_item-head');
+					tu_head.appendChild(tu_el('span', 'tu_pill', '#' + tu_post.id));
+					tu_head.appendChild(tu_el('span', 'tu_item-sub', 'user ' + tu_post.userId));
+					tu_card.appendChild(tu_head);
+
+					tu_card.appendChild(tu_el('h3', 'tu_item-title', tu_post.title));
+					tu_card.appendChild(tu_el('p', 'tu_item-text', tu_post.body));
+
+					tu_grid.appendChild(tu_card);
+				});
+
+				tu_resultEl.appendChild(tu_grid);
+			}
+
+			/* —— 随机狗图 —— */
+			function tu_renderDog(tu_pack) {
+				var tu_card = tu_el('div', 'tu_dog');
+
+				if (!tu_pack || tu_pack.status !== 'success' || !tu_pack.message) {
+					tu_card.appendChild(tu_el('p', 'tu_hint', '接口返回的内容里没有图片地址，换个时间再试。'));
+					tu_resultEl.appendChild(tu_card);
+					return;
+				}
+
+				var tu_img = document.createElement('img');
+				tu_img.className = 'tu_dog-img';
+				tu_img.src = tu_pack.message;
+				tu_img.alt = '接口返回的随机狗狗图片';
+				tu_img.addEventListener('error', function () {
+					tu_img.replaceWith(tu_el('p', 'tu_hint', '图片地址拿到了，但图片加载失败：' + tu_pack.message));
+				});
+				tu_card.appendChild(tu_img);
+
+				var tu_cap = tu_el('p', 'tu_dog-cap');
+				tu_cap.appendChild(tu_el('span', 'tu_pill', tu_pack.status));
+				tu_cap.appendChild(document.createTextNode(tu_pack.message));
+				tu_card.appendChild(tu_cap);
+
+				tu_resultEl.appendChild(tu_card);
+			}
+
+			/* —— 请求主流程 —— */
+			async function tu_load() {
+				var tu_source = tu_sources[tu_current];
+
+				tu_urlEl.textContent = tu_source.url;
+				tu_statusEl.textContent = '请求中…';
+				tu_timeEl.textContent = '—';
+				tu_countEl.textContent = '—';
+				tu_rawEl.textContent = '等待请求…';
+				tu_reloadBtn.disabled = true;
+				tu_showLoading();
+
+				if (typeof fetch !== 'function') {
+					tu_reloadBtn.disabled = false;
+					tu_statusEl.textContent = '失败';
+					tu_showError('当前浏览器不支持 fetch，请换用新版 Chrome 或 Edge。');
+					return;
+				}
+
+				var tu_start = (window.performance && window.performance.now) ? window.performance.now() : Date.now();
+				var tu_controller = new AbortController();
+				var tu_timer = window.setTimeout(function () {
+					tu_controller.abort();
+				}, 10000);
+
+				try {
+					var tu_response = await fetch(tu_source.url, {
+						cache: 'no-store',
+						signal: tu_controller.signal
+					});
+
+					tu_statusEl.textContent = tu_response.status + (tu_response.statusText ? ' ' + tu_response.statusText : '');
+
+					var tu_json = await tu_response.json();
+
+					if (!tu_response.ok) {
+						throw new Error('接口返回 HTTP ' + tu_response.status);
+					}
+
+					var tu_end = (window.performance && window.performance.now) ? window.performance.now() : Date.now();
+					tu_timeEl.textContent = Math.round(tu_end - tu_start) + ' ms';
+					tu_countEl.textContent = Array.isArray(tu_json) ? tu_json.length + ' 条' : '1 条';
+
+					tu_rawEl.textContent = JSON.stringify(tu_json, null, 2);
+					tu_resultEl.innerHTML = '';
+					tu_source.render(tu_json);
+				} catch (tu_error) {
+					tu_statusEl.textContent = '失败';
+					tu_timeEl.textContent = '—';
+					tu_countEl.textContent = '—';
+
+					var tu_message;
+					if (tu_error && tu_error.name === 'AbortError') {
+						tu_message = '请求超过 10 秒仍未返回，已自动中止。请检查网络，或稍后再点「重新请求」。';
+					} else if (tu_error instanceof TypeError) {
+						tu_message = '网络层面被拦下了：可能是断网、接口暂时不可用，或者这个接口的响应头里没有 Access-Control-Allow-Origin（跨域被拒绝）。';
+					} else {
+						tu_message = (tu_error && tu_error.message) ? tu_error.message : '未知错误。';
+					}
+
+					tu_showError(tu_message);
+				} finally {
+					window.clearTimeout(tu_timer);
+					tu_reloadBtn.disabled = false;
+				}
+			}
+
+			/* —— 切换接口 / 重新请求 —— */
+			var tu_tabs = document.querySelectorAll('.tu_tab');
+
+			Array.prototype.forEach.call(tu_tabs, function (tu_tab) {
+				tu_tab.addEventListener('click', function () {
+					tu_current = tu_tab.getAttribute('data-api');
+
+					Array.prototype.forEach.call(tu_tabs, function (tu_other) {
+						var tu_on = tu_other === tu_tab;
+						tu_other.classList.toggle('tu_on', tu_on);
+						tu_other.setAttribute('aria-selected', tu_on ? 'true' : 'false');
+					});
+
+					tu_load();
+				});
+			});
+
+			tu_reloadBtn.addEventListener('click', function () {
+				tu_load();
+			});
+
+			tu_load();
+		})();
+	</script>
+</body>
+</html>

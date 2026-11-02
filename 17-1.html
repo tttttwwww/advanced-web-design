@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JSON 数据展示 · 源码 / 树 / 表格</title>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			background: #eef2f9;
+			color: #1f2937;
+			font-family: "Microsoft YaHei", sans-serif;
+			line-height: 1.7;
+		}
+
+		.tu_hero {
+			padding: 42px 0 34px;
+			background: linear-gradient(135deg, #0b1220 0%, #1e3a8a 58%, #0e7490 100%);
+			border-radius: 0 0 28px 28px;
+			color: #fff;
+		}
+
+		.tu_hero-inner {
+			width: min(100% - 48px, 1100px);
+			margin: 0 auto;
+		}
+
+		.tu_home {
+			display: inline-block;
+			margin: 0 0 14px;
+			padding: 5px 14px;
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.45);
+			border-radius: 999px;
+			color: #fff;
+			font-size: 13px;
+			text-decoration: none;
+			transition: background 0.2s ease, transform 0.2s ease;
+		}
+
+		.tu_home:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: translateX(-3px);
+		}
+
+		.tu_eyebrow {
+			margin: 0 0 6px;
+			font-size: 12px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			opacity: 0.75;
+		}
+
+		h1 {
+			margin: 0 0 10px;
+			font-size: clamp(26px, 4vw, 40px);
+			letter-spacing: 0.04em;
+		}
+
+		.tu_lead {
+			max-width: 680px;
+			margin: 0;
+			font-size: 15px;
+			opacity: 0.92;
+		}
+
+		.tu_author {
+			margin: 14px 0 0;
+			font-size: 13px;
+			opacity: 0.7;
+		}
+
+		main {
+			width: min(100% - 48px, 1100px);
+			margin: 28px auto 0;
+		}
+
+		.tu_panel {
+			margin-bottom: 22px;
+			padding: 22px 24px;
+			background: #fff;
+			border-radius: 20px;
+			box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+		}
+
+		.tu_panel h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 0 16px;
+			font-size: 18px;
+			color: #0f172a;
+		}
+
+		.tu_panel h2::before {
+			content: "";
+			width: 6px;
+			height: 18px;
+			border-radius: 3px;
+			background: linear-gradient(#1d4ed8, #0e7490);
+		}
+
+		.tu_toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			padding-bottom: 16px;
+			border-bottom: 1px dashed #dbe3f0;
+		}
+
+		.tu_tabs {
+			display: inline-flex;
+			gap: 4px;
+			padding: 4px;
+			background: #eef2f9;
+			border-radius: 999px;
+		}
+
+		.tu_tab {
+			padding: 7px 18px;
+			background: transparent;
+			border: none;
+			border-radius: 999px;
+			color: #5b6b8c;
+			font-family: inherit;
+			font-size: 14px;
+			cursor: pointer;
+			transition: background 0.18s ease, color 0.18s ease;
+		}
+
+		.tu_tab:hover {
+			color: #1d4ed8;
+		}
+
+		.tu_tab[aria-selected="true"],
+		.tu_tab.tu_on {
+			background: #fff;
+			color: #1d4ed8;
+			font-weight: 600;
+			box-shadow: 0 2px 8px rgba(29, 78, 216, 0.18);
+		}
+
+		.tu_tools {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.tu_btn {
+			padding: 7px 16px;
+			background: linear-gradient(135deg, #1d4ed8, #0e7490);
+			border: none;
+			border-radius: 999px;
+			color: #fff;
+			font-family: inherit;
+			font-size: 13px;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.18s ease;
+		}
+
+		.tu_btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 18px rgba(29, 78, 216, 0.28);
+		}
+
+		.tu_btn:active {
+			transform: translateY(0);
+		}
+
+		.tu_btn-ghost {
+			background: #eef2f9;
+			border: 1px solid #cfdbf3;
+			color: #1d4ed8;
+		}
+
+		.tu_btn-ghost:hover {
+			box-shadow: 0 8px 18px rgba(29, 78, 216, 0.16);
+		}
+
+		.tu_view {
+			display: none;
+		}
+
+		.tu_view.tu_on {
+			display: block;
+		}
+
+		.tu_code {
+			margin: 16px 0 0;
+			padding: 18px 20px;
+			max-height: 520px;
+			overflow: auto;
+			background: #0b1220;
+			border-radius: 14px;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13.5px;
+			line-height: 1.75;
+			white-space: pre;
+			tab-size: 2;
+		}
+
+		.tu_code .tu_k {
+			color: #7dd3fc;
+		}
+
+		.tu_code .tu_s {
+			color: #86efac;
+		}
+
+		.tu_code .tu_m {
+			color: #fcd34d;
+		}
+
+		.tu_code .tu_b {
+			color: #c4b5fd;
+		}
+
+		.tu_code .tu_n {
+			color: #fca5a5;
+		}
+
+		.tu_code .tu_p {
+			color: #64748b;
+		}
+
+		.tu_tree {
+			margin: 16px 0 0;
+			padding: 18px 20px;
+			max-height: 520px;
+			overflow: auto;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 14px;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13.5px;
+			line-height: 1.9;
+		}
+
+		.tu_tree .tu_node {
+			margin: 2px 0;
+		}
+
+		.tu_tree summary {
+			list-style: none;
+			padding: 1px 0;
+			cursor: pointer;
+		}
+
+		.tu_tree summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.tu_tree summary::before {
+			content: "▸";
+			display: inline-block;
+			width: 16px;
+			color: #94a3b8;
+			transition: transform 0.15s ease;
+		}
+
+		.tu_tree details[open] > summary::before {
+			transform: rotate(90deg);
+		}
+
+		.tu_tree .tu_children {
+			margin-left: 6px;
+			padding-left: 16px;
+			border-left: 1px dashed #cbd5e1;
+		}
+
+		.tu_tree .tu_leaf {
+			padding-left: 16px;
+		}
+
+		.tu_tree .tu_key {
+			color: #1d4ed8;
+		}
+
+		.tu_tree .tu_hint {
+			margin-left: 6px;
+			color: #94a3b8;
+			font-size: 12px;
+		}
+
+		.tu_tree .tu_val-string {
+			color: #0f766e;
+		}
+
+		.tu_tree .tu_val-number {
+			color: #b45309;
+		}
+
+		.tu_tree .tu_val-boolean {
+			color: #7c3aed;
+		}
+
+		.tu_tree .tu_val-null {
+			color: #b91c1c;
+		}
+
+		.tu_caption {
+			margin: 16px 0 10px;
+			color: #64748b;
+			font-size: 13px;
+		}
+
+		.tu_table-wrap {
+			overflow: auto;
+			max-height: 460px;
+			border: 1px solid #e2e8f0;
+			border-radius: 12px;
+		}
+
+		.tu_table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13.5px;
+		}
+
+		.tu_table th,
+		.tu_table td {
+			padding: 10px 14px;
+			text-align: left;
+			white-space: nowrap;
+			border-bottom: 1px solid #eef2f7;
+		}
+
+		.tu_table th {
+			position: sticky;
+			top: 0;
+			background: #f1f5fb;
+			color: #1e3a8a;
+			font-weight: 600;
+		}
+
+		.tu_table tbody tr:hover {
+			background: #f8fbff;
+		}
+
+		.tu_table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.tu_table td {
+			color: #334155;
+		}
+
+		.tu_table .tu_cell-bool {
+			font-family: Consolas, monospace;
+			color: #7c3aed;
+		}
+
+		.tu_stats {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			gap: 12px;
+		}
+
+		.tu_stat {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			padding: 14px 16px;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 14px;
+		}
+
+		.tu_stat-num {
+			color: #1d4ed8;
+			font-size: 24px;
+			font-weight: 700;
+			font-variant-numeric: tabular-nums;
+			line-height: 1.3;
+		}
+
+		.tu_stat-label {
+			color: #64748b;
+			font-size: 12.5px;
+		}
+
+		.tu_types {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 16px;
+		}
+
+		.tu_type {
+			padding: 5px 12px;
+			background: #eef2f9;
+			border: 1px solid #dbe3f0;
+			border-radius: 999px;
+			color: #334155;
+			font-family: Consolas, monospace;
+			font-size: 12.5px;
+		}
+
+		.tu_type b {
+			color: #1d4ed8;
+			font-weight: 700;
+		}
+
+		.tu_lab {
+			display: grid;
+			gap: 12px;
+		}
+
+		.tu_lab textarea {
+			width: 100%;
+			min-height: 110px;
+			padding: 14px 16px;
+			background: #f8fafc;
+			border: 1px solid #cfdbf3;
+			border-radius: 12px;
+			color: #0f172a;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13.5px;
+			line-height: 1.7;
+			resize: vertical;
+		}
+
+		.tu_lab textarea:focus {
+			outline: 2px solid #93c5fd;
+			border-color: #1d4ed8;
+		}
+
+		.tu_lab-actions {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.tu_note {
+			margin: 0;
+			color: #64748b;
+			font-size: 13px;
+		}
+
+		.tu_err {
+			margin: 0;
+			color: #b91c1c;
+			font-size: 13px;
+		}
+
+		.tu_out {
+			margin: 0;
+			padding: 16px 18px;
+			min-height: 24px;
+			overflow: auto;
+			background: #0b1220;
+			border-radius: 12px;
+			color: #cbd5e1;
+			font-family: Consolas, "Courier New", monospace;
+			font-size: 13px;
+			line-height: 1.7;
+			white-space: pre-wrap;
+			word-break: break-all;
+		}
+
+		footer {
+			width: min(100% - 48px, 1100px);
+			margin: 6px auto 40px;
+			color: #8792b3;
+			font-size: 13px;
+			text-align: center;
+		}
+
+		@media (max-width: 720px) {
+			.tu_panel {
+				padding: 18px 16px;
+			}
+
+			.tu_tab {
+				padding: 6px 12px;
+				font-size: 13px;
+			}
+
+			.tu_code,
+			.tu_tree {
+				font-size: 12.5px;
+				padding: 14px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header class="tu_hero">
+		<div class="tu_hero-inner">
+			<a class="tu_home" href="index.html">← 返回首页</a>
+			<p class="tu_eyebrow">Lesson 17-1 · JSON</p>
+			<h1>JSON 数据展示</h1>
+			<p class="tu_lead">一段 JSON 字符串，三种看它的方式：原样高亮的源码、可以一层层展开的树、整整齐齐的表格。</p>
+			<p class="tu_author">24001010417 涂玮轩</p>
+		</div>
+	</header>
+
+	<main>
+		<section class="tu_panel" aria-labelledby="tu_view-title">
+			<h2 id="tu_view-title">同一份数据，三种视图</h2>
+
+			<div class="tu_toolbar">
+				<div class="tu_tabs" role="tablist" aria-label="JSON 视图切换">
+					<button class="tu_tab tu_on" id="tu_tab-source" type="button" role="tab" aria-selected="true" aria-controls="tu_view-source" data-view="source">源码</button>
+					<button class="tu_tab" id="tu_tab-tree" type="button" role="tab" aria-selected="false" aria-controls="tu_view-tree" data-view="tree">树结构</button>
+					<button class="tu_tab" id="tu_tab-table" type="button" role="tab" aria-selected="false" aria-controls="tu_view-table" data-view="table">表格</button>
+				</div>
+
+				<div class="tu_tools">
+					<button class="tu_btn tu_btn-ghost" id="tu_expand" type="button">全部展开</button>
+					<button class="tu_btn tu_btn-ghost" id="tu_collapse" type="button">全部收起</button>
+					<button class="tu_btn" id="tu_copy" type="button">复制 JSON</button>
+				</div>
+			</div>
+
+			<div class="tu_view tu_on" id="tu_view-source" role="tabpanel" aria-labelledby="tu_tab-source">
+				<pre class="tu_code" id="tu_code" tabindex="0">加载中…</pre>
+			</div>
+
+			<div class="tu_view" id="tu_view-tree" role="tabpanel" aria-labelledby="tu_tab-tree">
+				<div class="tu_tree" id="tu_tree"></div>
+			</div>
+
+			<div class="tu_view" id="tu_view-table" role="tabpanel" aria-labelledby="tu_tab-table">
+				<p class="tu_caption" id="tu_table-caption"></p>
+				<div class="tu_table-wrap">
+					<table class="tu_table" id="tu_table">
+						<thead></thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_stats-title">
+			<h2 id="tu_stats-title">数据概览</h2>
+			<div class="tu_stats" id="tu_stats"></div>
+			<div class="tu_types" id="tu_types"></div>
+		</section>
+
+		<section class="tu_panel" aria-labelledby="tu_lab-title">
+			<h2 id="tu_lab-title">JSON.parse / JSON.stringify 试验台</h2>
+			<div class="tu_lab">
+				<textarea id="tu_input" spellcheck="false" aria-label="待解析的 JSON 文本">{"课次":17,"主题":"JSON","要点":["展示","请求"],"完成":true,"备注":null}</textarea>
+				<div class="tu_lab-actions">
+					<button class="tu_btn" id="tu_format" type="button">格式化（缩进 2 空格）</button>
+					<button class="tu_btn tu_btn-ghost" id="tu_minify" type="button">压缩成一行</button>
+					<p class="tu_note" id="tu_lab-msg">上面的文本是一段合法 JSON，试试两个按钮。</p>
+				</div>
+				<pre class="tu_out" id="tu_output"></pre>
+				<p class="tu_note">解析失败会被 catch 住并显示错误原因，页面不会崩。</p>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<p>24001010417 涂玮轩 · 17-1 · JSON 数据展示</p>
+	</footer>
+
+	<script>
+		(function () {
+			'use strict';
+
+			/* —— 原始 JSON 字符串：先当文本读，再 parse 成对象 —— */
+			var tu_jsonText = `{
+  "课程": "高级网页设计",
+  "课次": 17,
+  "主题": "JSON 与异步数据",
+  "任课教师": "涂玮轩",
+  "上课时间": "2026-11-02 13:38",
+  "已结课": false,
+  "备注": null,
+  "知识点": [
+    "JSON 的六种数据类型",
+    "JSON.parse 解析字符串",
+    "JSON.stringify 序列化对象",
+    "fetch 请求跨域接口"
+  ],
+  "课时安排": {
+    "理论": 1,
+    "上机": 2,
+    "合计": 3
+  },
+  "作业": [
+    { "编号": "17-1", "要求": "展示 JSON", "分值": 40, "已存档": true },
+    { "编号": "17-2", "要求": "获取并展示接口数据", "分值": 60, "已存档": true }
+  ],
+  "学生": [
+    { "学号": "24001010401", "姓名": "李明", "作业数": 17, "平均分": 88.5, "上台演示": true },
+    { "学号": "24001010402", "姓名": "王芳", "作业数": 18, "平均分": 92.0, "上台演示": false },
+    { "学号": "24001010403", "姓名": "张伟", "作业数": 16, "平均分": 79.5, "上台演示": true },
+    { "学号": "24001010404", "姓名": "陈静", "作业数": 18, "平均分": 95.5, "上台演示": false },
+    { "学号": "24001010405", "姓名": "刘洋", "作业数": 15, "平均分": 74.0, "上台演示": true }
+  ]
+}`;
+
+			var tu_data;
+			try {
+				tu_data = JSON.parse(tu_jsonText);
+			} catch (tu_parseErr) {
+				document.getElementById('tu_code').textContent = '示例 JSON 写错了：' + tu_parseErr.message;
+				return;
+			}
+
+			var tu_pretty = JSON.stringify(tu_data, null, 2);
+
+			var tu_codeEl = document.getElementById('tu_code');
+			var tu_treeEl = document.getElementById('tu_tree');
+			var tu_tableEl = document.getElementById('tu_table');
+			var tu_captionEl = document.getElementById('tu_table-caption');
+			var tu_statsEl = document.getElementById('tu_stats');
+			var tu_typesEl = document.getElementById('tu_types');
+
+			var tu_escape = function (tu_text) {
+				return tu_text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			};
+
+			/* 给 JSON 文本上色：键、字符串、数字、布尔、null、标点分开 */
+			var tu_highlight = function (tu_text) {
+				return tu_escape(tu_text).replace(
+					/("(?:\\u[0-9a-fA-F]{4}|\\[^u]|[^\\"])*"\s*:?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+					function (tu_match) {
+						if (tu_match.charAt(0) === '"') {
+							if (/:\s*$/.test(tu_match)) {
+								return '<span class="tu_k">' + tu_match.replace(/:\s*$/, '') + '</span><span class="tu_p">:</span>';
+							}
+							return '<span class="tu_s">' + tu_match + '</span>';
+						}
+						if (tu_match === 'true' || tu_match === 'false') {
+							return '<span class="tu_b">' + tu_match + '</span>';
+						}
+						if (tu_match === 'null') {
+							return '<span class="tu_n">' + tu_match + '</span>';
+						}
+						return '<span class="tu_m">' + tu_match + '</span>';
+					}
+				);
+			};
+
+			tu_codeEl.innerHTML = tu_highlight(tu_pretty);
+
+			/* —— 通用小工具 —— */
+			var tu_el = function (tu_tag, tu_className, tu_text) {
+				var tu_node = document.createElement(tu_tag);
+				if (tu_className) {
+					tu_node.className = tu_className;
+				}
+				if (tu_text !== undefined && tu_text !== null) {
+					tu_node.textContent = String(tu_text);
+				}
+				return tu_node;
+			};
+
+			var tu_typeOf = function (tu_value) {
+				if (tu_value === null) {
+					return 'null';
+				}
+				if (Array.isArray(tu_value)) {
+					return 'array';
+				}
+				return typeof tu_value;
+			};
+
+			/* —— 树视图 —— */
+			function tu_buildTree(tu_node, tu_key, tu_depth) {
+				var tu_type = tu_typeOf(tu_node);
+
+				if (tu_type !== 'object' && tu_type !== 'array') {
+					var tu_leaf = document.createElement('div');
+					tu_leaf.className = 'tu_leaf';
+
+					if (tu_key !== null) {
+						var tu_keyEl = tu_el('span', 'tu_key', tu_key + ': ');
+						tu_leaf.appendChild(tu_keyEl);
+					}
+
+					var tu_valEl = tu_el('span', 'tu_val tu_val-' + tu_type, tu_type === 'string' ? '"' + tu_node + '"' : String(tu_node));
+					tu_leaf.appendChild(tu_valEl);
+					return tu_leaf;
+				}
+
+				var tu_details = document.createElement('details');
+				tu_details.className = 'tu_node';
+				tu_details.open = tu_depth <= 1;
+
+				var tu_summary = document.createElement('summary');
+				tu_summary.appendChild(tu_el('span', 'tu_key', tu_key === null ? '根节点' : tu_key));
+
+				if (tu_type === 'array') {
+					tu_summary.appendChild(tu_el('span', 'tu_hint', '[ 数组 · ' + tu_node.length + ' 项 ]'));
+				} else {
+					tu_summary.appendChild(tu_el('span', 'tu_hint', '{ 对象 · ' + Object.keys(tu_node).length + ' 个字段 }'));
+				}
+
+				var tu_children = document.createElement('div');
+				tu_children.className = 'tu_children';
+
+				if (tu_type === 'array') {
+					tu_node.forEach(function (tu_item, tu_index) {
+						tu_children.appendChild(tu_buildTree(tu_item, '[' + tu_index + ']', tu_depth + 1));
+					});
+				} else {
+					Object.keys(tu_node).forEach(function (tu_childKey) {
+						tu_children.appendChild(tu_buildTree(tu_node[tu_childKey], tu_childKey, tu_depth + 1));
+					});
+				}
+
+				tu_details.appendChild(tu_summary);
+				tu_details.appendChild(tu_children);
+				return tu_details;
+			}
+
+			Object.keys(tu_data).forEach(function (tu_rootKey) {
+				tu_treeEl.appendChild(tu_buildTree(tu_data[tu_rootKey], tu_rootKey, 1));
+			});
+
+			/* —— 表格视图：自动挑出第一组「对象数组」 —— */
+			var tu_tableRows = null;
+			var tu_tableKey = '';
+
+			Object.keys(tu_data).forEach(function (tu_key) {
+				var tu_value = tu_data[tu_key];
+				if (!tu_tableRows && Array.isArray(tu_value) && tu_value.length && tu_typeOf(tu_value[0]) === 'object') {
+					tu_tableRows = tu_value;
+					tu_tableKey = tu_key;
+				}
+			});
+
+			function tu_cellText(tu_value) {
+				var tu_type = tu_typeOf(tu_value);
+				if (tu_type === 'null') {
+					return '—';
+				}
+				if (tu_type === 'boolean') {
+					return tu_value ? '是' : '否';
+				}
+				if (tu_type === 'array' || tu_type === 'object') {
+					return JSON.stringify(tu_value);
+				}
+				return String(tu_value);
+			}
+
+			function tu_fillTable(tu_rows, tu_name) {
+				var tu_head = tu_tableEl.tHead;
+				var tu_body = tu_tableEl.tBodies[0];
+				var tu_cols = [];
+
+				tu_rows.forEach(function (tu_row) {
+					Object.keys(tu_row).forEach(function (tu_col) {
+						if (tu_cols.indexOf(tu_col) === -1) {
+							tu_cols.push(tu_col);
+						}
+					});
+				});
+
+				var tu_tr = document.createElement('tr');
+				tu_cols.forEach(function (tu_col) {
+					var tu_th = document.createElement('th');
+					tu_th.scope = 'col';
+					tu_th.textContent = tu_col;
+					tu_tr.appendChild(tu_th);
+				});
+				tu_head.appendChild(tu_tr);
+
+				tu_rows.forEach(function (tu_row) {
+					var tu_line = document.createElement('tr');
+					tu_cols.forEach(function (tu_col) {
+						var tu_td = document.createElement('td');
+						var tu_value = tu_row[tu_col];
+						tu_td.textContent = tu_cellText(tu_value);
+						if (tu_typeOf(tu_value) === 'boolean') {
+							tu_td.className = 'tu_cell-bool';
+						}
+						tu_line.appendChild(tu_td);
+					});
+					tu_body.appendChild(tu_line);
+				});
+
+				tu_captionEl.textContent = tu_name + ' · ' + tu_rows.length + ' 条记录 · ' + tu_cols.length + ' 列（由 JS 读 JSON 生成，不是手写的表格）';
+			}
+
+			if (tu_tableRows) {
+				tu_fillTable(tu_tableRows, tu_tableKey);
+			} else {
+				tu_captionEl.textContent = '这份 JSON 里没有对象数组，表格视图没有内容可展示。';
+			}
+
+			/* —— 统计 —— */
+			var tu_counts = { string: 0, number: 0, boolean: 0, null: 0, array: 0, object: 0 };
+			var tu_maxDepth = 0;
+
+			function tu_scan(tu_value, tu_depth) {
+				var tu_type = tu_typeOf(tu_value);
+				tu_counts[tu_type] = (tu_counts[tu_type] || 0) + 1;
+				if (tu_depth > tu_maxDepth) {
+					tu_maxDepth = tu_depth;
+				}
+				if (tu_type === 'array') {
+					tu_value.forEach(function (tu_item) {
+						tu_scan(tu_item, tu_depth + 1);
+					});
+				} else if (tu_type === 'object') {
+					Object.keys(tu_value).forEach(function (tu_key) {
+						tu_scan(tu_value[tu_key], tu_depth + 1);
+					});
+				}
+			}
+
+			tu_scan(tu_data, 1);
+
+			var tu_bytes = function (tu_text) {
+				try {
+					return new Blob([tu_text]).size;
+				} catch (tu_blobErr) {
+					return tu_text.length;
+				}
+			};
+
+			var tu_stats = [
+				{ num: Object.keys(tu_data).length, label: '顶级字段' },
+				{ num: tu_bytes(tu_pretty) + ' B', label: 'JSON 体积（UTF-8）' },
+				{ num: tu_data['学生'] ? tu_data['学生'].length : 0, label: '学生记录' },
+				{ num: tu_maxDepth, label: '最深层级' },
+				{ num: tu_counts.string + tu_counts.number + tu_counts.boolean + tu_counts.null, label: '叶子值' },
+				{ num: tu_counts.object + tu_counts.array, label: '对象 / 数组节点' }
+			];
+
+			tu_stats.forEach(function (tu_item) {
+				var tu_card = tu_el('div', 'tu_stat');
+				tu_card.appendChild(tu_el('span', 'tu_stat-num', tu_item.num));
+				tu_card.appendChild(tu_el('span', 'tu_stat-label', tu_item.label));
+				tu_statsEl.appendChild(tu_card);
+			});
+
+			[
+				{ key: 'string', name: '字符串' },
+				{ key: 'number', name: '数字' },
+				{ key: 'boolean', name: '布尔' },
+				{ key: 'null', name: 'null' },
+				{ key: 'array', name: '数组' },
+				{ key: 'object', name: '对象' }
+			].forEach(function (tu_type) {
+				var tu_chip = tu_el('span', 'tu_type', tu_type.name + ' ');
+				tu_chip.appendChild(tu_el('b', null, tu_counts[tu_type.key]));
+				tu_typesEl.appendChild(tu_chip);
+			});
+
+			/* —— 视图切换 —— */
+			var tu_tabs = document.querySelectorAll('.tu_tab');
+			var tu_views = document.querySelectorAll('.tu_view');
+
+			Array.prototype.forEach.call(tu_tabs, function (tu_tab) {
+				tu_tab.addEventListener('click', function () {
+					var tu_viewName = tu_tab.getAttribute('data-view');
+
+					Array.prototype.forEach.call(tu_tabs, function (tu_other) {
+						var tu_on = tu_other === tu_tab;
+						tu_other.classList.toggle('tu_on', tu_on);
+						tu_other.setAttribute('aria-selected', tu_on ? 'true' : 'false');
+					});
+
+					Array.prototype.forEach.call(tu_views, function (tu_view) {
+						tu_view.classList.toggle('tu_on', tu_view.id === 'tu_view-' + tu_viewName);
+					});
+				});
+			});
+
+			/* —— 展开 / 收起 / 复制 —— */
+			var tu_allDetails = function () {
+				return tu_treeEl.querySelectorAll('details');
+			};
+
+			document.getElementById('tu_expand').addEventListener('click', function () {
+				Array.prototype.forEach.call(tu_allDetails(), function (tu_details) {
+					tu_details.open = true;
+				});
+			});
+
+			document.getElementById('tu_collapse').addEventListener('click', function () {
+				Array.prototype.forEach.call(tu_allDetails(), function (tu_details) {
+					tu_details.open = false;
+				});
+			});
+
+			function tu_fallbackCopy(tu_text) {
+				var tu_area = document.createElement('textarea');
+				tu_area.value = tu_text;
+				tu_area.setAttribute('readonly', '');
+				tu_area.style.position = 'fixed';
+				tu_area.style.top = '-1000px';
+				document.body.appendChild(tu_area);
+				tu_area.select();
+				var tu_ok = false;
+				try {
+					tu_ok = document.execCommand('copy');
+				} catch (tu_copyErr) {
+					tu_ok = false;
+				}
+				document.body.removeChild(tu_area);
+				return tu_ok;
+			}
+
+			function tu_copy(tu_text, tu_done) {
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(tu_text).then(function () {
+						tu_done(true);
+					}, function () {
+						tu_done(tu_fallbackCopy(tu_text));
+					});
+					return;
+				}
+				tu_done(tu_fallbackCopy(tu_text));
+			}
+
+			var tu_copyBtn = document.getElementById('tu_copy');
+			var tu_copyTimer = null;
+
+			tu_copyBtn.addEventListener('click', function () {
+				tu_copy(tu_pretty, function (tu_ok) {
+					tu_copyBtn.textContent = tu_ok ? '已复制' : '复制失败';
+					window.clearTimeout(tu_copyTimer);
+					tu_copyTimer = window.setTimeout(function () {
+						tu_copyBtn.textContent = '复制 JSON';
+					}, 1600);
+				});
+			});
+
+			/* —— 解析试验台 —— */
+			var tu_input = document.getElementById('tu_input');
+			var tu_output = document.getElementById('tu_output');
+			var tu_labMsg = document.getElementById('tu_lab-msg');
+
+			function tu_runLab(tu_mode) {
+				var tu_text = tu_input.value.trim();
+
+				if (!tu_text) {
+					tu_output.textContent = '';
+					tu_labMsg.textContent = '先输入一段 JSON 文本再点按钮。';
+					tu_labMsg.className = 'tu_err';
+					return;
+				}
+
+				try {
+					var tu_parsed = JSON.parse(tu_text);
+					var tu_result = tu_mode === 'min' ? JSON.stringify(tu_parsed) : JSON.stringify(tu_parsed, null, 2);
+					tu_output.textContent = tu_result;
+					tu_labMsg.textContent = (tu_mode === 'min' ? '压缩完成' : '格式化完成') + ' · ' + tu_bytes(tu_result) + ' 字节';
+					tu_labMsg.className = 'tu_note';
+				} catch (tu_error) {
+					tu_output.textContent = '';
+					tu_labMsg.textContent = '解析失败：' + tu_error.message;
+					tu_labMsg.className = 'tu_err';
+				}
+			}
+
+			document.getElementById('tu_format').addEventListener('click', function () {
+				tu_runLab('pretty');
+			});
+
+			document.getElementById('tu_minify').addEventListener('click', function () {
+				tu_runLab('min');
+			});
+		})();
+	</script>
+</body>
+</html>
