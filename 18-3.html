@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7f6">
+  <meta name="description" content="基于知识库的智能客服系统架构图，SVG 矢量绘制，包含六层架构、25 个组件与知识回流闭环，并从科研视角标注关键研究议题。">
+  <title>知识库智能客服系统架构｜SVG</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/sora@5.2.8/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/noto-sans-sc@5.2.10/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/500.css">
+  <style>
+    :root {
+      --canvas: #f4f7f6;
+      --aqua: #74c8c0;
+      --sky: #9fc8f4;
+      --coral: #f5b5a3;
+      --sun: #f7d98b;
+      --ink: #172238;
+      --muted: #5d6b82;
+      --accent: #28344a;
+      --accent-hover: #1b2438;
+      --warm: #b5573f;
+      --glass-regular: rgba(255,255,255,.42);
+      --glass-protected: rgba(255,255,255,.74);
+      --edge: rgba(255,255,255,.72);
+      --divider: rgba(73,92,128,.16);
+      --font-display: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-body: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "IBM Plex Mono", SFMono-Regular, "Cascadia Code", Menlo, Consolas, monospace;
+      --radius-control: 12px;
+      --radius-card: 20px;
+      --radius-panel: 28px;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      background:
+        radial-gradient(ellipse at 6% 2%, rgba(116,200,192,.46) 0, rgba(116,200,192,0) 34%),
+        radial-gradient(ellipse at 96% 10%, rgba(159,200,244,.62) 0, rgba(159,200,244,0) 38%),
+        radial-gradient(ellipse at 84% 94%, rgba(245,181,163,.40) 0, rgba(245,181,163,0) 38%),
+        linear-gradient(140deg, #f4f7f6 0%, #edf2f7 58%, #f8f4ec 100%);
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    a { color: inherit; }
+    .page { width: min(1640px, 100%); margin: 0 auto; padding: 22px 26px 18px; }
+    .glass-regular {
+      background: var(--glass-regular);
+      border: 1px solid var(--edge);
+      backdrop-filter: blur(24px) saturate(130%);
+      -webkit-backdrop-filter: blur(24px) saturate(130%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 24px 60px rgba(31,46,78,.14);
+    }
+    .glass-protected {
+      background: var(--glass-protected);
+      border: 1px solid rgba(255,255,255,.82);
+      backdrop-filter: blur(32px) saturate(120%);
+      -webkit-backdrop-filter: blur(32px) saturate(120%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 18px 45px rgba(31,46,78,.12);
+    }
+    .topbar { min-height: 66px; border-radius: var(--radius-card); padding: 10px 12px 10px 20px; display: flex; align-items: center; gap: 22px; }
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; font-weight: 620; }
+    .brand-index { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; padding: 9px 10px; border: 1px solid var(--divider); border-radius: 9px; }
+    .topbar-note { margin-left: auto; color: var(--muted); font: 500 10px/1.5 var(--font-mono); letter-spacing: .08em; }
+    .nav-link, .button {
+      border: 0;
+      border-radius: var(--radius-control);
+      min-height: 42px;
+      padding: 9px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+      white-space: nowrap;
+    }
+    .nav-link, .button-primary { color: #f8fbff; background: var(--accent); }
+    .nav-link:hover, .button-primary:hover { background: var(--accent-hover); }
+    .nav-link:active, .button:active { transform: translateY(1px); }
+    .hero { margin-top: 20px; border-radius: var(--radius-panel); padding: 28px 30px; display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(268px, .58fr); gap: 32px; align-items: end; }
+    .eyebrow { margin: 0 0 12px; font: 500 10px/1.4 var(--font-mono); letter-spacing: .12em; color: var(--muted); }
+    h1 { margin: 0; font-family: var(--font-display); font-size: clamp(34px, 3.6vw, 52px); font-weight: 650; line-height: 1.12; letter-spacing: -.04em; text-wrap: balance; }
+    .hero-desc { max-width: 40em; margin: 16px 0 0; color: var(--muted); font-size: 14px; line-height: 1.85; text-wrap: pretty; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 17px; }
+    .hero-tags span { padding: 5px 10px; border: 1px solid var(--divider); border-radius: 999px; background: rgba(255,255,255,.44); font: 500 9px/1.5 var(--font-mono); letter-spacing: .05em; color: var(--accent); }
+    .hero-meta { border-left: 1px solid var(--divider); padding-left: 24px; display: flex; flex-direction: column; gap: 9px; }
+    .meta-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; font-size: 11px; }
+    .meta-row span { color: var(--muted); white-space: nowrap; }
+    .meta-row strong { font-weight: 620; text-align: right; }
+    .meta-note { margin: 4px 0 0; color: var(--muted); font-size: 10px; line-height: 1.75; }
+    .workspace { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 296px; gap: 18px; align-items: stretch; }
+    .diagram-panel { min-width: 0; border-radius: var(--radius-panel); overflow: hidden; display: flex; flex-direction: column; }
+    .diagram-toolbar { padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--divider); background: rgba(255,255,255,.32); }
+    .toolbar-hint { color: var(--muted); font: 400 10px/1.6 var(--font-mono); letter-spacing: .03em; }
+    .toolbar-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .button { min-height: 38px; padding: 7px 12px; font-size: 12px; }
+    .button-secondary { color: var(--ink); background: rgba(255,255,255,.48); border: 1px solid var(--divider); }
+    .button-secondary:hover { background: rgba(255,255,255,.86); border-color: rgba(73,92,128,.28); }
+    .svg-scroll { overflow: auto; padding: 14px; background: rgba(255,255,255,.22); scrollbar-color: rgba(40,52,74,.24) transparent; }
+    .svg-frame { min-width: 940px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(73,92,128,.12); background: #f7f9f8; }
+    .svg-frame svg { display: block; width: 100%; height: auto; }
+    .diagram-foot { padding: 11px 18px 13px; border-top: 1px solid var(--divider); color: var(--muted); font: 400 10px/1.7 var(--font-mono); display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .loop-legend { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .loop-line { width: 26px; height: 0; border-top: 2px dashed var(--warm); position: relative; }
+    .loop-line::after { content: ""; position: absolute; right: -1px; top: -4px; border-left: 5px solid var(--warm); border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; }
+    .inspector { border-radius: var(--radius-panel); padding: 24px; display: flex; flex-direction: column; min-width: 0; }
+    .detail-eyebrow { margin: 0 0 10px; color: var(--muted); font: 500 9px/1.5 var(--font-mono); letter-spacing: .09em; overflow-wrap: anywhere; }
+    .inspector h2 { margin: 0; font-family: var(--font-display); font-size: 25px; font-weight: 620; line-height: 1.26; letter-spacing: -.02em; }
+    .detail-description { margin: 13px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.85; text-wrap: pretty; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+    .tag { padding: 5px 9px; border-radius: 9px; border: 1px solid var(--divider); background: rgba(255,255,255,.44); font-size: 11px; color: var(--accent); }
+    .research-block { margin-top: 16px; padding: 12px 13px; border: 1px solid var(--divider); border-left: 2px solid var(--coral); border-radius: 10px; background: rgba(255,255,255,.36); }
+    .research-block[hidden] { display: none; }
+    .research-block p { margin: 0; font-size: 10px; line-height: 1.7; color: var(--muted); }
+    .research-block strong { display: block; margin-bottom: 3px; font: 500 9px/1.5 var(--font-mono); letter-spacing: .06em; color: var(--accent); }
+    .clear-button { margin-top: 14px; align-self: flex-start; }
+    .clear-button[hidden] { display: none; }
+    .inspector-divider { height: 1px; background: var(--divider); margin: 22px 0 18px; }
+    .legend-title { margin: 0 0 12px; font-size: 12px; font-weight: 620; }
+    .layer-legend { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 9px 12px; }
+    .legend-button { width: 100%; border: 1px solid transparent; border-radius: 9px; background: transparent; padding: 4px 5px; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10.5px; cursor: pointer; text-align: left; transition: background .18s ease, border-color .18s ease, color .18s ease; }
+    .legend-button:hover { background: rgba(255,255,255,.6); color: var(--ink); }
+    .legend-button.active { background: rgba(255,255,255,.86); border-color: var(--divider); color: var(--ink); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 3px; flex: 0 0 auto; }
+    .architecture-note { margin: auto 0 0; padding-top: 20px; color: var(--muted); font-size: 10.5px; line-height: 1.75; }
+    .research { margin-top: 18px; border-radius: var(--radius-panel); padding: 26px 30px 28px; }
+    .research-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+    .research-head h2 { font-size: 25px; }
+    .research-head p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.7; text-align: right; }
+    .research-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--divider); }
+    .research-card { padding: 18px 24px 0 0; border-right: 1px solid var(--divider); cursor: pointer; background: none; border-radius: 0; text-align: left; }
+    .research-card + .research-card { padding-left: 24px; }
+    .research-card:last-child { border-right: 0; padding-right: 0; }
+    .research-code { display: inline-block; margin-bottom: 8px; padding: 3px 7px; border: 1px solid var(--divider); border-radius: 7px; color: var(--warm); font: 500 8px/1.4 var(--font-mono); letter-spacing: .08em; }
+    .research-card h3 { margin: 0; font-size: 14px; font-weight: 620; line-height: 1.45; }
+    .research-card p { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.8; text-wrap: pretty; }
+    .research-metrics { margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 5px; }
+    .research-metrics span { padding: 3px 7px; border: 1px solid var(--divider); border-radius: 6px; font: 500 8.5px/1.5 var(--font-mono); color: var(--accent); }
+    .research-card:hover h3, .research-card:focus-visible h3 { color: var(--warm); }
+    .footer { display: flex; justify-content: space-between; gap: 18px; padding: 16px 8px 0; color: var(--muted); font: 400 9px/1.6 var(--font-mono); letter-spacing: .03em; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    button:focus-visible, a:focus-visible { outline: 3px solid rgba(40,52,74,.38); outline-offset: 3px; }
+    @media (max-width: 1180px) {
+      .workspace { grid-template-columns: minmax(0, 1fr) 258px; }
+      .inspector { padding: 20px; }
+    }
+    @media (max-width: 960px) {
+      .page { padding: 16px; }
+      .hero { grid-template-columns: 1fr; gap: 18px; align-items: start; padding: 24px; }
+      .hero-meta { border-left: 0; border-top: 1px solid var(--divider); padding: 15px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px 16px; }
+      .meta-row { display: block; }
+      .meta-row strong { display: block; text-align: left; margin-top: 2px; }
+      .meta-note { grid-column: 1 / -1; }
+      .workspace { grid-template-columns: 1fr; }
+      .layer-legend { grid-template-columns: repeat(3, 1fr); }
+      .architecture-note { margin-top: 0; }
+      .research-grid { grid-template-columns: 1fr; }
+      .research-card, .research-card + .research-card { padding: 16px 0; border-right: 0; border-bottom: 1px solid var(--divider); }
+      .research-card:last-child { border-bottom: 0; padding-bottom: 0; }
+      .research-head { align-items: flex-start; flex-direction: column; gap: 5px; }
+      .research-head p { text-align: left; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 10px; }
+      .topbar { padding: 9px 9px 9px 13px; min-height: 60px; gap: 10px; }
+      .brand { gap: 8px; font-size: 13px; }
+      .brand-index { padding: 8px; }
+      .topbar-note { display: none; }
+      .nav-link { margin-left: auto; min-height: 40px; padding: 8px 11px; font-size: 12px; }
+      .hero { margin-top: 14px; padding: 20px; }
+      h1 { font-size: 31px; }
+      .hero-desc { font-size: 13px; }
+      .hero-meta { grid-template-columns: 1fr 1fr; }
+      .workspace { margin-top: 14px; gap: 14px; }
+      .diagram-toolbar { padding: 12px; }
+      .toolbar-hint { font-size: 9px; }
+      .toolbar-actions { width: 100%; }
+      .toolbar-actions .button { flex: 1; }
+      .svg-scroll { padding: 10px; }
+      .svg-frame { min-width: 780px; }
+      .layer-legend { grid-template-columns: 1fr 1fr; }
+      .research { padding: 22px 20px 24px; }
+      .footer { flex-direction: column; gap: 2px; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .glass-regular, .glass-protected { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(244,247,246,.96); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar glass-regular">
+      <a class="brand" href="18-3.html" aria-label="知识库智能客服系统架构首页"><span class="brand-index">18—3</span><span>系统架构图谱</span></a>
+      <span class="topbar-note">KB-DRIVEN SERVICE / SVG ARCHITECTURE</span>
+      <a class="nav-link" href="18-4.html">查看数据看板 <span aria-hidden="true">→</span></a>
+    </header>
+
+    <main>
+      <section class="hero glass-protected" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">KNOWLEDGE-BASE DRIVEN INTELLIGENT CUSTOMER SERVICE</p>
+          <h1 id="pageTitle">基于知识库的<br>智能客服系统架构</h1>
+          <p class="hero-desc">把一次用户提问拆解为理解、检索、生成与治理四个环节：意图与槽位决定查询，检索层提供可引用证据，生成层在证据约束下作答，运营层将人工修正回流为知识更新。</p>
+          <div class="hero-tags"><span>SVG 矢量</span><span>6 层 / 25 组件</span><span>知识回流闭环</span><span>研究视角标注</span></div>
+        </div>
+        <aside class="hero-meta" aria-label="图表说明">
+          <div class="meta-row"><span>图元格式</span><strong>SVG（可缩放）</strong></div>
+          <div class="meta-row"><span>架构层级</span><strong>6 层 · 25 组件</strong></div>
+          <div class="meta-row"><span>研究议题</span><strong>3 项 · R01–R03</strong></div>
+          <p class="meta-note">图为逻辑架构示意，用于讨论系统构成与研究方向，不对应特定企业或厂商的真实部署。</p>
+        </aside>
+      </section>
+
+      <div class="workspace">
+        <section class="diagram-panel glass-regular" aria-label="知识库智能客服系统架构图">
+          <div class="diagram-toolbar">
+            <span class="toolbar-hint">点击节点查看职责 · Tab 键依次浏览 · Esc 取消选择</span>
+            <div class="toolbar-actions">
+              <button class="button button-secondary" id="resetButton" type="button">重置高亮</button>
+              <button class="button button-primary" id="downloadSvg" type="button">下载 SVG</button>
+            </div>
+          </div>
+          <div class="svg-scroll">
+            <div class="svg-frame">
+              <svg id="archSvg" viewBox="0 0 1240 790" width="100%" role="img" aria-labelledby="svgTitle svgDesc" preserveAspectRatio="xMidYMid meet"><title id="svgTitle">知识库驱动的智能客服系统架构图</title><desc id="svgDesc">六层逻辑架构：渠道与用户层、智能交互层、知识库与检索层、生成与决策层、运营与评测层、基础设施层，共 25 个组件，右侧虚线表示知识回流闭环。</desc><defs><style>text{font-family:'Sora Variable','Noto Sans SC Variable','PingFang SC','Microsoft YaHei',sans-serif;}.mono{font-family:'IBM Plex Mono','SFMono-Regular',Menlo,Consolas,monospace;}.band{fill:rgba(255,255,255,.40);stroke:rgba(73,92,128,.13);stroke-width:1;}.layer-name{font-size:11.5px;font-weight:600;fill:#172238;}.layer-en{font-size:7px;fill:#5d6b82;letter-spacing:.08em;}.node{cursor:pointer;transition:opacity .18s ease;}.card{fill:rgba(255,255,255,.92);stroke:rgba(73,92,128,.22);stroke-width:1;transition:fill .18s ease,stroke .18s ease;}.label{font-size:11.5px;font-weight:600;fill:#172238;}.sub{font-family:'IBM Plex Mono','SFMono-Regular',Menlo,Consolas,monospace;font-size:7px;fill:#5d6b82;letter-spacing:.05em;}.link{stroke:rgba(40,52,74,.28);stroke-width:1.2;fill:none;}.loop{stroke:#b5573f;stroke-width:1.4;stroke-dasharray:5 6;fill:none;stroke-linejoin:round;stroke-linecap:round;opacity:.85;}.loop-label{font-family:'IBM Plex Mono','SFMono-Regular',Menlo,Consolas,monospace;font-size:8px;fill:#b5573f;letter-spacing:.10em;}.caption{font-family:'IBM Plex Mono','SFMono-Regular',Menlo,Consolas,monospace;font-size:8px;fill:#5d6b82;letter-spacing:.04em;}.node:hover .card{stroke:rgba(40,52,74,.5);stroke-width:1.4;}.node.is-active .card{fill:#28344a;stroke:#28344a;}.node.is-active .label{fill:#f8fbff;}.node.is-active .sub{fill:rgba(248,251,255,.74);}.node.is-dim{opacity:.24;}.node:focus{outline:none;}.node:focus-visible .card{stroke:#28344a;stroke-width:1.8;}</style><marker id="arrow" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L8,5 L0,9 z" fill="rgba(40,52,74,.42)"/></marker><marker id="loopArrow" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L8,5 L0,9 z" fill="#b5573f"/></marker><pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M52 0 L0 0 0 52" fill="none" stroke="rgba(40,52,74,.045)" stroke-width="1"/></pattern><linearGradient id="wash" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef6f5"/><stop offset=".55" stop-color="#f6f8fa"/><stop offset="1" stop-color="#f9f4ee"/></linearGradient></defs><rect x="0" y="0" width="1240" height="790" fill="url(#wash)"/><rect x="0" y="0" width="1240" height="790" fill="url(#grid)"/><g class="links"><path class="link" d="M348.1 112.0 L348.1 127.0" marker-end="url(#arrow)"/><path class="link" d="M618.0 112.0 L618.0 127.0" marker-end="url(#arrow)"/><path class="link" d="M887.9 112.0 L887.9 127.0" marker-end="url(#arrow)"/><path class="link" d="M348.1 242.0 L348.1 257.0" marker-end="url(#arrow)"/><path class="link" d="M618.0 242.0 L618.0 257.0" marker-end="url(#arrow)"/><path class="link" d="M887.9 242.0 L887.9 257.0" marker-end="url(#arrow)"/><path class="link" d="M348.1 372.0 L348.1 387.0" marker-end="url(#arrow)"/><path class="link" d="M618.0 372.0 L618.0 387.0" marker-end="url(#arrow)"/><path class="link" d="M887.9 372.0 L887.9 387.0" marker-end="url(#arrow)"/><path class="link" d="M348.1 502.0 L348.1 517.0" marker-end="url(#arrow)"/><path class="link" d="M618.0 502.0 L618.0 517.0" marker-end="url(#arrow)"/><path class="link" d="M887.9 502.0 L887.9 517.0" marker-end="url(#arrow)"/><path class="link" d="M348.1 620.0 L348.1 635.0" marker-end="url(#arrow)"/><path class="link" d="M618.0 620.0 L618.0 635.0" marker-end="url(#arrow)"/><path class="link" d="M887.9 620.0 L887.9 635.0" marker-end="url(#arrow)"/><path class="loop" d="M1100.0 570.0 H1146 V326.0 H1108.0" marker-end="url(#loopArrow)"/></g><g class="layer"><rect class="band" x="136" y="22" width="964" height="86" rx="14"/><rect x="20" y="22" width="104" height="86" rx="10" fill="#9fc8f4" fill-opacity=".20" stroke="#9fc8f4" stroke-opacity=".6"/><text class="layer-name" x="72" y="62.0" text-anchor="middle">渠道与用户层</text><text class="layer-en mono" x="72" y="78.0" text-anchor="middle">USER &amp; CHANNEL</text><g class="node" data-id="web" data-layer="channels" tabindex="0" role="button" aria-label="网页与 H5 客服：嵌入官网与应用内页面的会话窗口，承载图文问答、知识推荐与会话转接。"><rect class="card" x="136.0" y="31.0" width="232.0" height="68.0" rx="12"/><rect x="145.0" y="45.0" width="3" height="40.0" rx="1.5" fill="#9fc8f4"/><text class="label" x="156.0" y="59.6">网页与 H5 客服</text><text class="sub mono" x="156.0" y="75.6">WEB / H5 SESSION</text></g><g class="node" data-id="app" data-layer="channels" tabindex="0" role="button" aria-label="移动 App 客服：应用内客服中心，注入订单、物流与账户上下文，使提问自带业务语境。"><rect class="card" x="380.0" y="31.0" width="232.0" height="68.0" rx="12"/><rect x="389.0" y="45.0" width="3" height="40.0" rx="1.5" fill="#9fc8f4"/><text class="label" x="400.0" y="59.6">移动 App 客服</text><text class="sub mono" x="400.0" y="75.6">IOS / ANDROID</text></g><g class="node" data-id="wechat" data-layer="channels" tabindex="0" role="button" aria-label="微信与小程序：社交渠道客服入口，适配消息卡片与模板消息，覆盖轻量咨询场景。"><rect class="card" x="624.0" y="31.0" width="232.0" height="68.0" rx="12"/><rect x="633.0" y="45.0" width="3" height="40.0" rx="1.5" fill="#9fc8f4"/><text class="label" x="644.0" y="59.6">微信与小程序</text><text class="sub mono" x="644.0" y="75.6">WECHAT / MINI</text></g><g class="node" data-id="voice" data-layer="channels" tabindex="0" role="button" aria-label="电话与工单：语音转写与工单系统接入，将复杂诉求平滑交接给人工坐席。"><rect class="card" x="868.0" y="31.0" width="232.0" height="68.0" rx="12"/><rect x="877.0" y="45.0" width="3" height="40.0" rx="1.5" fill="#9fc8f4"/><text class="label" x="888.0" y="59.6">电话与工单</text><text class="sub mono" x="888.0" y="75.6">VOICE / TICKET</text></g></g><g class="layer"><rect class="band" x="136" y="134" width="964" height="104" rx="14"/><rect x="20" y="134" width="104" height="104" rx="10" fill="#74c8c0" fill-opacity=".20" stroke="#74c8c0" stroke-opacity=".6"/><text class="layer-name" x="72" y="183.0" text-anchor="middle">智能交互层</text><text class="layer-en mono" x="72" y="199.0" text-anchor="middle">UNDERSTANDING</text><g class="node" data-id="intent" data-layer="nlu" tabindex="0" role="button" aria-label="意图识别：对用户诉求分类，判断知识域与应答策略，决定后续检索与生成路径。"><rect class="card" x="136.0" y="143.0" width="183.2" height="86.0" rx="12"/><rect x="145.0" y="157.0" width="3" height="58.0" rx="1.5" fill="#74c8c0"/><text class="label" x="156.0" y="179.1">意图识别</text><text class="sub mono" x="156.0" y="195.1">INTENT</text></g><g class="node" data-id="slot" data-layer="nlu" tabindex="0" role="button" aria-label="实体抽取：抽取订单号、商品、时间等结构化槽位，为查询与工具调用提供参数。"><rect class="card" x="331.2" y="143.0" width="183.2" height="86.0" rx="12"/><rect x="340.2" y="157.0" width="3" height="58.0" rx="1.5" fill="#74c8c0"/><text class="label" x="351.2" y="179.1">实体抽取</text><text class="sub mono" x="351.2" y="195.1">ENTITY / SLOT</text></g><g class="node" data-id="dialog" data-layer="nlu" tabindex="0" role="button" aria-label="多轮对话管理：维护对话状态，处理澄清、追问、指代消解与话题切换。"><rect class="card" x="526.4" y="143.0" width="183.2" height="86.0" rx="12"/><rect x="535.4" y="157.0" width="3" height="58.0" rx="1.5" fill="#74c8c0"/><text class="label" x="546.4" y="179.1">多轮对话管理</text><text class="sub mono" x="546.4" y="195.1">DIALOGUE STATE</text></g><g class="node" data-id="rewrite" data-layer="nlu" tabindex="0" role="button" aria-label="查询改写：结合会话上下文补全省略信息，规范化表述以提升检索召回质量。"><rect class="card" x="721.6" y="143.0" width="183.2" height="86.0" rx="12"/><rect x="730.6" y="157.0" width="3" height="58.0" rx="1.5" fill="#74c8c0"/><text class="label" x="741.6" y="179.1">查询改写</text><text class="sub mono" x="741.6" y="195.1">QUERY REWRITE</text></g><g class="node" data-id="sentiment" data-layer="nlu" tabindex="0" role="button" aria-label="情绪与风险识别：识别情绪强度与投诉风险信号，触发安抚话术或升级转人工策略。"><rect class="card" x="916.8" y="143.0" width="183.2" height="86.0" rx="12"/><rect x="925.8" y="157.0" width="3" height="58.0" rx="1.5" fill="#74c8c0"/><text class="label" x="936.8" y="179.1">情绪与风险识别</text><text class="sub mono" x="936.8" y="195.1">SENTIMENT</text></g></g><g class="layer"><rect class="band" x="136" y="264" width="964" height="104" rx="14"/><rect x="20" y="264" width="104" height="104" rx="10" fill="#aab5d8" fill-opacity=".20" stroke="#aab5d8" stroke-opacity=".6"/><text class="layer-name" x="72" y="313.0" text-anchor="middle">知识库与检索层</text><text class="layer-en mono" x="72" y="329.0" text-anchor="middle">KNOWLEDGE &amp; RAG</text><g class="node" data-id="graph" data-layer="knowledge" tabindex="0" role="button" aria-label="知识图谱：以实体与关系组织商品、政策、业务流程知识，支撑结构化推理与约束校验。"><rect class="card" x="136.0" y="273.0" width="232.0" height="86.0" rx="12"/><rect x="145.0" y="287.0" width="3" height="58.0" rx="1.5" fill="#aab5d8"/><text class="label" x="156.0" y="309.1">知识图谱</text><text class="sub mono" x="156.0" y="325.1">KNOWLEDGE GRAPH</text></g><g class="node" data-id="ingest" data-layer="knowledge" tabindex="0" role="button" aria-label="文档解析与切片：解析手册与政策文档，按语义切分为可检索、可引用的知识片段。"><rect class="card" x="380.0" y="273.0" width="232.0" height="86.0" rx="12"/><rect x="389.0" y="287.0" width="3" height="58.0" rx="1.5" fill="#aab5d8"/><text class="label" x="400.0" y="309.1">文档解析与切片</text><text class="sub mono" x="400.0" y="325.1">INGEST / CHUNK</text></g><g class="node" data-id="vector" data-layer="knowledge" tabindex="0" role="button" aria-label="FAQ 与向量库：存储标准问答与稠密向量索引，支持语义相似度召回与版本管理。"><rect class="card" x="624.0" y="273.0" width="232.0" height="86.0" rx="12"/><rect x="633.0" y="287.0" width="3" height="58.0" rx="1.5" fill="#aab5d8"/><text class="label" x="644.0" y="309.1">FAQ 与向量库</text><text class="sub mono" x="644.0" y="325.1">FAQ / VECTOR DB</text></g><g class="node" data-id="rerank" data-layer="knowledge" tabindex="0" role="button" aria-label="检索与重排：融合关键词与向量混合检索，对候选片段重排并输出证据集合。"><rect class="card" x="868.0" y="273.0" width="232.0" height="86.0" rx="12"/><rect x="877.0" y="287.0" width="3" height="58.0" rx="1.5" fill="#aab5d8"/><text class="label" x="888.0" y="309.1">检索与重排</text><text class="sub mono" x="888.0" y="325.1">RETRIEVE / RERANK</text></g></g><g class="layer"><rect class="band" x="136" y="394" width="964" height="104" rx="14"/><rect x="20" y="394" width="104" height="104" rx="10" fill="#f5b5a3" fill-opacity=".20" stroke="#f5b5a3" stroke-opacity=".6"/><text class="layer-name" x="72" y="443.0" text-anchor="middle">生成与决策层</text><text class="layer-en mono" x="72" y="459.0" text-anchor="middle">GENERATION</text><g class="node" data-id="llm" data-layer="generation" tabindex="0" role="button" aria-label="大模型推理：基于证据片段进行受控生成，在质量、延迟与成本之间做策略权衡。"><rect class="card" x="136.0" y="403.0" width="232.0" height="86.0" rx="12"/><rect x="145.0" y="417.0" width="3" height="58.0" rx="1.5" fill="#f5b5a3"/><text class="label" x="156.0" y="439.1">大模型推理</text><text class="sub mono" x="156.0" y="455.1">LLM SERVING</text></g><g class="node" data-id="compose" data-layer="generation" tabindex="0" role="button" aria-label="答案编排：组织答案结构，输出步骤化指引，并在允许范围内触发业务动作。"><rect class="card" x="380.0" y="403.0" width="232.0" height="86.0" rx="12"/><rect x="389.0" y="417.0" width="3" height="58.0" rx="1.5" fill="#f5b5a3"/><text class="label" x="400.0" y="439.1">答案编排</text><text class="sub mono" x="400.0" y="455.1">ANSWER COMPOSER</text></g><g class="node" data-id="citation" data-layer="generation" tabindex="0" role="button" aria-label="引用溯源：为结论标注知识片段来源，使人工作业与用户复核均有据可查。"><rect class="card" x="624.0" y="403.0" width="232.0" height="86.0" rx="12"/><rect x="633.0" y="417.0" width="3" height="58.0" rx="1.5" fill="#f5b5a3"/><text class="label" x="644.0" y="439.1">引用溯源</text><text class="sub mono" x="644.0" y="455.1">CITATION</text></g><g class="node" data-id="guard" data-layer="generation" tabindex="0" role="button" aria-label="安全与合规过滤：拦截越权、敏感与低置信回答，命中策略时切换到兜底话术。"><rect class="card" x="868.0" y="403.0" width="232.0" height="86.0" rx="12"/><rect x="877.0" y="417.0" width="3" height="58.0" rx="1.5" fill="#f5b5a3"/><text class="label" x="888.0" y="439.1">安全与合规过滤</text><text class="sub mono" x="888.0" y="455.1">GUARDRAIL</text></g></g><g class="layer"><rect class="band" x="136" y="524" width="964" height="92" rx="14"/><rect x="20" y="524" width="104" height="92" rx="10" fill="#f7d98b" fill-opacity=".20" stroke="#f7d98b" stroke-opacity=".6"/><text class="layer-name" x="72" y="567.0" text-anchor="middle">运营与评测层</text><text class="layer-en mono" x="72" y="583.0" text-anchor="middle">OPS &amp; EVAL</text><g class="node" data-id="labeling" data-layer="ops" tabindex="0" role="button" aria-label="标注与数据回流：沉淀真实会话与人工修正，回流为知识更新与模型训练信号。"><rect class="card" x="136.0" y="533.0" width="232.0" height="74.0" rx="12"/><rect x="145.0" y="547.0" width="3" height="46.0" rx="1.5" fill="#f7d98b"/><text class="label" x="156.0" y="564.1">标注与数据回流</text><text class="sub mono" x="156.0" y="580.1">LABEL / FEEDBACK</text></g><g class="node" data-id="eval" data-layer="ops" tabindex="0" role="button" aria-label="评测与实验：以离线评测集与在线实验共同衡量准确率、解决率与满意度。"><rect class="card" x="380.0" y="533.0" width="232.0" height="74.0" rx="12"/><rect x="389.0" y="547.0" width="3" height="46.0" rx="1.5" fill="#f7d98b"/><text class="label" x="400.0" y="564.1">评测与实验</text><text class="sub mono" x="400.0" y="580.1">EVALUATION</text></g><g class="node" data-id="monitor" data-layer="ops" tabindex="0" role="button" aria-label="监控与告警：跟踪召回命中、生成质量与端到端延迟，异常时快速定位链路环节。"><rect class="card" x="624.0" y="533.0" width="232.0" height="74.0" rx="12"/><rect x="633.0" y="547.0" width="3" height="46.0" rx="1.5" fill="#f7d98b"/><text class="label" x="644.0" y="564.1">监控与告警</text><text class="sub mono" x="644.0" y="580.1">OBSERVABILITY</text></g><g class="node" data-id="human" data-layer="ops" tabindex="0" role="button" aria-label="人工坐席协同：机器无法闭环时无缝转人工，保留完整上下文与已确认信息。"><rect class="card" x="868.0" y="533.0" width="232.0" height="74.0" rx="12"/><rect x="877.0" y="547.0" width="3" height="46.0" rx="1.5" fill="#f7d98b"/><text class="label" x="888.0" y="564.1">人工坐席协同</text><text class="sub mono" x="888.0" y="580.1">HUMAN IN THE LOOP</text></g></g><g class="layer"><rect class="band" x="136" y="642" width="964" height="92" rx="14"/><rect x="20" y="642" width="104" height="92" rx="10" fill="#a9b8ae" fill-opacity=".20" stroke="#a9b8ae" stroke-opacity=".6"/><text class="layer-name" x="72" y="685.0" text-anchor="middle">基础设施层</text><text class="layer-en mono" x="72" y="701.0" text-anchor="middle">INFRASTRUCTURE</text><g class="node" data-id="serving" data-layer="infra" tabindex="0" role="button" aria-label="模型服务与 GPU：承载推理服务的弹性调度、批处理与显存优化，支撑峰值并发。"><rect class="card" x="136.0" y="651.0" width="232.0" height="74.0" rx="12"/><rect x="145.0" y="665.0" width="3" height="46.0" rx="1.5" fill="#a9b8ae"/><text class="label" x="156.0" y="682.1">模型服务与 GPU</text><text class="sub mono" x="156.0" y="698.1">MODEL SERVING</text></g><g class="node" data-id="mq" data-layer="infra" tabindex="0" role="button" aria-label="消息队列与缓存：异步解耦会话事件，缓存热点知识与会话状态以降低端到端延迟。"><rect class="card" x="380.0" y="651.0" width="232.0" height="74.0" rx="12"/><rect x="389.0" y="665.0" width="3" height="46.0" rx="1.5" fill="#a9b8ae"/><text class="label" x="400.0" y="682.1">消息队列与缓存</text><text class="sub mono" x="400.0" y="698.1">MQ / CACHE</text></g><g class="node" data-id="storage" data-layer="infra" tabindex="0" role="button" aria-label="存储与日志：保存会话记录、知识原文与审计日志，满足追溯与合规要求。"><rect class="card" x="624.0" y="651.0" width="232.0" height="74.0" rx="12"/><rect x="633.0" y="665.0" width="3" height="46.0" rx="1.5" fill="#a9b8ae"/><text class="label" x="644.0" y="682.1">存储与日志</text><text class="sub mono" x="644.0" y="698.1">STORAGE / LOG</text></g><g class="node" data-id="platform" data-layer="infra" tabindex="0" role="button" aria-label="容器与发布：应用容器化部署、灰度发布与快速回滚，保障版本迭代稳定。"><rect class="card" x="868.0" y="651.0" width="232.0" height="74.0" rx="12"/><rect x="877.0" y="665.0" width="3" height="46.0" rx="1.5" fill="#a9b8ae"/><text class="label" x="888.0" y="682.1">容器与发布</text><text class="sub mono" x="888.0" y="698.1">K8S / CI·CD</text></g></g><text class="loop-label" x="1168" y="443.0" text-anchor="middle" transform="rotate(-90 1168 443.0)">知识回流 · KNOWLEDGE FEEDBACK LOOP</text><text class="caption" x="26" y="762">图 1 · 知识库驱动的智能客服系统逻辑架构（科研视角）</text><text class="caption" x="1214" y="762" text-anchor="end">SVG VECTOR · 6 LAYERS · 25 COMPONENTS</text><text class="caption" x="26" y="778" fill="rgba(93,107,130,.75)">连线表示主要依赖与数据流向，非完整调用拓扑；图为逻辑示意，不对应特定厂商部署。</text></svg>
+            </div>
+          </div>
+          <div class="diagram-foot">
+            <span>连线表示主要依赖与数据流向，非完整调用拓扑</span>
+            <span class="loop-legend"><span class="loop-line" aria-hidden="true"></span>知识回流 / 数据闭环</span>
+          </div>
+        </section>
+
+        <aside class="inspector glass-protected" aria-labelledby="detailTitle">
+          <p class="detail-eyebrow" id="detailEyebrow">ARCHITECTURE GUIDE</p>
+          <h2 id="detailTitle">架构导览</h2>
+          <p class="detail-description" id="detailDescription">用户提问经渠道进入，交互层完成意图与槽位解析，检索层从知识库召回可引用证据，生成层据此作答并做合规校验；运营层把人工修正回流为知识与训练数据，形成闭环。</p>
+          <div class="tag-list" id="detailTags"><span class="tag">理解</span><span class="tag">检索</span><span class="tag">生成</span><span class="tag">治理</span></div>
+          <div class="research-block" id="detailResearch" hidden>
+            <strong id="researchLabel">关联研究议题</strong>
+            <p id="researchText"></p>
+          </div>
+          <button class="button button-secondary clear-button" id="clearSelection" type="button" hidden>返回架构导览</button>
+          <div class="inspector-divider"></div>
+          <h3 class="legend-title">分层图例</h3>
+          <ul class="layer-legend" id="layerLegend">
+            <li><button class="legend-button" type="button" data-layer="channels"><span class="legend-dot" style="background:#9fc8f4"></span>渠道与用户层</button></li>
+            <li><button class="legend-button" type="button" data-layer="nlu"><span class="legend-dot" style="background:#74c8c0"></span>智能交互层</button></li>
+            <li><button class="legend-button" type="button" data-layer="knowledge"><span class="legend-dot" style="background:#aab5d8"></span>知识库与检索层</button></li>
+            <li><button class="legend-button" type="button" data-layer="generation"><span class="legend-dot" style="background:#f5b5a3"></span>生成与决策层</button></li>
+            <li><button class="legend-button" type="button" data-layer="ops"><span class="legend-dot" style="background:#f7d98b"></span>运营与评测层</button></li>
+            <li><button class="legend-button" type="button" data-layer="infra"><span class="legend-dot" style="background:#a9b8ae"></span>基础设施层</button></li>
+          </ul>
+          <p class="architecture-note">点击图例可单独聚焦某一层。图中共 25 个组件，右侧虚线为知识回流路径：运营沉淀 → 知识更新 → 检索复测。</p>
+        </aside>
+      </div>
+
+      <section class="research glass-protected" aria-labelledby="researchTitle">
+        <div class="research-head">
+          <div>
+            <p class="eyebrow">RESEARCH DIRECTIONS</p>
+            <h2 id="researchTitle">三个值得展开的研究议题</h2>
+          </div>
+          <p>以下为架构中尚未闭合的问题域<br>列出的是拟衡量指标，不含实测数值</p>
+        </div>
+        <div class="research-grid">
+          <button class="research-card" type="button" data-research="R01" aria-label="查看研究议题 R01：检索增强的知识可信度">
+            <span class="research-code">R01 · KNOWLEDGE GROUNDING</span>
+            <h3>检索增强的知识可信度</h3>
+            <p>生成结论与检索证据之间的一致性如何量化？证据不足时系统如何显式降级，而不是给出看似完整的答案？</p>
+            <div class="research-metrics"><span>证据覆盖率</span><span>引用一致率</span><span>人工核验成本</span></div>
+          </button>
+          <button class="research-card" type="button" data-research="R02" aria-label="查看研究议题 R02：多轮对话中的意图漂移">
+            <span class="research-code">R02 · INTENT DRIFT</span>
+            <h3>多轮对话中的意图漂移</h3>
+            <p>长会话中意图与槽位状态如何稳定跟踪？澄清与话题切换应当依据哪些信号判定时机？</p>
+            <div class="research-metrics"><span>澄清轮次</span><span>意图保持率</span><span>转人工触发率</span></div>
+          </button>
+          <button class="research-card" type="button" data-research="R03" aria-label="查看研究议题 R03：人机协同的评测闭环">
+            <span class="research-code">R03 · HUMAN-IN-THE-LOOP</span>
+            <h3>人机协同的评测闭环</h3>
+            <p>自动指标与真实解决率之间的偏差如何校正？人工修正怎样高效回流为知识更新与训练信号？</p>
+            <div class="research-metrics"><span>任务解决率</span><span>一次解决率</span><span>回流样本质量</span></div>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><span>知识库智能客服系统架构 · 18-3</span><span>SVG 矢量图 · 6 层 25 组件 · 研究视角</span></footer>
+  </div>
+  <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+
+  <script>
+(() => {
+  'use strict';
+  const DATA = {"nodes":{"web":{"label":"网页与 H5 客服","sub":"WEB / H5 SESSION","layer":"channels","layerName":"渠道与用户层","layerEn":"USER & CHANNEL","desc":"嵌入官网与应用内页面的会话窗口，承载图文问答、知识推荐与会话转接。","tags":["嵌入式会话","图文消息","会话转接"]},"app":{"label":"移动 App 客服","sub":"IOS / ANDROID","layer":"channels","layerName":"渠道与用户层","layerEn":"USER & CHANNEL","desc":"应用内客服中心，注入订单、物流与账户上下文，使提问自带业务语境。","tags":["应用内会话","上下文注入","推送提醒"]},"wechat":{"label":"微信与小程序","sub":"WECHAT / MINI","layer":"channels","layerName":"渠道与用户层","layerEn":"USER & CHANNEL","desc":"社交渠道客服入口，适配消息卡片与模板消息，覆盖轻量咨询场景。","tags":["渠道适配","卡片问答","模板消息"]},"voice":{"label":"电话与工单","sub":"VOICE / TICKET","layer":"channels","layerName":"渠道与用户层","layerEn":"USER & CHANNEL","desc":"语音转写与工单系统接入，将复杂诉求平滑交接给人工坐席。","tags":["语音转写","工单流转","坐席衔接"]},"intent":{"label":"意图识别","sub":"INTENT","layer":"nlu","layerName":"智能交互层","layerEn":"UNDERSTANDING","desc":"对用户诉求分类，判断知识域与应答策略，决定后续检索与生成路径。","tags":["意图分类","意图路由"]},"slot":{"label":"实体抽取","sub":"ENTITY / SLOT","layer":"nlu","layerName":"智能交互层","layerEn":"UNDERSTANDING","desc":"抽取订单号、商品、时间等结构化槽位，为查询与工具调用提供参数。","tags":["槽位抽取","实体链接"]},"dialog":{"label":"多轮对话管理","sub":"DIALOGUE STATE","layer":"nlu","layerName":"智能交互层","layerEn":"UNDERSTANDING","desc":"维护对话状态，处理澄清、追问、指代消解与话题切换。","tags":["状态跟踪","澄清追问","话题切换"]},"rewrite":{"label":"查询改写","sub":"QUERY REWRITE","layer":"nlu","layerName":"智能交互层","layerEn":"UNDERSTANDING","desc":"结合会话上下文补全省略信息，规范化表述以提升检索召回质量。","tags":["上下文补全","查询规范化"]},"sentiment":{"label":"情绪与风险识别","sub":"SENTIMENT","layer":"nlu","layerName":"智能交互层","layerEn":"UNDERSTANDING","desc":"识别情绪强度与投诉风险信号，触发安抚话术或升级转人工策略。","tags":["情绪识别","风险升级"]},"graph":{"label":"知识图谱","sub":"KNOWLEDGE GRAPH","layer":"knowledge","layerName":"知识库与检索层","layerEn":"KNOWLEDGE & RAG","desc":"以实体与关系组织商品、政策、业务流程知识，支撑结构化推理与约束校验。","tags":["实体关系","规则知识"]},"ingest":{"label":"文档解析与切片","sub":"INGEST / CHUNK","layer":"knowledge","layerName":"知识库与检索层","layerEn":"KNOWLEDGE & RAG","desc":"解析手册与政策文档，按语义切分为可检索、可引用的知识片段。","tags":["文档解析","语义切片"]},"vector":{"label":"FAQ 与向量库","sub":"FAQ / VECTOR DB","layer":"knowledge","layerName":"知识库与检索层","layerEn":"KNOWLEDGE & RAG","desc":"存储标准问答与稠密向量索引，支持语义相似度召回与版本管理。","tags":["向量索引","相似召回"]},"rerank":{"label":"检索与重排","sub":"RETRIEVE / RERANK","layer":"knowledge","layerName":"知识库与检索层","layerEn":"KNOWLEDGE & RAG","desc":"融合关键词与向量混合检索，对候选片段重排并输出证据集合。","tags":["混合检索","证据重排"]},"llm":{"label":"大模型推理","sub":"LLM SERVING","layer":"generation","layerName":"生成与决策层","layerEn":"GENERATION","desc":"基于证据片段进行受控生成，在质量、延迟与成本之间做策略权衡。","tags":["受控生成","推理服务"]},"compose":{"label":"答案编排","sub":"ANSWER COMPOSER","layer":"generation","layerName":"生成与决策层","layerEn":"GENERATION","desc":"组织答案结构，输出步骤化指引，并在允许范围内触发业务动作。","tags":["答案组织","动作编排"]},"citation":{"label":"引用溯源","sub":"CITATION","layer":"generation","layerName":"生成与决策层","layerEn":"GENERATION","desc":"为结论标注知识片段来源，使人工作业与用户复核均有据可查。","tags":["来源标注","可核验"]},"guard":{"label":"安全与合规过滤","sub":"GUARDRAIL","layer":"generation","layerName":"生成与决策层","layerEn":"GENERATION","desc":"拦截越权、敏感与低置信回答，命中策略时切换到兜底话术。","tags":["敏感拦截","兜底策略"]},"labeling":{"label":"标注与数据回流","sub":"LABEL / FEEDBACK","layer":"ops","layerName":"运营与评测层","layerEn":"OPS & EVAL","desc":"沉淀真实会话与人工修正，回流为知识更新与模型训练信号。","tags":["数据标注","知识回流"]},"eval":{"label":"评测与实验","sub":"EVALUATION","layer":"ops","layerName":"运营与评测层","layerEn":"OPS & EVAL","desc":"以离线评测集与在线实验共同衡量准确率、解决率与满意度。","tags":["离线评测","在线实验"]},"monitor":{"label":"监控与告警","sub":"OBSERVABILITY","layer":"ops","layerName":"运营与评测层","layerEn":"OPS & EVAL","desc":"跟踪召回命中、生成质量与端到端延迟，异常时快速定位链路环节。","tags":["质量监控","延迟告警"]},"human":{"label":"人工坐席协同","sub":"HUMAN IN THE LOOP","layer":"ops","layerName":"运营与评测层","layerEn":"OPS & EVAL","desc":"机器无法闭环时无缝转人工，保留完整上下文与已确认信息。","tags":["无缝转接","上下文保留"]},"serving":{"label":"模型服务与 GPU","sub":"MODEL SERVING","layer":"infra","layerName":"基础设施层","layerEn":"INFRASTRUCTURE","desc":"承载推理服务的弹性调度、批处理与显存优化，支撑峰值并发。","tags":["弹性推理","批处理"]},"mq":{"label":"消息队列与缓存","sub":"MQ / CACHE","layer":"infra","layerName":"基础设施层","layerEn":"INFRASTRUCTURE","desc":"异步解耦会话事件，缓存热点知识与会话状态以降低端到端延迟。","tags":["异步解耦","热点缓存"]},"storage":{"label":"存储与日志","sub":"STORAGE / LOG","layer":"infra","layerName":"基础设施层","layerEn":"INFRASTRUCTURE","desc":"保存会话记录、知识原文与审计日志，满足追溯与合规要求。","tags":["会话存储","审计留痕"]},"platform":{"label":"容器与发布","sub":"K8S / CI·CD","layer":"infra","layerName":"基础设施层","layerEn":"INFRASTRUCTURE","desc":"应用容器化部署、灰度发布与快速回滚，保障版本迭代稳定。","tags":["灰度发布","弹性伸缩"]}},"research":{"R01":{"title":"检索增强的知识可信度","question":"生成结论与检索证据之间的一致性如何量化？证据不足时系统如何显式降级而不是硬答？","layers":["知识库与检索层","生成与决策层"],"metrics":["证据覆盖率","引用一致率","人工核验成本"]},"R02":{"title":"多轮对话中的意图漂移","question":"长会话中意图与槽位状态如何稳定跟踪？澄清与话题切换的时机依据什么信号判定？","layers":["智能交互层"],"metrics":["澄清轮次","意图保持率","转人工触发率"]},"R03":{"title":"人机协同的评测闭环","question":"自动指标与真实解决率之间的偏差如何校正？人工修正怎样高效回流为知识与训练信号？","layers":["运营与评测层"],"metrics":["任务解决率","一次解决率","回流样本质量"]}},"layers":[{"id":"channels","name":"渠道与用户层","color":"#9fc8f4"},{"id":"nlu","name":"智能交互层","color":"#74c8c0"},{"id":"knowledge","name":"知识库与检索层","color":"#aab5d8"},{"id":"generation","name":"生成与决策层","color":"#f5b5a3"},{"id":"ops","name":"运营与评测层","color":"#f7d98b"},{"id":"infra","name":"基础设施层","color":"#a9b8ae"}]};
+  const svg = document.getElementById('archSvg');
+  const liveStatus = document.getElementById('liveStatus');
+  const detailEyebrow = document.getElementById('detailEyebrow');
+  const detailTitle = document.getElementById('detailTitle');
+  const detailDescription = document.getElementById('detailDescription');
+  const detailTags = document.getElementById('detailTags');
+  const detailResearch = document.getElementById('detailResearch');
+  const researchLabel = document.getElementById('researchLabel');
+  const researchText = document.getElementById('researchText');
+  const clearSelection = document.getElementById('clearSelection');
+  const layerLegend = document.getElementById('layerLegend');
+  const nodes = [...svg.querySelectorAll('.node')];
+  const nodeEls = new Map(nodes.map(el => [el.dataset.id, el]));
+  const layerResearch = { nlu: ['R02'], knowledge: ['R01'], generation: ['R01'], ops: ['R03'] };
+  const layerMeta = new Map(DATA.layers.map(item => [item.id, item]));
+  let selectedId = null;
+  let focusLayer = null;
+
+  if (!DATA || !nodes.length) return;
+
+  function tags(list) {
+    return list.map(text => {
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.textContent = text;
+      return span;
+    });
+  }
+
+  function layerLabel(layerId) {
+    const meta = layerMeta.get(layerId);
+    return meta ? meta.name : '';
+  }
+
+  function showResearch(layerId) {
+    const ids = layerResearch[layerId] || [];
+    if (!ids.length) {
+      detailResearch.hidden = true;
+      return;
+    }
+    const items = ids.map(id => DATA.research[id]).filter(Boolean);
+    if (!items.length) {
+      detailResearch.hidden = true;
+      return;
+    }
+    researchLabel.textContent = `关联研究议题 · ${ids.join(' / ')}`;
+    researchText.textContent = items.map(item => `${item.title}：${item.question}`).join('　');
+    detailResearch.hidden = false;
+  }
+
+  function clearNodeStates() {
+    nodes.forEach(el => el.classList.remove('is-active'));
+  }
+
+  function resetGuide() {
+    selectedId = null;
+    clearNodeStates();
+    detailEyebrow.textContent = 'ARCHITECTURE GUIDE';
+    detailTitle.textContent = '架构导览';
+    detailDescription.textContent = '用户提问经渠道进入，交互层完成意图与槽位解析，检索层从知识库召回可引用证据，生成层据此作答并做合规校验；运营层把人工修正回流为知识与训练数据，形成闭环。';
+    detailTags.replaceChildren(...tags(['理解', '检索', '生成', '治理']));
+    detailResearch.hidden = true;
+    clearSelection.hidden = true;
+  }
+
+  function selectNode(id, announce = true) {
+    const item = DATA.nodes[id];
+    const el = nodeEls.get(id);
+    if (!item || !el) return;
+    selectedId = id;
+    clearNodeStates();
+    el.classList.add('is-active');
+    detailEyebrow.textContent = `${item.layerName} / ${item.sub}`;
+    detailTitle.textContent = item.label;
+    detailDescription.textContent = item.desc;
+    detailTags.replaceChildren(...tags(item.tags));
+    showResearch(item.layer);
+    clearSelection.hidden = false;
+    if (announce) liveStatus.textContent = `已选择${item.label}：${item.desc}`;
+  }
+
+  function clearFocus() {
+    focusLayer = null;
+    nodes.forEach(el => el.classList.remove('is-dim'));
+    [...layerLegend.querySelectorAll('.legend-button')].forEach(button => button.classList.remove('active'));
+  }
+
+  function setFocus(layerId) {
+    if (focusLayer === layerId) {
+      clearFocus();
+      liveStatus.textContent = '已取消分层聚焦';
+      return;
+    }
+    focusLayer = layerId;
+    nodes.forEach(el => el.classList.toggle('is-dim', el.dataset.layer !== layerId));
+    [...layerLegend.querySelectorAll('.legend-button')].forEach(button => {
+      button.classList.toggle('active', button.dataset.layer === layerId);
+    });
+    liveStatus.textContent = `已聚焦${layerLabel(layerId)}`;
+  }
+
+  function downloadSvg() {
+    if (!svg) return;
+    const clone = svg.cloneNode(true);
+    clone.querySelectorAll('.is-active, .is-dim').forEach(el => {
+      el.classList.remove('is-active');
+      el.classList.remove('is-dim');
+    });
+    clone.querySelectorAll('[tabindex]').forEach(el => el.removeAttribute('tabindex'));
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    const box = svg.viewBox.baseVal;
+    clone.setAttribute('width', box.width);
+    clone.setAttribute('height', box.height);
+    const source = '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = '18-3-kb-customer-service-architecture.svg';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1200);
+    liveStatus.textContent = '架构图已导出为 SVG 文件';
+  }
+
+  svg.addEventListener('click', event => {
+    const target = event.target.closest('.node');
+    if (target) selectNode(target.dataset.id);
+  });
+
+  svg.addEventListener('keydown', event => {
+    const target = event.target.closest('.node');
+    if (event.key === 'Escape') {
+      resetGuide();
+      liveStatus.textContent = '已返回架构导览';
+      return;
+    }
+    if (!target) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectNode(target.dataset.id);
+    }
+  });
+
+  clearSelection.addEventListener('click', () => {
+    resetGuide();
+    liveStatus.textContent = '已返回架构导览';
+  });
+
+  document.getElementById('resetButton').addEventListener('click', () => {
+    resetGuide();
+    clearFocus();
+    liveStatus.textContent = '已重置全部高亮';
+  });
+
+  document.getElementById('downloadSvg').addEventListener('click', downloadSvg);
+
+  layerLegend.addEventListener('click', event => {
+    const button = event.target.closest('.legend-button');
+    if (button) setFocus(button.dataset.layer);
+  });
+
+  document.querySelectorAll('[data-research]').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.research;
+      const item = DATA.research[id];
+      if (!item) return;
+      const targetLayer = Object.keys(layerResearch).find(key => layerResearch[key].includes(id));
+      if (targetLayer) setFocus(targetLayer);
+      detailEyebrow.textContent = `RESEARCH / ${id}`;
+      detailTitle.textContent = item.title;
+      detailDescription.textContent = item.question;
+      detailTags.replaceChildren(...tags(item.metrics));
+      researchLabel.textContent = `涉及层级 · ${item.layers.join(' / ')}`;
+      researchText.textContent = '以上为拟衡量的观察维度，用于设计评测方案，不代表已有实测结论。';
+      detailResearch.hidden = false;
+      clearSelection.hidden = false;
+      selectedId = null;
+      clearNodeStates();
+      liveStatus.textContent = `已查看研究议题${id}：${item.title}`;
+    });
+  });
+})();
+
+  </script>
+</body>
+</html>

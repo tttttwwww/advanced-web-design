@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7f6">
+  <title>涂玮轩｜Canvas 粒子文字动画</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/sora@5.2.8/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/noto-sans-sc@5.2.10/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/500.css">
+  <style>
+    :root {
+      --canvas: #f4f7f6;
+      --aqua: #74c8c0;
+      --sky: #9fc8f4;
+      --coral: #f5b5a3;
+      --sun: #f7d98b;
+      --ink: #172238;
+      --muted: #5d6b82;
+      --accent: #28344a;
+      --accent-hover: #1b2438;
+      --warm: #f39a62;
+      --glass-thin: rgba(255,255,255,.18);
+      --glass-regular: rgba(255,255,255,.42);
+      --glass-protected: rgba(255,255,255,.72);
+      --edge: rgba(255,255,255,.72);
+      --divider: rgba(73,92,128,.16);
+      --font-display: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-body: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "IBM Plex Mono", SFMono-Regular, "Cascadia Code", Menlo, Consolas, monospace;
+      --radius-control: 12px;
+      --radius-card: 20px;
+      --radius-panel: 28px;
+      --shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 24px 60px rgba(31,46,78,.14);
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 8% 14%, rgba(116,200,192,.56) 0, rgba(116,200,192,0) 38%),
+        radial-gradient(ellipse at 88% 16%, rgba(159,200,244,.68) 0, rgba(159,200,244,0) 40%),
+        radial-gradient(ellipse at 80% 90%, rgba(245,181,163,.50) 0, rgba(245,181,163,0) 42%),
+        linear-gradient(135deg, #f4f7f6 0%, #edf3f5 52%, #f8f4ec 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .32;
+      background-image: linear-gradient(rgba(40,52,74,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(40,52,74,.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    a { color: inherit; }
+    .page { width: min(1500px, 100%); margin: 0 auto; padding: 22px 26px 16px; position: relative; }
+    .glass-regular {
+      background: var(--glass-regular);
+      border: 1px solid var(--edge);
+      backdrop-filter: blur(24px) saturate(130%);
+      -webkit-backdrop-filter: blur(24px) saturate(130%);
+      box-shadow: var(--shadow);
+    }
+    .glass-protected {
+      background: var(--glass-protected);
+      border: 1px solid rgba(255,255,255,.82);
+      backdrop-filter: blur(32px) saturate(120%);
+      -webkit-backdrop-filter: blur(32px) saturate(120%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 18px 45px rgba(31,46,78,.12);
+    }
+    .glass-thin {
+      background: var(--glass-thin);
+      border: 1px solid rgba(255,255,255,.38);
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.42), 0 12px 30px rgba(31,46,78,.10);
+    }
+    .topbar {
+      min-height: 66px;
+      border-radius: var(--radius-card);
+      padding: 10px 12px 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      position: relative;
+      z-index: 5;
+    }
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; font-weight: 620; }
+    .brand-index { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; padding: 9px 10px; border: 1px solid var(--divider); border-radius: 9px; }
+    .top-meta { display: flex; align-items: center; gap: 8px; margin-left: auto; color: var(--muted); font-size: 13px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #27877f; box-shadow: 0 0 0 4px rgba(39,135,127,.10); }
+    .nav-link, .button {
+      border: 0;
+      border-radius: var(--radius-control);
+      min-height: 44px;
+      padding: 11px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease, border-color .2s ease;
+    }
+    .nav-link, .button-primary { color: #f8fbff; background: var(--accent); }
+    .nav-link:hover, .button-primary:hover { background: var(--accent-hover); }
+    .nav-link:active, .button:active { transform: translateY(1px); }
+    .main {
+      display: grid;
+      grid-template-columns: minmax(250px, .29fr) minmax(0, 1fr);
+      gap: 0;
+      min-height: 620px;
+      height: calc(100svh - 154px);
+      max-height: 860px;
+      margin-top: 20px;
+    }
+    .intro {
+      align-self: start;
+      position: relative;
+      z-index: 3;
+      margin: 54px -44px 0 0;
+      padding: 28px;
+      border-radius: var(--radius-panel);
+    }
+    .eyebrow { margin: 0 0 14px; font: 500 11px/1.4 var(--font-mono); letter-spacing: .12em; color: var(--muted); }
+    h1 { margin: 0; font-family: var(--font-display); font-size: clamp(50px, 5.4vw, 78px); font-weight: 650; line-height: 1.06; letter-spacing: -.04em; text-wrap: balance; }
+    .intro-copy { margin: 20px 0 24px; max-width: 16em; color: var(--muted); font-size: 15px; line-height: 1.85; text-wrap: pretty; }
+    .intro-meta { border-top: 1px solid var(--divider); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 8px 14px; font: 500 10px/1.5 var(--font-mono); letter-spacing: .06em; color: var(--accent); }
+    .stage { min-width: 0; position: relative; overflow: hidden; border-radius: 34px; isolation: isolate; }
+    #nameCanvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: crosshair; }
+    .mode-rail { position: absolute; z-index: 2; top: 24px; right: 24px; padding: 6px; border-radius: 16px; display: flex; flex-direction: column; gap: 4px; }
+    .mode-button {
+      min-width: 92px;
+      min-height: 42px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: left;
+    }
+    .mode-button span { font: 500 10px/1 var(--font-mono); opacity: .8; }
+    .mode-button:hover { background: rgba(255,255,255,.38); color: var(--ink); }
+    .mode-button.active { background: rgba(255,255,255,.80); border-color: rgba(255,255,255,.88); color: var(--ink); box-shadow: 0 5px 15px rgba(31,46,78,.08); }
+    .stage-caption { position: absolute; left: 58px; top: 32px; display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; pointer-events: none; }
+    .caption-line { width: 28px; height: 1px; background: var(--accent); }
+    .controls {
+      position: absolute;
+      z-index: 2;
+      right: 24px;
+      bottom: 24px;
+      border-radius: 18px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .button { min-height: 42px; padding: 9px 15px; font-size: 13px; }
+    .button-secondary { color: var(--ink); background: rgba(255,255,255,.45); border: 1px solid var(--divider); }
+    .button-secondary:hover { background: rgba(255,255,255,.82); border-color: rgba(73,92,128,.28); }
+    .particle-stat { display: flex; align-items: baseline; gap: 6px; padding: 0 10px 0 6px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .particle-stat strong { color: var(--ink); font: 500 13px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
+    .gesture { position: absolute; left: 34px; bottom: 32px; color: var(--muted); font: 400 10px/1.5 var(--font-mono); letter-spacing: .04em; pointer-events: none; }
+    .footer { min-height: 48px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 8px 0; color: var(--muted); font: 400 10px/1.5 var(--font-mono); letter-spacing: .05em; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid rgba(40,52,74,.38); outline-offset: 3px; }
+    @media (max-width: 900px) {
+      .page { padding: 16px; }
+      .main { display: block; height: auto; max-height: none; margin-top: 16px; }
+      .intro { margin: 0 0 -24px; padding: 22px 24px 38px; }
+      .intro-copy { max-width: 28em; margin: 12px 0 14px; }
+      h1 { font-size: 54px; }
+      .intro-meta { padding-top: 12px; }
+      .stage { height: 620px; min-height: 620px; border-radius: 28px; }
+      .stage-caption { left: 26px; }
+      .gesture { display: none; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 10px; }
+      .topbar { padding: 9px 9px 9px 13px; gap: 10px; min-height: 60px; }
+      .brand { gap: 8px; font-size: 13px; }
+      .brand-index { padding: 8px; }
+      .top-meta { display: none; }
+      .nav-link { margin-left: auto; min-height: 40px; padding: 8px 11px; font-size: 12px; }
+      .intro { padding: 20px 20px 36px; }
+      h1 { font-size: 48px; }
+      .intro-copy { font-size: 14px; }
+      .stage { height: 590px; min-height: 590px; }
+      .mode-rail { top: 16px; left: 14px; right: 14px; flex-direction: row; justify-content: stretch; }
+      .mode-button { flex: 1; min-width: 0; justify-content: center; padding: 8px; }
+      .stage-caption { top: 82px; left: 20px; right: 20px; font-size: 11px; }
+      .controls { left: 14px; right: 14px; bottom: 16px; flex-wrap: wrap; justify-content: center; }
+      .particle-stat { margin-left: auto; }
+      .footer { padding: 14px 6px 4px; flex-direction: column; align-items: flex-start; gap: 2px; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .glass-regular, .glass-protected, .glass-thin { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(244,247,246,.94); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar glass-regular">
+      <a class="brand" href="18-1.html" aria-label="Canvas 文字动画首页">
+        <span class="brand-index">18—1</span>
+        <span>Canvas 字体实验</span>
+      </a>
+      <div class="top-meta"><span class="status-dot" aria-hidden="true"></span><span>实时渲染</span></div>
+      <a class="nav-link" href="18-2.html">电商系统架构 <span aria-hidden="true">→</span></a>
+    </header>
+
+    <main class="main">
+      <section class="intro glass-protected" aria-labelledby="pageTitle">
+        <p class="eyebrow">TYPOGRAPHY IN MOTION</p>
+        <h1 id="pageTitle">涂玮轩</h1>
+        <p class="intro-copy">粒子从游离到聚合，姓名在每一次运动中重新显影。移动指针，让文字留下你的轨迹。</p>
+        <div class="intro-meta"><span>CANVAS 2D</span><span>PARTICLE TYPE</span><span>交互文字</span></div>
+      </section>
+
+      <section class="stage glass-regular" aria-label="涂玮轩 Canvas 粒子动画舞台">
+        <canvas id="nameCanvas" role="img" aria-label="由动态粒子组成的文字：涂玮轩">涂玮轩。当前浏览器不支持 Canvas，请使用支持 HTML5 Canvas 的浏览器。</canvas>
+        <div class="mode-rail glass-thin" role="group" aria-label="选择动画模式">
+          <button class="mode-button active" type="button" data-mode="gather" aria-pressed="true"><span>01</span>聚合</button>
+          <button class="mode-button" type="button" data-mode="wave" aria-pressed="false"><span>02</span>波浪</button>
+          <button class="mode-button" type="button" data-mode="orbit" aria-pressed="false"><span>03</span>星轨</button>
+        </div>
+        <div class="stage-caption"><span class="caption-line" aria-hidden="true"></span><span id="modeCaption">游离粒子正在寻找文字轮廓</span></div>
+        <div class="gesture">MOVE YOUR POINTER TO DISPERSE THE PARTICLES</div>
+        <div class="controls glass-protected">
+          <button class="button button-primary" id="playButton" type="button">暂停动画</button>
+          <button class="button button-secondary" id="replayButton" type="button">重新聚合</button>
+          <div class="particle-stat"><strong id="particleCount">—</strong><span>粒子</span></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><span>涂玮轩 · 粒子文字动画</span><span>HTML CANVAS / PURE JAVASCRIPT</span></footer>
+  </div>
+  <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+      const canvas = document.getElementById('nameCanvas');
+      const ctx = canvas.getContext('2d');
+      const playButton = document.getElementById('playButton');
+      const replayButton = document.getElementById('replayButton');
+      const countLabel = document.getElementById('particleCount');
+      const modeCaption = document.getElementById('modeCaption');
+      const liveStatus = document.getElementById('liveStatus');
+      const modeButtons = [...document.querySelectorAll('[data-mode]')];
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const name = '涂玮轩';
+      const colors = ['#28344a', '#397f7a', '#bf7058'];
+      const captions = {
+        gather: '游离粒子正在寻找文字轮廓',
+        wave: '文字沿着呼吸般的波形流动',
+        orbit: '每一个笔画都有自己的运行轨迹'
+      };
+      let width = 0;
+      let height = 0;
+      let particles = [];
+      let charLabels = [];
+      let fontSize = 120;
+      let nameBaseline = 0;
+      let mode = 'gather';
+      let running = !reducedMotion;
+      let frameId = 0;
+      let time = 0;
+      let resizeTimer = 0;
+      const pointer = { x: 0, y: 0, active: false };
+
+      function randomBetween(min, max) { return min + Math.random() * (max - min); }
+
+      function buildParticles(placeAtTarget = false) {
+        const offscreen = document.createElement('canvas');
+        offscreen.width = Math.max(1, Math.round(width));
+        offscreen.height = Math.max(1, Math.round(height));
+        const off = offscreen.getContext('2d', { willReadFrequently: true });
+        const centerX = width * 0.5;
+        const centerY = height * (width < 560 ? 0.48 : 0.50);
+        fontSize = Math.min(180, width / 3.65, height * 0.27);
+        const family = '"Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif';
+        off.font = `650 ${fontSize}px ${family}`;
+        off.textAlign = 'left';
+        off.textBaseline = 'middle';
+        let textWidth = off.measureText(name).width;
+        const maxTextWidth = width * (width < 560 ? 0.82 : 0.76);
+        if (textWidth > maxTextWidth) {
+          fontSize *= maxTextWidth / textWidth;
+          off.font = `650 ${fontSize}px ${family}`;
+          textWidth = off.measureText(name).width;
+        }
+        const textStart = centerX - textWidth / 2;
+        off.fillStyle = '#000000';
+        off.fillText(name, textStart, centerY);
+        nameBaseline = centerY + fontSize * 0.68;
+        charLabels = [];
+        let cursor = textStart;
+        ['TU', 'WEI', 'XUAN'].forEach((label, index) => {
+          const charWidth = off.measureText(name[index]).width;
+          charLabels.push({ label, x: cursor + charWidth / 2, width: charWidth });
+          cursor += charWidth;
+        });
+        const pixels = off.getImageData(0, 0, offscreen.width, offscreen.height).data;
+        const step = width < 560 ? 4 : 5;
+        const targets = [];
+        for (let y = 0; y < offscreen.height; y += step) {
+          for (let x = 0; x < offscreen.width; x += step) {
+            if (pixels[(y * offscreen.width + x) * 4 + 3] > 110) targets.push({ x, y });
+          }
+        }
+        particles = targets.map((target, index) => {
+          const colorIndex = Math.random() < 0.78 ? 0 : (Math.random() < 0.72 ? 1 : 2);
+          return {
+            tx: target.x,
+            ty: target.y,
+            x: placeAtTarget ? target.x : randomBetween(-width * 0.08, width * 1.08),
+            y: placeAtTarget ? target.y : randomBetween(-height * 0.08, height * 1.08),
+            vx: 0,
+            vy: 0,
+            radius: randomBetween(0.72, colorIndex === 0 ? 1.65 : 2.05),
+            phase: randomBetween(0, Math.PI * 2),
+            colorIndex,
+            index
+          };
+        });
+        countLabel.textContent = particles.length.toLocaleString('zh-CN');
+        draw();
+      }
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        width = Math.max(1, rect.width);
+        height = Math.max(1, rect.height);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        buildParticles(reducedMotion && !running);
+      }
+
+      function roundedLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      function drawField() {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(40,52,74,.055)';
+        ctx.lineWidth = 1;
+        for (let x = 32; x < width; x += 80) roundedLine(x, 0, x, height);
+        for (let y = 32; y < height; y += 80) roundedLine(0, y, width, y);
+        const centerX = width / 2;
+        const centerY = height * (width < 560 ? 0.48 : 0.50);
+        ctx.setLineDash([3, 8]);
+        ctx.strokeStyle = 'rgba(40,52,74,.13)';
+        [1, 1.18].forEach((scale, index) => {
+          ctx.beginPath();
+          ctx.ellipse(centerX, centerY, Math.min(width * .36, 390) * scale, fontSize * (.74 + index * .16), -.09, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(40,52,74,.54)';
+        ctx.font = '500 9px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText('NAME / PARTICLE FIELD', 28, height - 76);
+        ctx.restore();
+      }
+
+      function update(delta) {
+        const centerX = width / 2;
+        const centerY = height * (width < 560 ? 0.48 : 0.50);
+        const orbitAngle = Math.sin(time * .62) * .075;
+        const cos = Math.cos(orbitAngle);
+        const sin = Math.sin(orbitAngle);
+        particles.forEach(p => {
+          let targetX = p.tx;
+          let targetY = p.ty;
+          if (mode === 'wave') {
+            targetX += Math.cos(time * 1.45 + p.phase) * 2.8;
+            targetY += Math.sin(p.tx * .019 + time * 2.25 + p.phase * .18) * 13;
+          } else if (mode === 'orbit') {
+            const dx = p.tx - centerX;
+            const dy = p.ty - centerY;
+            targetX = centerX + dx * cos - dy * sin + Math.cos(time * 1.2 + p.phase) * 4;
+            targetY = centerY + dx * sin + dy * cos + Math.sin(time * 1.35 + p.phase) * 4;
+          } else {
+            targetY += Math.sin(time * 1.4 + p.phase) * 1.2;
+          }
+          p.vx += (targetX - p.x) * .022 * delta;
+          p.vy += (targetY - p.y) * .022 * delta;
+          if (pointer.active) {
+            const dx = p.x - pointer.x;
+            const dy = p.y - pointer.y;
+            const distance = Math.hypot(dx, dy) || 1;
+            const radius = 105;
+            if (distance < radius) {
+              const force = (1 - distance / radius) * 1.55 * delta;
+              p.vx += dx / distance * force;
+              p.vy += dy / distance * force;
+            }
+          }
+          const damping = Math.pow(.875, delta);
+          p.vx *= damping;
+          p.vy *= damping;
+          p.x += p.vx * delta;
+          p.y += p.vy * delta;
+        });
+      }
+
+      function drawParticles() {
+        colors.forEach((color, colorIndex) => {
+          ctx.beginPath();
+          particles.forEach(p => {
+            if (p.colorIndex !== colorIndex) return;
+            ctx.moveTo(p.x + p.radius, p.y);
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          });
+          ctx.fillStyle = color;
+          ctx.fill();
+        });
+      }
+
+      function drawLabels() {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(40,52,74,.25)';
+        ctx.fillStyle = 'rgba(40,52,74,.66)';
+        ctx.lineWidth = 1;
+        ctx.font = '500 9px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'center';
+        charLabels.forEach(item => {
+          const half = Math.min(item.width * .30, 34);
+          roundedLine(item.x - half, nameBaseline, item.x + half, nameBaseline);
+          ctx.fillText(item.label, item.x, nameBaseline + 18);
+        });
+        ctx.restore();
+      }
+
+      function drawPointer() {
+        if (!pointer.active) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(40,52,74,.34)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 5]);
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 30 + Math.sin(time * 3) * 3, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        drawField();
+        drawParticles();
+        drawLabels();
+        drawPointer();
+      }
+
+      function animate(timestamp) {
+        if (!running) return;
+        time = timestamp / 1000;
+        update(1);
+        draw();
+        frameId = requestAnimationFrame(animate);
+      }
+
+      function syncPlayButton() {
+        playButton.textContent = running ? '暂停动画' : '播放动画';
+        playButton.setAttribute('aria-label', running ? '暂停 Canvas 动画' : '播放 Canvas 动画');
+      }
+
+      function startAnimation() {
+        cancelAnimationFrame(frameId);
+        if (running && !document.hidden) frameId = requestAnimationFrame(animate);
+      }
+
+      function setMode(nextMode) {
+        mode = nextMode;
+        modeButtons.forEach(button => {
+          const active = button.dataset.mode === mode;
+          button.classList.toggle('active', active);
+          button.setAttribute('aria-pressed', String(active));
+        });
+        modeCaption.textContent = captions[mode];
+        liveStatus.textContent = `已切换为${modeButtons.find(button => button.dataset.mode === mode).textContent.replace(/^\d+/, '').trim()}模式`;
+        if (!running) { update(1); draw(); }
+      }
+
+      modeButtons.forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
+      playButton.addEventListener('click', () => {
+        running = !running;
+        syncPlayButton();
+        liveStatus.textContent = running ? '动画已播放' : '动画已暂停';
+        if (running) startAnimation();
+        else { cancelAnimationFrame(frameId); draw(); }
+      });
+      replayButton.addEventListener('click', () => {
+        setMode('gather');
+        buildParticles(false);
+        liveStatus.textContent = '粒子已重新释放，正在聚合为涂玮轩';
+        if (!running) { running = true; syncPlayButton(); }
+        startAnimation();
+      });
+      canvas.addEventListener('pointermove', event => {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = event.clientX - rect.left;
+        pointer.y = event.clientY - rect.top;
+        pointer.active = true;
+        if (!running) draw();
+      });
+      canvas.addEventListener('pointerleave', () => { pointer.active = false; if (!running) draw(); });
+      document.addEventListener('visibilitychange', startAnimation);
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resize, 120);
+      });
+      if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(() => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 100);
+        });
+        observer.observe(canvas.parentElement);
+      }
+      syncPlayButton();
+      if (reducedMotion) modeCaption.textContent = '已遵循减少动态效果设置，可手动播放';
+      resize();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => resize());
+      startAnimation();
+    })();
+  </script>
+</body>
+</html>

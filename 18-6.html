@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-tu-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7f6">
+  <meta name="description" content="基于本地 Mermaid 11.17.2 绘制的智能客服系统流程图与 ER 图，包含会话主流程、8 张核心数据表与 7 条关系。">
+  <title>智能客服系统流程与 ER 图｜Mermaid</title>
+  <style>
+    /* ============ 设计变量 ============ */
+    :root {
+      --tu_canvas: #eef3f4;
+      --tu_canvas-deep: #e6edf0;
+      --tu_ink: #172238;
+      --tu_muted: #5d6b82;
+      --tu_accent: #28344a;
+      --tu_aqua: #74c8c0;
+      --tu_sky: #9fc8f4;
+      --tu_coral: #f5b5a3;
+      --tu_sun: #f7d98b;
+      --tu_glass: rgba(255, 255, 255, .46);
+      --tu_glass-strong: rgba(255, 255, 255, .78);
+      --tu_edge: rgba(255, 255, 255, .72);
+      --tu_divider: rgba(73, 92, 128, .16);
+      --tu_plot: #fbfcfa;
+      --tu_code-bg: #0f1828;
+      --tu_button-bg: #28344a;
+      --tu_button-bg-hover: #1b2438;
+      --tu_button-ink: #f8fbff;
+      --tu_shadow: 0 24px 60px rgba(31, 46, 78, .12);
+      --tu_shadow-soft: 0 10px 26px rgba(31, 46, 78, .08);
+      --tu_ok: #1f7a68;
+      --tu_warn: #b5573f;
+      --tu_radius-control: 12px;
+      --tu_radius-card: 20px;
+      --tu_radius-panel: 30px;
+      --tu_font-display: "Sora", "Segoe UI Variable", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --tu_font-body: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+      --tu_font-mono: "Cascadia Code", "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    html[data-tu-theme="dark"] {
+      color-scheme: dark;
+      --tu_canvas: #0a121f;
+      --tu_canvas-deep: #070d17;
+      --tu_ink: #e7eefb;
+      --tu_muted: #93a3bd;
+      --tu_accent: #dce7fb;
+      --tu_glass: rgba(18, 29, 47, .55);
+      --tu_glass-strong: rgba(20, 32, 52, .82);
+      --tu_edge: rgba(129, 157, 199, .22);
+      --tu_divider: rgba(139, 163, 199, .18);
+      --tu_plot: #0e1726;
+      --tu_button-bg: #cfe0fb;
+      --tu_button-bg-hover: #ffffff;
+      --tu_button-ink: #0b1320;
+      --tu_shadow: 0 24px 60px rgba(0, 0, 0, .5);
+      --tu_shadow-soft: 0 10px 26px rgba(0, 0, 0, .35);
+      --tu_ok: #5fbfa7;
+      --tu_warn: #f0a189;
+    }
+
+    /* ============ 基础 ============ */
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--tu_canvas);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--tu_ink);
+      font: 400 14px/1.7 var(--tu_font-body);
+      background:
+        radial-gradient(ellipse at 4% 0%, rgba(116, 200, 192, .42) 0, rgba(116, 200, 192, 0) 36%),
+        radial-gradient(ellipse at 98% 4%, rgba(159, 200, 244, .52) 0, rgba(159, 200, 244, 0) 40%),
+        radial-gradient(ellipse at 84% 100%, rgba(245, 181, 163, .36) 0, rgba(245, 181, 163, 0) 42%),
+        linear-gradient(150deg, #f2f6f5 0%, #edf1f7 56%, #f8f4ec 100%);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    html[data-tu-theme="dark"] body {
+      background:
+        radial-gradient(ellipse at 6% 0%, rgba(52, 120, 112, .34) 0, rgba(52, 120, 112, 0) 38%),
+        radial-gradient(ellipse at 96% 6%, rgba(52, 92, 150, .42) 0, rgba(52, 92, 150, 0) 42%),
+        radial-gradient(ellipse at 80% 100%, rgba(140, 80, 64, .24) 0, rgba(140, 80, 64, 0) 44%),
+        linear-gradient(160deg, #0a1322 0%, #0b1728 58%, #0d1420 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .3;
+      background-image:
+        linear-gradient(rgba(40, 52, 74, .05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(40, 52, 74, .05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, #000, transparent 86%);
+      -webkit-mask-image: linear-gradient(to bottom, #000, transparent 86%);
+    }
+
+    html[data-tu-theme="dark"] body::before {
+      opacity: .35;
+      background-image:
+        linear-gradient(rgba(159, 200, 244, .07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(159, 200, 244, .07) 1px, transparent 1px);
+    }
+
+    ::selection {
+      background: rgba(116, 200, 192, .38);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--tu_aqua);
+      outline-offset: 2px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    code {
+      font-family: var(--tu_font-mono);
+    }
+
+    /* ============ 页面骨架 ============ */
+    .tu_page {
+      position: relative;
+      z-index: 1;
+      width: min(1480px, 100%);
+      margin: 0 auto;
+      padding: 18px clamp(14px, 2.4vw, 30px) 10px;
+    }
+
+    .tu_glass {
+      background: var(--tu_glass);
+      border: 1px solid var(--tu_edge);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--tu_shadow);
+      backdrop-filter: blur(26px) saturate(135%);
+      -webkit-backdrop-filter: blur(26px) saturate(135%);
+    }
+
+    html[data-tu-theme="dark"] .tu_glass {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), var(--tu_shadow);
+    }
+
+    /* ============ 顶栏 ============ */
+    .tu_topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 64px;
+      padding: 10px 12px 10px 18px;
+      border-radius: var(--tu_radius-card);
+    }
+
+    .tu_brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .tu_brand-index {
+      padding: 9px 10px;
+      border: 1px solid var(--tu_divider);
+      border-radius: 9px;
+      background: var(--tu_glass-strong);
+      color: var(--tu_ink);
+      font: 600 12px/1 var(--tu_font-mono);
+      letter-spacing: .08em;
+    }
+
+    .tu_brand-text {
+      font-weight: 640;
+      letter-spacing: -.01em;
+      white-space: nowrap;
+    }
+
+    .tu_nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-left: 2px;
+    }
+
+    .tu_nav-link {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--tu_muted);
+      font-size: 13px;
+      text-decoration: none;
+      transition: background .18s ease, color .18s ease;
+    }
+
+    .tu_nav-link:hover {
+      color: var(--tu_ink);
+      background: rgba(255, 255, 255, .5);
+    }
+
+    html[data-tu-theme="dark"] .tu_nav-link:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .tu_top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .tu_icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--tu_divider);
+      border-radius: 11px;
+      background: var(--tu_glass-strong);
+      color: var(--tu_ink);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .tu_icon-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .tu_icon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .tu_icon-moon {
+      display: none;
+    }
+
+    html[data-tu-theme="dark"] .tu_icon-sun {
+      display: none;
+    }
+
+    html[data-tu-theme="dark"] .tu_icon-moon {
+      display: block;
+    }
+
+    .tu_home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 11px;
+      background: var(--tu_button-bg);
+      color: var(--tu_button-ink);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: var(--tu_shadow-soft);
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .tu_home:hover {
+      background: var(--tu_button-bg-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ============ Hero ============ */
+    .tu_hero {
+      position: relative;
+      margin-top: 18px;
+      padding: clamp(26px, 3.2vw, 42px) clamp(22px, 3vw, 40px) 0;
+      border-radius: var(--tu_radius-panel);
+      overflow: hidden;
+    }
+
+    .tu_hero::before,
+    .tu_hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .tu_hero::before {
+      top: -180px;
+      right: -120px;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle at 30% 30%, rgba(159, 200, 244, .55), rgba(159, 200, 244, 0) 68%);
+    }
+
+    .tu_hero::after {
+      right: 120px;
+      bottom: -170px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle at 50% 50%, rgba(116, 200, 192, .42), rgba(116, 200, 192, 0) 70%);
+    }
+
+    .tu_hero-main {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
+      gap: clamp(24px, 3.4vw, 50px);
+      align-items: end;
+      padding-bottom: 30px;
+    }
+
+    .tu_eyebrow {
+      margin: 0 0 14px;
+      color: var(--tu_muted);
+      font: 500 10px/1.4 var(--tu_font-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--tu_font-display);
+      font-size: clamp(38px, 4.6vw, 64px);
+      font-weight: 650;
+      line-height: 1.02;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+
+    .tu_title-accent {
+      color: transparent;
+      background: linear-gradient(96deg, #2f8f83 0%, #3f6fb8 52%, #b4654c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    html[data-tu-theme="dark"] .tu_title-accent {
+      background: linear-gradient(96deg, #7fe0d1 0%, #9cc4ff 52%, #ffb59c 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .tu_hero-desc {
+      max-width: 44em;
+      margin: 20px 0 0;
+      color: var(--tu_muted);
+      font-size: 15px;
+      line-height: 1.9;
+      text-wrap: pretty;
+    }
+
+    .tu_hero-desc code {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(40, 52, 74, .07);
+      color: var(--tu_ink);
+      font-size: .9em;
+    }
+
+    html[data-tu-theme="dark"] .tu_hero-desc code {
+      background: rgba(159, 200, 244, .12);
+    }
+
+    .tu_tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .tu_tags span {
+      padding: 5px 11px;
+      border: 1px solid var(--tu_divider);
+      border-radius: 999px;
+      background: var(--tu_glass-strong);
+      color: var(--tu_muted);
+      font: 500 9.5px/1.5 var(--tu_font-mono);
+      letter-spacing: .06em;
+    }
+
+    .tu_hero-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      justify-content: end;
+      padding-left: clamp(18px, 2.4vw, 30px);
+      border-left: 1px solid var(--tu_divider);
+    }
+
+    .tu_meta-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 11.5px;
+    }
+
+    .tu_meta-row span {
+      color: var(--tu_muted);
+      white-space: nowrap;
+    }
+
+    .tu_meta-row strong {
+      font-family: var(--tu_font-mono);
+      font-size: 11px;
+      font-weight: 640;
+      letter-spacing: -.01em;
+      text-align: right;
+    }
+
+    .tu_meta-note {
+      margin: 6px 0 0;
+      color: var(--tu_muted);
+      font-size: 10.5px;
+      line-height: 1.8;
+    }
+
+    /* ============ KPI ============ */
+    .tu_kpis {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin: 0 calc(-1 * clamp(22px, 3vw, 40px));
+      padding: 0;
+      border-top: 1px solid var(--tu_divider);
+      list-style: none;
+    }
+
+    .tu_kpi {
+      min-width: 0;
+      padding: 18px clamp(18px, 2.6vw, 34px) 20px;
+      border-right: 1px solid var(--tu_divider);
+    }
+
+    .tu_kpi:last-child {
+      border-right: 0;
+    }
+
+    .tu_kpi-label {
+      margin: 0 0 4px;
+      color: var(--tu_muted);
+      font: 500 9px/1.4 var(--tu_font-mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .tu_kpi-value {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 0;
+      font-family: var(--tu_font-display);
+      font-size: clamp(26px, 2.4vw, 34px);
+      font-weight: 630;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tu_kpi-value small {
+      color: var(--tu_muted);
+      font-family: var(--tu_font-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    /* ============ 区块 ============ */
+    main {
+      padding-top: 30px;
+    }
+
+    .tu_section {
+      margin-bottom: 32px;
+      scroll-margin-top: 96px;
+    }
+
+    .tu_section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 0 4px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--tu_font-display);
+      font-size: clamp(24px, 2.5vw, 32px);
+      font-weight: 640;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+
+    .tu_section-desc {
+      max-width: 62em;
+      margin: 8px 0 0;
+      color: var(--tu_muted);
+      font-size: 12.5px;
+      line-height: 1.85;
+      text-wrap: pretty;
+    }
+
+    .tu_legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      padding-bottom: 3px;
+    }
+
+    .tu_legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--tu_muted);
+      font: 500 10px/1.5 var(--tu_font-mono);
+      letter-spacing: .02em;
+    }
+
+    .tu_dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 3px;
+    }
+
+    .tu_dot-contact {
+      background: #59b8a9;
+    }
+
+    .tu_dot-gate {
+      background: #6f9fd8;
+    }
+
+    .tu_dot-brain {
+      background: #d9ad60;
+    }
+
+    .tu_dot-human {
+      background: #d99578;
+    }
+
+    .tu_dot-data {
+      background: #a191dc;
+    }
+
+    /* ============ 卡片 / 工具栏 ============ */
+    .tu_card {
+      padding: 20px;
+      border: 1px solid var(--tu_edge);
+      border-radius: var(--tu_radius-card);
+      background: var(--tu_glass);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--tu_shadow-soft);
+      backdrop-filter: blur(24px) saturate(130%);
+      -webkit-backdrop-filter: blur(24px) saturate(130%);
+    }
+
+    html[data-tu-theme="dark"] .tu_card {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), var(--tu_shadow-soft);
+    }
+
+    .tu_diagram-card {
+      padding: 14px 14px 10px;
+    }
+
+    .tu_toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 4px 12px;
+    }
+
+    .tu_zoom {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      border: 1px solid var(--tu_divider);
+      border-radius: 12px;
+      background: var(--tu_glass-strong);
+    }
+
+    .tu_zoom-btn {
+      width: 32px;
+      height: 30px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--tu_ink);
+      font: 600 15px/1 var(--tu_font-mono);
+      cursor: pointer;
+      transition: background .16s ease;
+    }
+
+    .tu_zoom-btn:hover {
+      background: rgba(40, 52, 74, .08);
+    }
+
+    html[data-tu-theme="dark"] .tu_zoom-btn:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .tu_zoom-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .tu_zoom-label {
+      min-width: 48px;
+      color: var(--tu_muted);
+      font: 500 10.5px/1 var(--tu_font-mono);
+      letter-spacing: .02em;
+      text-align: center;
+    }
+
+    .tu_zoom-reset {
+      height: 30px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--tu_muted);
+      font-size: 11px;
+      cursor: pointer;
+      transition: background .16s ease, color .16s ease;
+    }
+
+    .tu_zoom-reset:hover {
+      color: var(--tu_ink);
+      background: rgba(40, 52, 74, .08);
+    }
+
+    html[data-tu-theme="dark"] .tu_zoom-reset:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .tu_toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .tu_btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 13px;
+      border: 1px solid var(--tu_divider);
+      border-radius: 10px;
+      background: var(--tu_glass-strong);
+      color: var(--tu_ink);
+      font: 500 12px/1 var(--tu_font-body);
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .tu_btn:hover {
+      border-color: rgba(63, 94, 251, .35);
+      transform: translateY(-1px);
+    }
+
+    .tu_btn:active {
+      transform: translateY(0);
+    }
+
+    .tu_btn[aria-expanded="true"] {
+      border-color: transparent;
+      background: var(--tu_button-bg);
+      color: var(--tu_button-ink);
+    }
+
+    /* ============ 图表画布 ============ */
+    .tu_diagram-scroll {
+      max-height: 760px;
+      padding: 20px;
+      overflow: auto;
+      overscroll-behavior: contain;
+      border: 1px solid var(--tu_divider);
+      border-radius: 16px;
+      background-color: var(--tu_plot);
+      background-image: radial-gradient(rgba(40, 52, 74, .1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    html[data-tu-theme="dark"] .tu_diagram-scroll {
+      background-image: radial-gradient(rgba(159, 200, 244, .12) 1px, transparent 1px);
+    }
+
+    .tu_diagram-canvas {
+      min-width: 100%;
+      text-align: center;
+    }
+
+    .tu_diagram-canvas svg {
+      display: block;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .tu_canvas-wide {
+      min-width: 940px;
+    }
+
+    .tu_loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 320px;
+      margin: 0;
+      color: var(--tu_muted);
+      font-size: 12px;
+    }
+
+    .tu_spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(73, 92, 128, .22);
+      border-top-color: var(--tu_aqua);
+      border-radius: 50%;
+      animation: tu_spin .8s linear infinite;
+    }
+
+    @keyframes tu_spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .tu_error {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 300px;
+      padding: 24px;
+      color: var(--tu_warn);
+      text-align: center;
+    }
+
+    .tu_error strong {
+      font-size: 14px;
+    }
+
+    .tu_error p {
+      max-width: 52em;
+      margin: 0;
+      color: var(--tu_muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    /* ============ 源码 ============ */
+    .tu_source {
+      margin-top: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 14px;
+      background: var(--tu_code-bg);
+    }
+
+    .tu_source-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      color: #8fa6c8;
+      font: 500 10px/1 var(--tu_font-mono);
+      letter-spacing: .06em;
+    }
+
+    .tu_source-dots {
+      display: inline-flex;
+      gap: 5px;
+    }
+
+    .tu_source-dots i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #40506b;
+    }
+
+    .tu_source-dots i:first-child {
+      background: #e8897a;
+    }
+
+    .tu_source-dots i:nth-child(2) {
+      background: #e8c07a;
+    }
+
+    .tu_source-dots i:nth-child(3) {
+      background: #74c8a5;
+    }
+
+    .tu_code {
+      max-height: 380px;
+      margin: 0;
+      padding: 16px 18px;
+      overflow: auto;
+      color: #d7e3f7;
+      font: 400 12px/1.75 var(--tu_font-mono);
+      tab-size: 2;
+    }
+
+    .tu_status {
+      min-height: 18px;
+      margin: 10px 4px 0;
+      color: var(--tu_muted);
+      font: 400 10.5px/1.5 var(--tu_font-mono);
+      letter-spacing: .02em;
+    }
+
+    .tu_status[data-tu_state="ok"] {
+      color: var(--tu_ok);
+    }
+
+    .tu_status[data-tu_state="warn"] {
+      color: var(--tu_warn);
+    }
+
+    /* ============ 流程说明 ============ */
+    .tu_notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .tu_note {
+      padding: 16px 18px;
+      border: 1px solid var(--tu_edge);
+      border-radius: 16px;
+      background: var(--tu_glass);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45);
+    }
+
+    html[data-tu-theme="dark"] .tu_note {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+    }
+
+    .tu_note-index {
+      color: var(--tu_aqua);
+      font: 600 10px/1 var(--tu_font-mono);
+      letter-spacing: .1em;
+    }
+
+    .tu_note h3 {
+      margin: 8px 0 5px;
+      font-family: var(--tu_font-display);
+      font-size: 14px;
+      font-weight: 640;
+      letter-spacing: -.01em;
+    }
+
+    .tu_note p {
+      margin: 0;
+      color: var(--tu_muted);
+      font-size: 11.5px;
+      line-height: 1.8;
+    }
+
+    /* ============ 数据字典 ============ */
+    .tu_tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .tu_table-card {
+      padding: 16px 17px;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .tu_table-card:hover {
+      transform: translateY(-3px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), var(--tu_shadow);
+    }
+
+    .tu_table-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tu_table-name {
+      font: 600 12.5px/1.4 var(--tu_font-mono);
+      letter-spacing: .04em;
+    }
+
+    .tu_table-cn {
+      color: var(--tu_muted);
+      font-size: 11px;
+    }
+
+    .tu_table-keys {
+      margin: 8px 0 0;
+      color: var(--tu_muted);
+      font: 400 10px/1.7 var(--tu_font-mono);
+    }
+
+    .tu_table-desc {
+      margin: 8px 0 0;
+      color: var(--tu_ink);
+      opacity: .82;
+      font-size: 11.5px;
+      line-height: 1.75;
+    }
+
+    .tu_table-meta {
+      margin: 10px 0 0;
+      color: var(--tu_muted);
+      font: 500 9.5px/1.4 var(--tu_font-mono);
+      letter-spacing: .06em;
+    }
+
+    /* ============ 关系 ============ */
+    .tu_relations {
+      margin-top: 12px;
+      padding: 4px 20px 8px;
+    }
+
+    .tu_relations-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 0 6px;
+    }
+
+    .tu_relations-head h3 {
+      margin: 0;
+      font-family: var(--tu_font-display);
+      font-size: 16px;
+      font-weight: 640;
+      letter-spacing: -.01em;
+    }
+
+    .tu_relations-head span {
+      color: var(--tu_muted);
+      font: 500 9.5px/1.4 var(--tu_font-mono);
+      letter-spacing: .06em;
+    }
+
+    .tu_rel-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.1fr) 76px minmax(0, 1.6fr);
+      gap: 16px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid var(--tu_divider);
+      font-size: 11.5px;
+    }
+
+    .tu_rel-path {
+      color: var(--tu_ink);
+      font: 500 11px/1.6 var(--tu_font-mono);
+    }
+
+    .tu_rel-path em {
+      color: var(--tu_muted);
+      font-style: normal;
+      padding: 0 4px;
+    }
+
+    .tu_rel-cardinality {
+      padding: 3px 0;
+      border-radius: 6px;
+      background: rgba(116, 200, 192, .14);
+      color: #248274;
+      font: 600 10px/1.4 var(--tu_font-mono);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    html[data-tu-theme="dark"] .tu_rel-cardinality {
+      color: #7fe0d1;
+    }
+
+    .tu_rel-desc {
+      color: var(--tu_muted);
+      line-height: 1.7;
+    }
+
+    /* ============ 页脚 ============ */
+    .tu_footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding: 22px 4px 26px;
+      border-top: 1px solid var(--tu_divider);
+      color: var(--tu_muted);
+      font-size: 11px;
+    }
+
+    .tu_footer p {
+      margin: 0;
+    }
+
+    .tu_footer code {
+      color: var(--tu_ink);
+    }
+
+    /* ============ 响应式 ============ */
+    @media (max-width: 1100px) {
+      .tu_hero-main {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .tu_hero-meta {
+        padding-top: 20px;
+        padding-left: 0;
+        border-top: 1px solid var(--tu_divider);
+        border-left: 0;
+      }
+
+      .tu_notes-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .tu_nav {
+        display: none;
+      }
+
+      .tu_diagram-scroll {
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .tu_kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tu_kpi:nth-child(2) {
+        border-right: 0;
+      }
+
+      .tu_kpi:nth-child(-n+2) {
+        border-bottom: 1px solid var(--tu_divider);
+      }
+
+      .tu_notes-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .tu_rel-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 14px;
+      }
+
+      .tu_rel-desc {
+        grid-column: 1 / -1;
+      }
+
+      .tu_section-head {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .tu_topbar {
+        gap: 10px;
+        padding-left: 12px;
+      }
+
+      .tu_brand-text {
+        display: none;
+      }
+
+      .tu_home {
+        padding: 0 11px;
+        font-size: 12px;
+      }
+
+      .tu_icon-btn {
+        width: 38px;
+        height: 38px;
+      }
+
+      .tu_toolbar {
+        align-items: flex-start;
+      }
+
+      .tu_toolbar-actions {
+        width: 100%;
+      }
+
+      .tu_btn {
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+
+      .tu_hero {
+        border-radius: 24px;
+      }
+
+      .tu_diagram-card {
+        padding: 10px 10px 8px;
+      }
+
+      .tu_canvas-wide {
+        min-width: 760px;
+      }
+    }
+
+    /* ============ 动效 / 打印 ============ */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media print {
+      body::before,
+      .tu_topbar,
+      .tu_toolbar,
+      .tu_source,
+      .tu_home {
+        display: none !important;
+      }
+
+      .tu_page {
+        padding: 0;
+      }
+
+      .tu_diagram-scroll {
+        max-height: none;
+        overflow: visible;
+      }
+
+      .tu_card,
+      .tu_hero,
+      .tu_note {
+        border: 1px solid #ccc;
+        box-shadow: none;
+      }
+
+      .tu_section {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tu_page">
+    <header class="tu_topbar tu_glass">
+      <div class="tu_brand">
+        <span class="tu_brand-index">18-6</span>
+        <span class="tu_brand-text">Mermaid 图表实验室</span>
+      </div>
+      <nav class="tu_nav" aria-label="页内导航">
+        <a class="tu_nav-link" href="#tu_flow">流程图</a>
+        <a class="tu_nav-link" href="#tu_er">ER 图</a>
+        <a class="tu_nav-link" href="#tu_tables">数据字典</a>
+      </nav>
+      <div class="tu_top-actions">
+        <button class="tu_icon-btn" id="tu_theme" type="button" aria-pressed="false" aria-label="切换到深色模式" title="切换深色模式">
+          <svg class="tu_icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 2.6v2.1M12 19.3v2.1M2.6 12h2.1M19.3 12h2.1M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M18.7 5.3l-1.5 1.5M6.8 17.2l-1.5 1.5"></path>
+          </svg>
+          <svg class="tu_icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.4 14.2A8.4 8.4 0 1 1 9.8 3.6a6.8 6.8 0 0 0 10.6 10.6Z"></path>
+          </svg>
+        </button>
+        <a class="tu_home" href="index.html">← 返回首页</a>
+      </div>
+    </header>
+
+    <section class="tu_hero tu_glass" aria-labelledby="tu_title">
+      <div class="tu_hero-main">
+        <div>
+          <p class="tu_eyebrow">Diagram as Code · 第 18 课</p>
+          <h1 id="tu_title">智能客服系统<br><span class="tu_title-accent">流程与数据模型</span></h1>
+          <p class="tu_hero-desc">把业务写成文本，让 Mermaid 在浏览器里画出来。第一张流程图串起「用户提问 → 意图识别 → 检索生成 → 合规校验 → 人工兜底」的 19 个环节；第二张 ER 图拆开 8 张核心表、44 个字段与 7 条关系，说明会话、消息、意图、知识库、工单与评价如何彼此咬合。渲染脚本已下载到本地 <code>cdn/mermaid/</code>，断网也能用。</p>
+          <div class="tu_tags">
+            <span>MERMAID 11.17.2</span>
+            <span>LOCAL CDN</span>
+            <span>FLOWCHART</span>
+            <span>ER DIAGRAM</span>
+          </div>
+        </div>
+        <aside class="tu_hero-meta" aria-label="页面信息">
+          <div class="tu_meta-row"><span>渲染引擎</span><strong>Mermaid 11.17.2</strong></div>
+          <div class="tu_meta-row"><span>本地路径</span><strong>cdn/mermaid/</strong></div>
+          <div class="tu_meta-row"><span>图表类型</span><strong>Flowchart + ER</strong></div>
+          <div class="tu_meta-row"><span>页面作者</span><strong>涂玮轩</strong></div>
+          <p class="tu_meta-note">图形由浏览器端实时解析 SVG 生成：可缩放、可切换深浅主题、可查看源码、可导出 SVG。</p>
+        </aside>
+      </div>
+      <ul class="tu_kpis" aria-label="页面数据概览">
+        <li class="tu_kpi">
+          <p class="tu_kpi-label">流程节点</p>
+          <p class="tu_kpi-value">19<small>个</small></p>
+        </li>
+        <li class="tu_kpi">
+          <p class="tu_kpi-label">核心数据表</p>
+          <p class="tu_kpi-value">8<small>张</small></p>
+        </li>
+        <li class="tu_kpi">
+          <p class="tu_kpi-label">表间关系</p>
+          <p class="tu_kpi-value">7<small>条</small></p>
+        </li>
+        <li class="tu_kpi">
+          <p class="tu_kpi-label">外部依赖</p>
+          <p class="tu_kpi-value">0<small>个</small></p>
+        </li>
+      </ul>
+    </section>
+
+    <main>
+      <section class="tu_section" id="tu_flow" aria-labelledby="tu_flow-title">
+        <div class="tu_section-head">
+          <div>
+            <p class="tu_eyebrow">01 · Flowchart</p>
+            <h2 id="tu_flow-title">会话主流程</h2>
+            <p class="tu_section-desc">主链路：多渠道接入 → 统一网关 → 意图识别 → 知识检索与生成 → 合规校验 → 回复。三条兜底分支分别处理低置信、合规风险与用户不满意，最终都汇入人工坐席与工单系统。</p>
+          </div>
+          <div class="tu_legend" aria-label="流程节点图例">
+            <span class="tu_legend-item"><i class="tu_dot tu_dot-contact"></i>用户触点</span>
+            <span class="tu_legend-item"><i class="tu_dot tu_dot-gate"></i>接入理解</span>
+            <span class="tu_legend-item"><i class="tu_dot tu_dot-brain"></i>应答引擎</span>
+            <span class="tu_legend-item"><i class="tu_dot tu_dot-human"></i>人工运营</span>
+            <span class="tu_legend-item"><i class="tu_dot tu_dot-data"></i>数据闭环</span>
+          </div>
+        </div>
+
+        <article class="tu_card tu_diagram-card">
+          <div class="tu_toolbar">
+            <div class="tu_zoom" role="group" aria-label="流程图缩放">
+              <button class="tu_zoom-btn" id="tu_flow-zoom-out" type="button" aria-label="缩小流程图">−</button>
+              <output class="tu_zoom-label" id="tu_flow-zoom-label">100%</output>
+              <button class="tu_zoom-btn" id="tu_flow-zoom-in" type="button" aria-label="放大流程图">+</button>
+              <button class="tu_zoom-reset" id="tu_flow-zoom-reset" type="button">重置</button>
+            </div>
+            <div class="tu_toolbar-actions">
+              <button class="tu_btn" id="tu_flow-download" type="button">下载 SVG</button>
+              <button class="tu_btn" id="tu_flow-copy" type="button">复制源码</button>
+              <button class="tu_btn" id="tu_flow-source-btn" type="button" aria-expanded="false" aria-controls="tu_flow-source">查看源码</button>
+            </div>
+          </div>
+          <div class="tu_diagram-scroll" id="tu_flow-scroll">
+            <div class="tu_diagram-canvas" id="tu_flow-canvas" role="img" aria-label="智能客服系统会话主流程图" aria-busy="true">
+              <p class="tu_loading"><span class="tu_spinner" aria-hidden="true"></span>正在用本地 Mermaid 渲染流程图…</p>
+            </div>
+          </div>
+          <section class="tu_source" id="tu_flow-source" hidden aria-label="流程图的 Mermaid 源码">
+            <div class="tu_source-head">
+              <span class="tu_source-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="tu_source-file">flowchart.mmd</span>
+            </div>
+            <pre class="tu_code"><code id="tu_flow-code"></code></pre>
+          </section>
+          <p class="tu_status" id="tu_flow-status" role="status"></p>
+        </article>
+
+        <div class="tu_notes-grid">
+          <article class="tu_note">
+            <p class="tu_note-index">THRESHOLD 0.72</p>
+            <h3>低置信度直接转人工</h3>
+            <p>意图识别置信度低于 0.72 时不硬答，直接进入人工排队；阈值并非全局写死，而是由 <code>INTENT.threshold</code> 按意图分别配置。</p>
+          </article>
+          <article class="tu_note">
+            <p class="tu_note-index">COMPLIANCE GATE</p>
+            <h3>回答先过合规再出口</h3>
+            <p>大模型输出需通过敏感词、事实一致性与业务规则三类校验；命中风险时中断自动回复，转人工并保留上下文。</p>
+          </article>
+          <article class="tu_note">
+            <p class="tu_note-index">CLOSED LOOP</p>
+            <h3>满意度与 badcase 回流</h3>
+            <p>质检抽样和低分评价写入知识库更新队列，经过审核后的新答案重新参与检索，形成「越用越准」的闭环。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="tu_section" id="tu_er" aria-labelledby="tu_er-title">
+        <div class="tu_section-head">
+          <div>
+            <p class="tu_eyebrow">02 · Entity Relationship</p>
+            <h2 id="tu_er-title">数据模型 ER 图</h2>
+            <p class="tu_section-desc">以「客户—会话—消息」为主线：意图与知识库负责回答，坐席与工单负责兜底，评价表负责闭环。字段类型为示例建模，实际落地可按数据库方言调整。</p>
+          </div>
+          <div class="tu_legend" aria-label="ER 图字段标记说明">
+            <span class="tu_legend-item">PK 主键</span>
+            <span class="tu_legend-item">FK 外键</span>
+            <span class="tu_legend-item">UK 唯一键</span>
+          </div>
+        </div>
+
+        <article class="tu_card tu_diagram-card">
+          <div class="tu_toolbar">
+            <div class="tu_zoom" role="group" aria-label="ER 图缩放">
+              <button class="tu_zoom-btn" id="tu_er-zoom-out" type="button" aria-label="缩小 ER 图">−</button>
+              <output class="tu_zoom-label" id="tu_er-zoom-label">100%</output>
+              <button class="tu_zoom-btn" id="tu_er-zoom-in" type="button" aria-label="放大 ER 图">+</button>
+              <button class="tu_zoom-reset" id="tu_er-zoom-reset" type="button">重置</button>
+            </div>
+            <div class="tu_toolbar-actions">
+              <button class="tu_btn" id="tu_er-download" type="button">下载 SVG</button>
+              <button class="tu_btn" id="tu_er-copy" type="button">复制源码</button>
+              <button class="tu_btn" id="tu_er-source-btn" type="button" aria-expanded="false" aria-controls="tu_er-source">查看源码</button>
+            </div>
+          </div>
+          <div class="tu_diagram-scroll" id="tu_er-scroll">
+            <div class="tu_diagram-canvas tu_canvas-wide" id="tu_er-canvas" role="img" aria-label="智能客服系统数据库 ER 图，包含 8 张核心数据表" aria-busy="true">
+              <p class="tu_loading"><span class="tu_spinner" aria-hidden="true"></span>正在用本地 Mermaid 渲染 ER 图…</p>
+            </div>
+          </div>
+          <section class="tu_source" id="tu_er-source" hidden aria-label="ER 图的 Mermaid 源码">
+            <div class="tu_source-head">
+              <span class="tu_source-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="tu_source-file">er-diagram.mmd</span>
+            </div>
+            <pre class="tu_code"><code id="tu_er-code"></code></pre>
+          </section>
+          <p class="tu_status" id="tu_er-status" role="status"></p>
+        </article>
+      </section>
+
+      <section class="tu_section" id="tu_tables" aria-labelledby="tu_tables-title">
+        <div class="tu_section-head">
+          <div>
+            <p class="tu_eyebrow">03 · Data Dictionary</p>
+            <h2 id="tu_tables-title">数据字典</h2>
+            <p class="tu_section-desc">8 张表覆盖「客户—会话—消息」主链路、意图与知识、坐席与工单、评价闭环；字段数为当前示例模型，可随业务扩展。</p>
+          </div>
+        </div>
+        <div class="tu_tables-grid" id="tu_tables-grid"></div>
+
+        <article class="tu_card tu_relations">
+          <div class="tu_relations-head">
+            <h3>关系一览</h3>
+            <span>7 RELATIONSHIPS · CROW'S FOOT</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">CUSTOMER<em>→</em>SESSION</span>
+            <span class="tu_rel-cardinality">1 : N</span>
+            <span class="tu_rel-desc">一个客户可以发起多次会话，会话记录归属到唯一客户。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">SESSION<em>→</em>MESSAGE</span>
+            <span class="tu_rel-cardinality">1 : N</span>
+            <span class="tu_rel-desc">一次会话包含多条消息，消息按时间排序用于上下文回放。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">MESSAGE<em>→</em>INTENT</span>
+            <span class="tu_rel-cardinality">N : 0..1</span>
+            <span class="tu_rel-desc">一条消息可能命中一个意图，闲聊或无意义消息可以没有意图。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">INTENT<em>→</em>KNOWLEDGE</span>
+            <span class="tu_rel-cardinality">1 : N</span>
+            <span class="tu_rel-desc">一个意图关联多条知识，检索时按意图过滤后再做向量召回。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">SESSION<em>→</em>TICKET</span>
+            <span class="tu_rel-cardinality">1 : N</span>
+            <span class="tu_rel-desc">会话可升级为工单，复杂问题拆成多张工单分派处理。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">AGENT<em>→</em>TICKET</span>
+            <span class="tu_rel-cardinality">1 : N</span>
+            <span class="tu_rel-desc">一名坐席可以处理多张工单，工单记录处理人与关闭时间。</span>
+          </div>
+          <div class="tu_rel-row">
+            <span class="tu_rel-path">SESSION<em>→</em>FEEDBACK</span>
+            <span class="tu_rel-cardinality">1 : 0..1</span>
+            <span class="tu_rel-desc">一次会话最多收集一条满意度评价，低分评价进入质检队列。</span>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="tu_footer">
+      <p>24001010417 涂玮轩 · 第 18 课 · Mermaid 流程图与 ER 图</p>
+      <p>本地依赖：<code>cdn/mermaid/mermaid.min.js</code>（Mermaid 11.17.2 · MIT）· 页面：18-6.html</p>
+    </footer>
+  </div>
+
+  <noscript>
+    <p style="padding: 16px 24px; color: #b5573f;">本页的流程图与 ER 图由 Mermaid 在浏览器中实时渲染，请启用 JavaScript 后查看。源码仍可在页面脚本中查阅。</p>
+  </noscript>
+
+  <script src="cdn/mermaid/mermaid.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      /* ================= 配色与图形源码 ================= */
+      const tu_palettes = {
+        light: {
+          ink: '#172238',
+          bg: '#fbfcfa',
+          line: '#5c7699',
+          labelBg: '#fbfcfa',
+          clusterFill: '#f7faf8',
+          clusterStroke: 'rgba(73, 92, 128, .22)',
+          attrOdd: '#ffffff',
+          attrEven: '#f4f7f6',
+          contact: { fill: '#eaf7f3', stroke: '#59b8a9' },
+          gate: { fill: '#eaf1fb', stroke: '#6f9fd8' },
+          brain: { fill: '#fdf4e4', stroke: '#d9ad60' },
+          human: { fill: '#fcece6', stroke: '#d99578' },
+          data: { fill: '#f1eefa', stroke: '#a191dc' },
+          decision: { fill: '#ffffff', stroke: '#28344a' }
+        },
+        dark: {
+          ink: '#e6edf9',
+          bg: '#0e1726',
+          line: '#8ba3c7',
+          labelBg: '#0e1726',
+          clusterFill: 'rgba(23, 36, 58, .6)',
+          clusterStroke: 'rgba(139, 163, 199, .3)',
+          attrOdd: '#152238',
+          attrEven: '#0f1a2b',
+          contact: { fill: '#12312c', stroke: '#4fae9f' },
+          gate: { fill: '#14263c', stroke: '#5b8fc9' },
+          brain: { fill: '#33290f', stroke: '#c99a4e' },
+          human: { fill: '#331f18', stroke: '#c9846a' },
+          data: { fill: '#241f3d', stroke: '#8f7fd0' },
+          decision: { fill: '#1a2740', stroke: '#8ba3c7' }
+        }
+      };
+
+      function tu_flowSource(tu_p) {
+        return `flowchart TD
+  classDef tu_contact fill:${tu_p.contact.fill},stroke:${tu_p.contact.stroke},stroke-width:1.5px,color:${tu_p.ink}
+  classDef tu_gate fill:${tu_p.gate.fill},stroke:${tu_p.gate.stroke},stroke-width:1.5px,color:${tu_p.ink}
+  classDef tu_brain fill:${tu_p.brain.fill},stroke:${tu_p.brain.stroke},stroke-width:1.5px,color:${tu_p.ink}
+  classDef tu_human fill:${tu_p.human.fill},stroke:${tu_p.human.stroke},stroke-width:1.5px,color:${tu_p.ink}
+  classDef tu_data fill:${tu_p.data.fill},stroke:${tu_p.data.stroke},stroke-width:1.5px,color:${tu_p.ink}
+  classDef tu_decision fill:${tu_p.decision.fill},stroke:${tu_p.decision.stroke},stroke-width:1.5px,color:${tu_p.ink}
+
+  subgraph tu_g1["① 用户触点"]
+    direction TB
+    tu_u1["Web / App<br/>在线咨询"]
+    tu_u2["公众号 / 小程序<br/>消息"]
+    tu_u3["400 电话<br/>语音转写"]
+  end
+
+  subgraph tu_g2["② 接入与理解"]
+    tu_a0["统一会话网关<br/>鉴权 · 排队 · 限流"]
+    tu_a1["消息预处理<br/>纠错 · 去噪 · 敏感词"]
+    tu_a2{"意图识别 NLU<br/>置信度 ≥ 0.72 ?"}
+    tu_a3["槽位抽取<br/>订单号 · 商品 · 时间"]
+  end
+
+  subgraph tu_g3["③ 智能应答引擎"]
+    tu_b1["知识库检索 RAG<br/>向量召回 + 重排"]
+    tu_b2["大模型生成回答<br/>流式输出"]
+    tu_b3{"合规与事实校验"}
+    tu_b4["回复用户"]
+    tu_s1{"用户满意吗？"}
+  end
+
+  subgraph tu_g4["④ 人工与运营"]
+    tu_c1["转人工排队<br/>技能组路由"]
+    tu_c2["人工坐席工作台"]
+    tu_c3["工单系统<br/>升级 · 回访"]
+    tu_c4["质检抽样<br/>满意度回访"]
+    tu_c5["知识库更新<br/>badcase 回流"]
+  end
+
+  subgraph tu_g5["⑤ 数据闭环"]
+    tu_d1["会话与消息落库"]
+    tu_d2["指标看板 · 质检抽样"]
+  end
+
+  tu_u1 --> tu_a0
+  tu_u2 --> tu_a0
+  tu_u3 --> tu_a0
+  tu_a0 --> tu_a1 --> tu_a2
+  tu_a2 -->|"高置信"| tu_a3 --> tu_b1
+  tu_b1 --> tu_b2 --> tu_b3
+  tu_b3 -->|"通过"| tu_b4
+  tu_b4 --> tu_s1
+  tu_s1 -->|"满意"| tu_c4
+  tu_s1 -->|"不满意"| tu_c1
+  tu_a2 -->|"低置信 / 投诉"| tu_c1
+  tu_b3 -->|"命中风险"| tu_c1
+  tu_c1 --> tu_c2 --> tu_c3 --> tu_c4
+  tu_c4 --> tu_c5
+  tu_c5 -->|"知识回流"| tu_b1
+  tu_b4 --> tu_d1
+  tu_c2 --> tu_d1
+  tu_c4 --> tu_d2
+  tu_d1 --> tu_d2
+
+  class tu_u1,tu_u2,tu_u3 tu_contact
+  class tu_a0,tu_a1,tu_a3 tu_gate
+  class tu_a2,tu_b3,tu_s1 tu_decision
+  class tu_b1,tu_b2,tu_b4 tu_brain
+  class tu_c1,tu_c2,tu_c3,tu_c4,tu_c5 tu_human
+  class tu_d1,tu_d2 tu_data
+`;
+      }
+
+      const tu_erSource = `erDiagram
+  CUSTOMER ||--o{ SESSION : "发起"
+  SESSION ||--o{ MESSAGE : "包含"
+  MESSAGE }o--o| INTENT : "命中"
+  INTENT ||--o{ KNOWLEDGE : "关联"
+  SESSION ||--o{ TICKET : "升级"
+  AGENT ||--o{ TICKET : "处理"
+  SESSION ||--o| FEEDBACK : "评价"
+
+  CUSTOMER {
+    bigint customer_id PK "客户 ID"
+    varchar name "昵称 / 姓名"
+    varchar phone UK "手机号"
+    varchar level "会员等级"
+    datetime created_at "注册时间"
+  }
+
+  SESSION {
+    bigint session_id PK "会话 ID"
+    bigint customer_id FK "所属客户"
+    varchar channel "接入渠道"
+    varchar status "进行中 / 已结束"
+    datetime started_at "开始时间"
+    datetime ended_at "结束时间"
+  }
+
+  MESSAGE {
+    bigint message_id PK "消息 ID"
+    bigint session_id FK "所属会话"
+    bigint intent_id FK "命中意图"
+    varchar sender "用户 / 机器人 / 坐席"
+    text content "消息内容"
+    decimal confidence "识别置信度"
+    datetime created_at "发送时间"
+  }
+
+  INTENT {
+    bigint intent_id PK "意图 ID"
+    varchar name UK "意图名称"
+    varchar category "业务分类"
+    decimal threshold "转人工阈值"
+  }
+
+  KNOWLEDGE {
+    bigint kb_id PK "知识点 ID"
+    bigint intent_id FK "关联意图"
+    varchar question "标准问题"
+    text answer "标准答案"
+    int hit_count "命中次数"
+    datetime updated_at "更新时间"
+  }
+
+  AGENT {
+    bigint agent_id PK "坐席 ID"
+    varchar name "姓名"
+    varchar skill_group "技能组"
+    varchar status "在线 / 忙碌 / 离线"
+  }
+
+  TICKET {
+    bigint ticket_id PK "工单 ID"
+    bigint session_id FK "来源会话"
+    bigint agent_id FK "处理坐席"
+    varchar priority "优先级"
+    varchar status "待处理 / 处理中 / 已完成"
+    datetime created_at "创建时间"
+    datetime closed_at "关闭时间"
+  }
+
+  FEEDBACK {
+    bigint feedback_id PK "评价 ID"
+    bigint session_id FK "关联会话"
+    tinyint rating "满意度 1-5 分"
+    varchar comment "用户留言"
+    datetime created_at "提交时间"
+  }
+`;
+
+      /* ================= 数据字典 ================= */
+      const tu_tables = [
+        { name: 'CUSTOMER', cn: '客户', fields: 5, keys: 'PK customer_id · UK phone', desc: 'C 端客户档案，各渠道身份统一归并到客户主表。' },
+        { name: 'SESSION', cn: '会话', fields: 6, keys: 'PK session_id · FK customer_id', desc: '一次咨询的生命周期：渠道、状态与起止时间。' },
+        { name: 'MESSAGE', cn: '消息', fields: 7, keys: 'PK message_id · FK session_id', desc: '用户、机器人、坐席的逐条消息与识别置信度。' },
+        { name: 'INTENT', cn: '意图', fields: 4, keys: 'PK intent_id · UK name', desc: 'NLU 意图目录，按意图配置各自的转人工阈值。' },
+        { name: 'KNOWLEDGE', cn: '知识', fields: 6, keys: 'PK kb_id · FK intent_id', desc: 'FAQ 与标准答案，命中次数参与检索排序。' },
+        { name: 'AGENT', cn: '坐席', fields: 4, keys: 'PK agent_id · UK name', desc: '人工客服档案、技能组与实时在线状态。' },
+        { name: 'TICKET', cn: '工单', fields: 7, keys: 'PK ticket_id · FK session_id', desc: '转人工后的处理单，含优先级与关闭时间。' },
+        { name: 'FEEDBACK', cn: '评价', fields: 5, keys: 'PK feedback_id · FK session_id', desc: '满意度评分与用户留言，驱动质检抽样。' }
+      ];
+
+      /* ================= 状态与元素引用 ================= */
+      const tu_state = {
+        theme: 'light',
+        zoom: { flow: 1, er: 1 },
+        sources: { flow: '', er: '' },
+        timers: { flow: 0, er: 0 }
+      };
+
+      function tu_byId(tu_id) {
+        return document.getElementById(tu_id);
+      }
+
+      const tu_ui = {
+        flow: {},
+        er: {},
+        themeBtn: tu_byId('tu_theme'),
+        tablesGrid: tu_byId('tu_tables-grid'),
+        metaTheme: document.querySelector('meta[name="theme-color"]')
+      };
+
+      ['flow', 'er'].forEach(function (tu_key) {
+        const tu_prefix = 'tu_' + tu_key + '-';
+        const tu_ref = tu_ui[tu_key];
+        tu_ref.canvas = tu_byId(tu_prefix + 'canvas');
+        tu_ref.code = tu_byId(tu_prefix + 'code');
+        tu_ref.status = tu_byId(tu_prefix + 'status');
+        tu_ref.source = tu_byId(tu_prefix + 'source');
+        tu_ref.sourceBtn = tu_byId(tu_prefix + 'source-btn');
+        tu_ref.copyBtn = tu_byId(tu_prefix + 'copy');
+        tu_ref.downloadBtn = tu_byId(tu_prefix + 'download');
+        tu_ref.zoomLabel = tu_byId(tu_prefix + 'zoom-label');
+        tu_ref.zoomIn = tu_byId(tu_prefix + 'zoom-in');
+        tu_ref.zoomOut = tu_byId(tu_prefix + 'zoom-out');
+        tu_ref.zoomReset = tu_byId(tu_prefix + 'zoom-reset');
+      });
+
+      /* ================= 工具函数 ================= */
+      function tu_escapeText(tu_text) {
+        return String(tu_text).replace(/[&<>"']/g, function (tu_ch) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[tu_ch];
+        });
+      }
+
+      function tu_setStatus(tu_key, tu_text, tu_tone) {
+        const tu_el = tu_ui[tu_key].status;
+        if (!tu_el) {
+          return;
+        }
+        tu_el.textContent = tu_text || '';
+        if (tu_tone) {
+          tu_el.setAttribute('data-tu_state', tu_tone);
+        } else {
+          tu_el.removeAttribute('data-tu_state');
+        }
+        window.clearTimeout(tu_state.timers[tu_key]);
+        if (tu_text && tu_tone !== 'warn') {
+          tu_state.timers[tu_key] = window.setTimeout(function () {
+            tu_el.textContent = '';
+            tu_el.removeAttribute('data-tu_state');
+          }, 5000);
+        }
+      }
+
+      function tu_currentPalette() {
+        return tu_palettes[tu_state.theme] || tu_palettes.light;
+      }
+
+      function tu_themeVars(tu_p) {
+        return {
+          background: tu_p.bg,
+          primaryColor: tu_p.brain.fill,
+          primaryTextColor: tu_p.ink,
+          primaryBorderColor: tu_p.brain.stroke,
+          secondaryColor: tu_p.gate.fill,
+          tertiaryColor: tu_p.contact.fill,
+          mainBkg: tu_p.brain.fill,
+          nodeBorder: tu_p.brain.stroke,
+          nodeTextColor: tu_p.ink,
+          textColor: tu_p.ink,
+          titleColor: tu_p.ink,
+          lineColor: tu_p.line,
+          edgeLabelBackground: tu_p.labelBg,
+          clusterBkg: tu_p.clusterFill,
+          clusterBorder: tu_p.clusterStroke,
+          attributeBackgroundColorOdd: tu_p.attrOdd,
+          attributeBackgroundColorEven: tu_p.attrEven,
+          fontFamily: '"Sora", "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif',
+          fontSize: '13px'
+        };
+      }
+
+      /* ================= 渲染 ================= */
+      function tu_showError(tu_key, tu_message) {
+        const tu_canvas = tu_ui[tu_key].canvas;
+        tu_canvas.setAttribute('aria-busy', 'false');
+        tu_canvas.innerHTML = '<div class="tu_error"><strong>图表渲染失败</strong><p>' +
+          tu_escapeText(tu_message) + '</p><p>请确认 cdn/mermaid/mermaid.min.js 与本页位于同一目录，并使用现代浏览器打开。</p></div>';
+      }
+
+      function tu_applyZoom(tu_key) {
+        const tu_ref = tu_ui[tu_key];
+        const tu_zoom = tu_state.zoom[tu_key];
+        const tu_svgEl = tu_ref.canvas.querySelector('svg');
+        if (tu_svgEl) {
+          tu_svgEl.style.maxWidth = 'none';
+          tu_svgEl.style.width = (tu_zoom * 100) + '%';
+          tu_svgEl.style.height = 'auto';
+        }
+        tu_ref.zoomLabel.textContent = Math.round(tu_zoom * 100) + '%';
+        tu_ref.zoomIn.disabled = tu_zoom >= 2;
+        tu_ref.zoomOut.disabled = tu_zoom <= 0.6;
+      }
+
+      function tu_zoomBy(tu_key, tu_delta) {
+        const tu_next = Math.min(2, Math.max(0.6, Math.round((tu_state.zoom[tu_key] + tu_delta) * 100) / 100));
+        tu_state.zoom[tu_key] = tu_next;
+        tu_applyZoom(tu_key);
+      }
+
+      async function tu_renderOne(tu_key) {
+        const tu_ref = tu_ui[tu_key];
+        const tu_source = tu_state.sources[tu_key];
+        const tu_renderId = 'tu_mmd_' + tu_key + '_' + Date.now();
+        tu_ref.canvas.setAttribute('aria-busy', 'true');
+        tu_setStatus(tu_key, '正在用 Mermaid 解析 ' + (tu_key === 'flow' ? '流程图' : 'ER 图') + '…');
+        try {
+          const tu_result = await window.mermaid.render(tu_renderId, tu_source);
+          tu_ref.canvas.innerHTML = tu_result.svg;
+          if (typeof tu_result.bindFunctions === 'function') {
+            tu_result.bindFunctions(tu_ref.canvas);
+          }
+          tu_ref.canvas.setAttribute('aria-busy', 'false');
+          tu_ref.code.textContent = tu_source;
+          tu_applyZoom(tu_key);
+          tu_setStatus(tu_key, (tu_key === 'flow' ? '流程图' : 'ER 图') + '已渲染 · Mermaid 11.17.2', 'ok');
+        } catch (tu_err) {
+          console.error('[18-6] Mermaid 渲染失败：', tu_err);
+          tu_ref.canvas.setAttribute('aria-busy', 'false');
+          if (!tu_ref.canvas.querySelector('svg')) {
+            tu_showError(tu_key, tu_err && tu_err.message ? tu_err.message : '未知解析错误');
+          }
+          tu_setStatus(tu_key, '渲染失败，请检查 Mermaid 源码或本地脚本', 'warn');
+        }
+      }
+
+      async function tu_renderAll() {
+        if (!window.mermaid || typeof window.mermaid.render !== 'function') {
+          tu_showError('flow', '本地 mermaid.min.js 未加载，window.mermaid 不存在');
+          tu_showError('er', '本地 mermaid.min.js 未加载，window.mermaid 不存在');
+          tu_setStatus('flow', '缺少本地 Mermaid 脚本', 'warn');
+          tu_setStatus('er', '缺少本地 Mermaid 脚本', 'warn');
+          return;
+        }
+        const tu_p = tu_currentPalette();
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: 'base',
+          themeVariables: tu_themeVars(tu_p),
+          flowchart: {
+            htmlLabels: true,
+            curve: 'basis',
+            padding: 16,
+            nodeSpacing: 34,
+            rankSpacing: 52,
+            useMaxWidth: true
+          },
+          er: {
+            useMaxWidth: true,
+            entityPadding: 14,
+            minEntityWidth: 120,
+            minEntityHeight: 60,
+            fontSize: 12
+          }
+        });
+        tu_state.sources.flow = tu_flowSource(tu_p);
+        tu_state.sources.er = tu_erSource;
+        await tu_renderOne('flow');
+        await tu_renderOne('er');
+      }
+
+      let tu_renderQueue = Promise.resolve();
+
+      function tu_scheduleRender() {
+        tu_renderQueue = tu_renderQueue.then(function () {
+          return tu_renderAll();
+        }).catch(function (tu_err) {
+          console.error('[18-6] 渲染队列异常：', tu_err);
+        });
+        return tu_renderQueue;
+      }
+
+      /* ================= 主题 ================= */
+      function tu_readTheme() {
+        try {
+          const tu_saved = window.localStorage.getItem('tu_18_6_theme');
+          if (tu_saved === 'dark' || tu_saved === 'light') {
+            return tu_saved;
+          }
+        } catch (tu_err) {
+          /* 隐私模式下忽略 */
+        }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      }
+
+      function tu_applyTheme(tu_theme) {
+        tu_state.theme = tu_theme;
+        document.documentElement.setAttribute('data-tu-theme', tu_theme);
+        const tu_isDark = tu_theme === 'dark';
+        tu_ui.themeBtn.setAttribute('aria-pressed', String(tu_isDark));
+        const tu_label = tu_isDark ? '切换到浅色模式' : '切换到深色模式';
+        tu_ui.themeBtn.setAttribute('aria-label', tu_label);
+        tu_ui.themeBtn.setAttribute('title', tu_label);
+        if (tu_ui.metaTheme) {
+          tu_ui.metaTheme.setAttribute('content', tu_isDark ? '#0a121f' : '#f4f7f6');
+        }
+        try {
+          window.localStorage.setItem('tu_18_6_theme', tu_theme);
+        } catch (tu_err) {
+          /* 隐私模式下忽略 */
+        }
+      }
+
+      function tu_toggleTheme() {
+        tu_applyTheme(tu_state.theme === 'dark' ? 'light' : 'dark');
+        tu_scheduleRender();
+      }
+
+      /* ================= 源码 / 复制 / 导出 ================= */
+      function tu_toggleSource(tu_key) {
+        const tu_ref = tu_ui[tu_key];
+        const tu_willOpen = tu_ref.source.hidden;
+        tu_ref.source.hidden = !tu_willOpen;
+        tu_ref.sourceBtn.setAttribute('aria-expanded', String(tu_willOpen));
+        tu_ref.sourceBtn.textContent = tu_willOpen ? '收起源码' : '查看源码';
+        if (tu_willOpen) {
+          tu_ref.code.textContent = tu_state.sources[tu_key] || '';
+        }
+      }
+
+      function tu_copyFallback(tu_text, tu_key) {
+        const tu_area = document.createElement('textarea');
+        tu_area.value = tu_text;
+        tu_area.setAttribute('readonly', '');
+        tu_area.style.position = 'fixed';
+        tu_area.style.top = '0';
+        tu_area.style.left = '0';
+        tu_area.style.opacity = '0';
+        document.body.appendChild(tu_area);
+        tu_area.select();
+        let tu_ok = false;
+        try {
+          tu_ok = document.execCommand('copy');
+        } catch (tu_err) {
+          tu_ok = false;
+        }
+        document.body.removeChild(tu_area);
+        tu_setStatus(tu_key, tu_ok ? '源码已复制到剪贴板' : '复制失败，请在源码框中手动选择', tu_ok ? 'ok' : 'warn');
+      }
+
+      function tu_copySource(tu_key) {
+        const tu_text = tu_state.sources[tu_key] || '';
+        if (!tu_text) {
+          tu_setStatus(tu_key, '源码尚未生成，请等待渲染完成', 'warn');
+          return;
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(tu_text).then(function () {
+            tu_setStatus(tu_key, '源码已复制到剪贴板', 'ok');
+          }).catch(function () {
+            tu_copyFallback(tu_text, tu_key);
+          });
+        } else {
+          tu_copyFallback(tu_text, tu_key);
+        }
+      }
+
+      function tu_downloadSvg(tu_key) {
+        const tu_ref = tu_ui[tu_key];
+        const tu_svgEl = tu_ref.canvas.querySelector('svg');
+        if (!tu_svgEl) {
+          tu_setStatus(tu_key, '暂无可导出的图形，请等待渲染完成', 'warn');
+          return;
+        }
+        const tu_clone = tu_svgEl.cloneNode(true);
+        tu_clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        tu_clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        const tu_titleEl = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        tu_titleEl.textContent = tu_key === 'flow' ? '智能客服系统会话主流程图' : '智能客服系统 ER 图';
+        tu_clone.insertBefore(tu_titleEl, tu_clone.firstChild);
+
+        const tu_pad = 28;
+        const tu_vb = (tu_svgEl.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+        if (tu_vb.length === 4 && tu_vb.every(Number.isFinite)) {
+          const tu_x = tu_vb[0];
+          const tu_y = tu_vb[1];
+          const tu_w = tu_vb[2];
+          const tu_h = tu_vb[3];
+          tu_clone.setAttribute('viewBox', [tu_x - tu_pad, tu_y - tu_pad, tu_w + tu_pad * 2, tu_h + tu_pad * 2].join(' '));
+          tu_clone.setAttribute('width', String(Math.round(tu_w + tu_pad * 2)));
+          tu_clone.setAttribute('height', String(Math.round(tu_h + tu_pad * 2)));
+          const tu_bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          tu_bg.setAttribute('x', String(tu_x - tu_pad));
+          tu_bg.setAttribute('y', String(tu_y - tu_pad));
+          tu_bg.setAttribute('width', String(tu_w + tu_pad * 2));
+          tu_bg.setAttribute('height', String(tu_h + tu_pad * 2));
+          tu_bg.setAttribute('fill', tu_state.theme === 'dark' ? '#0e1726' : '#ffffff');
+          tu_clone.insertBefore(tu_bg, tu_titleEl.nextSibling);
+        }
+
+        const tu_blob = new Blob([tu_clone.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
+        const tu_url = URL.createObjectURL(tu_blob);
+        const tu_link = document.createElement('a');
+        tu_link.href = tu_url;
+        tu_link.download = '18-6-智能客服-' + (tu_key === 'flow' ? '流程图' : 'ER图') + '.svg';
+        document.body.appendChild(tu_link);
+        tu_link.click();
+        document.body.removeChild(tu_link);
+        window.setTimeout(function () {
+          URL.revokeObjectURL(tu_url);
+        }, 1500);
+        tu_setStatus(tu_key, 'SVG 已导出，可用浏览器或设计软件打开', 'ok');
+      }
+
+      /* ================= 数据字典渲染 ================= */
+      function tu_renderTables() {
+        tu_ui.tablesGrid.innerHTML = tu_tables.map(function (tu_t) {
+          return [
+            '<article class="tu_card tu_table-card">',
+            '<div class="tu_table-head"><span class="tu_table-name">' + tu_t.name + '</span><span class="tu_table-cn">' + tu_t.cn + '</span></div>',
+            '<p class="tu_table-keys">' + tu_t.keys + '</p>',
+            '<p class="tu_table-desc">' + tu_t.desc + '</p>',
+            '<p class="tu_table-meta">' + tu_t.fields + ' 字段</p>',
+            '</article>'
+          ].join('');
+        }).join('');
+      }
+
+      /* ================= 事件绑定 ================= */
+      function tu_bindControls() {
+        ['flow', 'er'].forEach(function (tu_key) {
+          const tu_ref = tu_ui[tu_key];
+          tu_ref.zoomIn.addEventListener('click', function () {
+            tu_zoomBy(tu_key, 0.2);
+          });
+          tu_ref.zoomOut.addEventListener('click', function () {
+            tu_zoomBy(tu_key, -0.2);
+          });
+          tu_ref.zoomReset.addEventListener('click', function () {
+            tu_state.zoom[tu_key] = 1;
+            tu_applyZoom(tu_key);
+          });
+          tu_ref.sourceBtn.addEventListener('click', function () {
+            tu_toggleSource(tu_key);
+          });
+          tu_ref.copyBtn.addEventListener('click', function () {
+            tu_copySource(tu_key);
+          });
+          tu_ref.downloadBtn.addEventListener('click', function () {
+            tu_downloadSvg(tu_key);
+          });
+        });
+        tu_ui.themeBtn.addEventListener('click', tu_toggleTheme);
+      }
+
+      /* ================= 启动 ================= */
+      function tu_init() {
+        tu_applyTheme(tu_readTheme());
+        tu_renderTables();
+        tu_bindControls();
+        tu_scheduleRender();
+      }
+
+      tu_init();
+    })();
+  </script>
+</body>
+</html>

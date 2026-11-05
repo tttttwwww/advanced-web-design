@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7f6">
+  <title>电商全站系统架构图｜Canvas</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/sora@5.2.8/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/noto-sans-sc@5.2.10/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/ibm-plex-mono@5.2.7/500.css">
+  <style>
+    :root {
+      --canvas: #f4f7f6;
+      --aqua: #74c8c0;
+      --sky: #9fc8f4;
+      --coral: #f5b5a3;
+      --sun: #f7d98b;
+      --ink: #172238;
+      --muted: #5d6b82;
+      --accent: #28344a;
+      --accent-hover: #1b2438;
+      --warm: #f39a62;
+      --glass-regular: rgba(255,255,255,.42);
+      --glass-protected: rgba(255,255,255,.74);
+      --edge: rgba(255,255,255,.72);
+      --divider: rgba(73,92,128,.16);
+      --font-display: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-body: "Sora Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "IBM Plex Mono", SFMono-Regular, "Cascadia Code", Menlo, Consolas, monospace;
+      --radius-control: 12px;
+      --radius-card: 20px;
+      --radius-panel: 28px;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      background:
+        radial-gradient(ellipse at 5% 0%, rgba(116,200,192,.48) 0, rgba(116,200,192,0) 36%),
+        radial-gradient(ellipse at 96% 12%, rgba(159,200,244,.60) 0, rgba(159,200,244,0) 39%),
+        radial-gradient(ellipse at 82% 92%, rgba(245,181,163,.42) 0, rgba(245,181,163,0) 40%),
+        linear-gradient(140deg, #f4f7f6, #edf2f7 60%, #f7f4ed);
+      min-height: 100vh;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    .page { width: min(1640px, 100%); margin: 0 auto; padding: 22px 26px 18px; }
+    .glass-regular {
+      background: var(--glass-regular);
+      border: 1px solid var(--edge);
+      backdrop-filter: blur(24px) saturate(130%);
+      -webkit-backdrop-filter: blur(24px) saturate(130%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 24px 60px rgba(31,46,78,.14);
+    }
+    .glass-protected {
+      background: var(--glass-protected);
+      border: 1px solid rgba(255,255,255,.82);
+      backdrop-filter: blur(32px) saturate(120%);
+      -webkit-backdrop-filter: blur(32px) saturate(120%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 18px 45px rgba(31,46,78,.12);
+    }
+    .topbar { min-height: 66px; border-radius: var(--radius-card); padding: 10px 12px 10px 20px; display: flex; align-items: center; gap: 22px; }
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; color: var(--ink); font-weight: 620; }
+    .brand-index { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; padding: 9px 10px; border: 1px solid var(--divider); border-radius: 9px; }
+    .topbar-note { margin-left: auto; color: var(--muted); font: 500 10px/1.5 var(--font-mono); letter-spacing: .08em; }
+    .nav-link, .button {
+      border: 0;
+      border-radius: var(--radius-control);
+      min-height: 42px;
+      padding: 9px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+      white-space: nowrap;
+    }
+    .nav-link, .button-primary { color: #f8fbff; background: var(--accent); }
+    .nav-link:hover, .button-primary:hover { background: var(--accent-hover); }
+    .intro { margin-top: 20px; border-radius: var(--radius-panel); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .eyebrow { margin: 0 0 9px; font: 500 10px/1.4 var(--font-mono); letter-spacing: .12em; color: var(--muted); }
+    h1 { margin: 0; font-family: var(--font-display); font-size: clamp(32px, 3.2vw, 48px); line-height: 1.14; font-weight: 650; letter-spacing: -.035em; text-wrap: balance; }
+    .intro-copy { max-width: 37em; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.85; text-wrap: pretty; }
+    .intro-tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .intro-tags span { padding: 4px 9px; border: 1px solid var(--divider); border-radius: 999px; font: 500 9px/1.5 var(--font-mono); letter-spacing: .05em; }
+    .workspace { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr) 292px; gap: 18px; align-items: stretch; }
+    .diagram-panel { min-width: 0; border-radius: var(--radius-panel); overflow: hidden; }
+    .diagram-toolbar { padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--divider); background: rgba(255,255,255,.34); }
+    .segmented { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--divider); border-radius: 14px; background: rgba(255,255,255,.30); }
+    .view-button { min-height: 38px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--muted); padding: 7px 12px; cursor: pointer; font-size: 12px; }
+    .view-button:hover { color: var(--ink); background: rgba(255,255,255,.44); }
+    .view-button.active { color: var(--ink); background: rgba(255,255,255,.90); border-color: rgba(255,255,255,.94); box-shadow: 0 4px 12px rgba(31,46,78,.07); }
+    .toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .button { min-height: 38px; padding: 7px 11px; font-size: 12px; }
+    .button-secondary { color: var(--ink); background: rgba(255,255,255,.48); border: 1px solid var(--divider); }
+    .button-secondary:hover { background: rgba(255,255,255,.86); border-color: rgba(73,92,128,.28); }
+    .button-square { width: 38px; padding: 0; font: 500 18px/1 var(--font-mono); }
+    .button:active { transform: translateY(1px); }
+    .button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .zoom-level { min-width: 45px; text-align: center; font: 500 10px/1 var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+    .canvas-scroll { height: 720px; overflow: auto; position: relative; scrollbar-color: rgba(40,52,74,.24) transparent; }
+    .canvas-holder { width: 100%; min-width: 1080px; height: 100%; position: relative; }
+    #architectureCanvas { display: block; width: 100%; height: 100%; outline-offset: -4px; }
+    .canvas-help { padding: 10px 18px 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--divider); color: var(--muted); font: 400 10px/1.6 var(--font-mono); }
+    .flow-legend { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .flow-line { width: 25px; height: 2px; background: var(--warm); position: relative; }
+    .flow-line::after { content: ""; position: absolute; right: -1px; top: -3px; border-left: 5px solid var(--warm); border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+    .inspector { border-radius: var(--radius-panel); padding: 24px; display: flex; flex-direction: column; min-width: 0; }
+    .detail-eyebrow { margin: 0 0 10px; color: var(--muted); font: 500 10px/1.5 var(--font-mono); letter-spacing: .10em; overflow-wrap: anywhere; }
+    .inspector h2 { margin: 0; font-family: var(--font-display); font-size: 26px; line-height: 1.25; font-weight: 620; letter-spacing: -.02em; }
+    .detail-description { margin: 14px 0 0; color: var(--muted); font-size: 13px; line-height: 1.85; text-wrap: pretty; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .tag { padding: 5px 9px; border-radius: 9px; border: 1px solid var(--divider); background: rgba(255,255,255,.42); font-size: 11px; color: var(--accent); }
+    .clear-button { margin-top: 16px; align-self: flex-start; }
+    .clear-button[hidden] { display: none; }
+    .inspector-divider { height: 1px; background: var(--divider); margin: 24px 0 20px; }
+    .legend-title { margin: 0 0 13px; font-size: 12px; font-weight: 620; }
+    .layer-legend { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+    .layer-legend li { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+    .legend-dot { width: 9px; height: 9px; border-radius: 3px; flex: 0 0 auto; }
+    .architecture-note { margin: auto 0 0; padding-top: 24px; color: var(--muted); font-size: 11px; line-height: 1.75; }
+    .footer { display: flex; justify-content: space-between; gap: 16px; padding: 16px 8px 0; color: var(--muted); font: 400 10px/1.6 var(--font-mono); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid rgba(40,52,74,.38); outline-offset: 3px; }
+    @media (max-width: 1180px) {
+      .workspace { grid-template-columns: minmax(0, 1fr) 250px; }
+      .inspector { padding: 20px; }
+      .intro-copy { max-width: 31em; }
+      .diagram-toolbar { align-items: flex-start; }
+    }
+    @media (max-width: 920px) {
+      .page { padding: 16px; }
+      .intro { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .intro-copy { max-width: 48em; }
+      .workspace { grid-template-columns: 1fr; }
+      .inspector { min-height: 0; }
+      .architecture-note { margin-top: 0; }
+      .layer-legend { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 10px; }
+      .topbar { padding: 9px 9px 9px 13px; min-height: 60px; gap: 10px; }
+      .brand { gap: 8px; font-size: 13px; }
+      .brand-index { padding: 8px; }
+      .topbar-note { display: none; }
+      .nav-link { margin-left: auto; min-height: 40px; padding: 8px 11px; font-size: 12px; }
+      .intro { margin-top: 14px; padding: 20px; }
+      h1 { font-size: 32px; }
+      .intro-copy { font-size: 13px; }
+      .workspace { margin-top: 14px; gap: 14px; }
+      .diagram-toolbar { padding: 12px; }
+      .segmented { width: 100%; }
+      .view-button { flex: 1; padding: 7px 6px; }
+      .toolbar-actions { width: 100%; }
+      #flowToggle { flex: 1; }
+      #exportButton { margin-left: auto; }
+      .canvas-scroll { height: 660px; }
+      .canvas-help { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .layer-legend { grid-template-columns: 1fr 1fr; }
+      .footer { flex-direction: column; gap: 2px; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .glass-regular, .glass-protected { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(244,247,246,.95); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar glass-regular">
+      <a class="brand" href="18-2.html" aria-label="电商系统架构图首页"><span class="brand-index">18—2</span><span>全站系统图谱</span></a>
+      <span class="topbar-note">E-COMMERCE / LOGICAL ARCHITECTURE</span>
+      <a class="nav-link" href="18-1.html">返回文字动画 <span aria-hidden="true">→</span></a>
+    </header>
+
+    <main>
+      <section class="intro glass-protected" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">FROM REQUEST TO ORDER</p>
+          <h1 id="pageTitle">电商全站系统架构图</h1>
+          <div class="intro-tags"><span>CANVAS 2D</span><span>逻辑视图</span><span>交互式架构</span></div>
+        </div>
+        <p class="intro-copy">从多渠道访问、统一接入与业务服务，到数据中间件和云原生基础设施。点击节点查看职责，切换链路观察订单与数据如何在全站流动。</p>
+      </section>
+
+      <div class="workspace">
+        <section class="diagram-panel glass-regular" aria-label="可交互电商系统架构图">
+          <div class="diagram-toolbar">
+            <div class="segmented" role="group" aria-label="选择架构链路视图">
+              <button class="view-button active" type="button" data-view="all" aria-pressed="true">全部架构</button>
+              <button class="view-button" type="button" data-view="order" aria-pressed="false">订单链路</button>
+              <button class="view-button" type="button" data-view="data" aria-pressed="false">数据链路</button>
+            </div>
+            <div class="toolbar-actions">
+              <button class="button button-secondary" id="flowToggle" type="button" disabled>暂停流动</button>
+              <button class="button button-secondary button-square" id="zoomOut" type="button" aria-label="缩小架构图">−</button>
+              <span class="zoom-level" id="zoomLevel">100%</span>
+              <button class="button button-secondary button-square" id="zoomIn" type="button" aria-label="放大架构图">+</button>
+              <button class="button button-secondary" id="fitButton" type="button">适应画布</button>
+              <button class="button button-primary" id="exportButton" type="button">导出 PNG</button>
+            </div>
+          </div>
+          <div class="canvas-scroll">
+            <div class="canvas-holder">
+              <canvas id="architectureCanvas" tabindex="0" role="img" aria-label="电商全站系统架构图。点击节点查看职责，或使用方向键依次选择节点。">电商全站系统架构图，包括用户与渠道、接入与安全、业务服务、平台支撑、数据与中间件、基础设施六个层级。当前浏览器不支持 Canvas。</canvas>
+            </div>
+          </div>
+          <div class="canvas-help"><span>点击节点查看职责 · 放大后拖拽平移 · 方向键切换节点</span><span class="flow-legend"><span class="flow-line" aria-hidden="true"></span>核心依赖 / 动态流向</span></div>
+        </section>
+
+        <aside class="inspector glass-protected" aria-labelledby="detailTitle">
+          <p class="detail-eyebrow" id="detailEyebrow">ARCHITECTURE GUIDE</p>
+          <h2 id="detailTitle">架构导览</h2>
+          <p class="detail-description" id="detailDescription">请求从接入层进入，业务服务通过平台能力协同，数据与中间件提供持久化、缓存和异步解耦，底层基础设施承载部署、弹性与容灾。</p>
+          <div class="tag-list" id="detailTags"><span class="tag">统一接入</span><span class="tag">服务协同</span><span class="tag">数据驱动</span></div>
+          <button class="button button-secondary clear-button" id="clearSelection" type="button" hidden>返回架构导览</button>
+          <div class="inspector-divider"></div>
+          <h3 class="legend-title">架构分层</h3>
+          <ul class="layer-legend">
+            <li><span class="legend-dot" style="background:#9fc8f4"></span>用户与渠道</li>
+            <li><span class="legend-dot" style="background:#74c8c0"></span>接入与安全</li>
+            <li><span class="legend-dot" style="background:#f5b5a3"></span>业务服务</li>
+            <li><span class="legend-dot" style="background:#f7d98b"></span>平台支撑</li>
+            <li><span class="legend-dot" style="background:#aab5d8"></span>数据与中间件</li>
+            <li><span class="legend-dot" style="background:#a9b8ae"></span>基础设施</li>
+          </ul>
+          <p class="architecture-note">说明：本图为通用电商逻辑架构参考，连线用于表达核心依赖与阅读路径，不对应特定云厂商、真实生产部署或唯一调用顺序。</p>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer"><span>电商全站系统 · Canvas 架构图</span><span id="viewStatus">全部架构 · 6 个层级 · 32 个节点</span></footer>
+  </div>
+  <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+
+  <script>
+(() => {
+  'use strict';
+  const canvas = document.getElementById('architectureCanvas');
+  const ctx = canvas.getContext('2d');
+  const holder = canvas.parentElement;
+  const detailEyebrow = document.getElementById('detailEyebrow');
+  const detailTitle = document.getElementById('detailTitle');
+  const detailDescription = document.getElementById('detailDescription');
+  const detailTags = document.getElementById('detailTags');
+  const clearSelection = document.getElementById('clearSelection');
+  const viewStatus = document.getElementById('viewStatus');
+  const liveStatus = document.getElementById('liveStatus');
+  const flowToggle = document.getElementById('flowToggle');
+  const zoomLevel = document.getElementById('zoomLevel');
+  const viewButtons = [...document.querySelectorAll('[data-view]')];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const layerColors = {
+    channels: '#9fc8f4', access: '#74c8c0', business: '#f5b5a3',
+    platform: '#f7d98b', data: '#aab5d8', infra: '#a9b8ae'
+  };
+  const layerNames = {
+    channels: '用户与渠道', access: '接入与安全', business: '业务服务',
+    platform: '平台支撑', data: '数据与中间件', infra: '基础设施'
+  };
+  const node = (id, label, sub, desc, tags) => ({ id, label, sub, desc, tags });
+  const definitions = [
+    {
+      id: 'channels', en: 'CHANNELS', y: 24, h: 80, columns: 4,
+      nodes: [
+        node('web', '品牌官网', 'WEB · H5', '面向桌面与移动浏览器的品牌、商品浏览和交易入口。', ['页面渲染', '商品浏览', '会话保持']),
+        node('app', '移动应用', 'IOS · ANDROID', '原生移动交易入口，承接个性化体验、推送和账户服务。', ['移动交易', '消息触达', '设备适配']),
+        node('mini', '小程序', 'MINI PROGRAM', '轻量化购物入口，适用于社交传播、活动落地与快捷转化。', ['轻量访问', '社交分享', '快捷登录']),
+        node('open', '开放平台', 'OPEN API', '向商家、服务商与合作伙伴提供受控的标准化接口。', ['接口开放', '合作接入', '权限隔离'])
+      ]
+    },
+    {
+      id: 'access', en: 'EDGE & SECURITY', y: 124, h: 82, columns: 4,
+      nodes: [
+        node('edge', 'DNS · CDN', 'EDGE DELIVERY', '完成域名解析、静态资源分发与就近访问，降低源站压力。', ['域名解析', '内容缓存', '边缘分发']),
+        node('waf', 'WAF · Bot 防护', 'TRAFFIC SHIELD', '识别异常流量与常见攻击，在业务处理前建立安全边界。', ['攻击防护', '爬虫识别', '流量清洗']),
+        node('lb', '负载均衡', 'LOAD BALANCER', '将请求分配到可用服务实例，并配合健康检查实现故障摘除。', ['流量分配', '健康检查', '故障摘除']),
+        node('gateway', 'API 网关', 'UNIFIED ENTRY', '统一处理路由、认证、限流、协议适配与接口审计。', ['动态路由', '认证鉴权', '限流熔断'])
+      ]
+    },
+    {
+      id: 'business', en: 'DOMAIN SERVICES', y: 226, h: 152, columns: 5,
+      nodes: [
+        node('user', '用户中心', 'ACCOUNT', '管理账户资料、会员身份、地址与用户偏好。', ['账户档案', '会员体系', '地址管理']),
+        node('product', '商品中心', 'PRODUCT · SKU', '维护 SPU、SKU、类目、价格与上下架状态。', ['商品建模', '价格管理', '类目管理']),
+        node('search', '搜索与推荐', 'DISCOVERY', '提供商品检索、筛选排序与个性化发现能力。', ['全文检索', '筛选排序', '推荐召回']),
+        node('cart', '购物车', 'CART', '汇总待购商品，处理选中、数量变更与结算前校验。', ['商品暂存', '数量管理', '结算校验']),
+        node('order', '订单中心', 'ORDER', '创建并推进订单状态，协调库存、支付、履约与售后。', ['订单创建', '状态流转', '交易协同']),
+        node('inventory', '库存中心', 'STOCK', '管理可售库存、预占、扣减与释放，避免超卖。', ['库存预占', '库存扣减', '库存释放']),
+        node('promo', '营销中心', 'PROMOTION', '承载优惠券、满减、活动规则与促销计算。', ['优惠计算', '活动规则', '券码管理']),
+        node('payment', '支付中心', 'PAYMENT', '统一对接支付渠道，处理支付单、回调与对账。', ['支付路由', '回调处理', '支付对账']),
+        node('logistics', '履约物流', 'FULFILLMENT', '组织发货、仓配协同、运单跟踪与签收状态。', ['发货协同', '运单跟踪', '签收回传']),
+        node('aftersale', '售后服务', 'AFTER SALES', '处理退款、退货、换货与售后工单流转。', ['退款退货', '换货处理', '售后工单'])
+      ]
+    },
+    {
+      id: 'platform', en: 'SHARED CAPABILITIES', y: 398, h: 78, columns: 5,
+      nodes: [
+        node('auth', '账号权限', 'IAM', '统一身份、角色与权限策略，控制服务和后台访问边界。', ['统一身份', '角色权限', '访问控制']),
+        node('message', '消息中心', 'NOTIFICATION', '汇集站内信、短信、邮件与推送等事件触达能力。', ['事件订阅', '模板管理', '多渠道触达']),
+        node('risk', '规则 · 风控', 'RISK CONTROL', '通过规则与风险识别保护账户、营销和交易环节。', ['风险识别', '规则决策', '异常处置']),
+        node('schedule', '任务调度', 'SCHEDULER', '执行定时、延迟与批处理任务，支撑状态关闭和对账。', ['定时任务', '延迟任务', '批处理']),
+        node('config', '配置中心', 'CONFIGURATION', '集中管理应用配置、功能开关与动态参数。', ['配置下发', '功能开关', '版本管理'])
+      ]
+    },
+    {
+      id: 'data', en: 'DATA & MIDDLEWARE', y: 496, h: 88, columns: 5,
+      nodes: [
+        node('db', '关系数据库', 'MYSQL CLUSTER', '持久化订单、商品、用户等强结构化业务数据。', ['事务持久化', '主从复制', '备份恢复']),
+        node('redis', '缓存', 'REDIS', '承载热点数据、会话、分布式锁与高频读取加速。', ['热点缓存', '会话存储', '分布式锁']),
+        node('mq', '消息队列', 'MESSAGE QUEUE', '通过事件和异步消息解耦服务，并削峰填谷。', ['异步解耦', '削峰填谷', '事件分发']),
+        node('es', '搜索索引', 'ELASTICSEARCH', '维护商品检索索引，支持全文查询与多维筛选。', ['倒排索引', '全文查询', '聚合筛选']),
+        node('lake', '数据湖仓 · BI', 'DATA & ANALYTICS', '汇聚业务事件与离线数据，服务报表、分析和经营洞察。', ['数据汇聚', '指标分析', '经营报表'])
+      ]
+    },
+    {
+      id: 'infra', en: 'INFRASTRUCTURE', y: 604, h: 82, columns: 4,
+      nodes: [
+        node('k8s', '容器编排', 'KUBERNETES', '调度容器工作负载，提供服务伸缩、滚动发布与自愈。', ['容器调度', '弹性伸缩', '故障自愈']),
+        node('registry', '注册与发现', 'SERVICE DISCOVERY', '维护服务实例目录与健康状态，支持服务间寻址。', ['服务注册', '实例发现', '健康感知']),
+        node('cicd', '持续交付', 'CI / CD', '通过自动构建、测试和发布流程交付应用版本。', ['自动构建', '自动测试', '发布回滚']),
+        node('resilience', '容灾与备份', 'RESILIENCE', '通过多可用区、备份和恢复预案提升系统连续性。', ['多区部署', '数据备份', '灾难恢复'])
+      ]
+    }
+  ];
+  const crossNodes = [
+    { id: 'security', label: '安全与合规', sub: 'SECURITY', desc: '统一认证、数据加密、密钥管理、隐私保护与审计追踪贯穿各层。', tags: ['数据加密', '隐私保护', '审计追踪'], layer: 'access' },
+    { id: 'observability', label: '可观测与运维', sub: 'OBSERVABILITY', desc: '以日志、指标、链路追踪和告警建立全站运行态势与故障定位能力。', tags: ['日志指标', '链路追踪', '告警处置'], layer: 'infra' }
+  ];
+  const flows = {
+    order: { name: '订单链路', color: '#d9784f', ids: ['app', 'waf', 'gateway', 'order', 'inventory', 'payment', 'mq', 'db'] },
+    data: { name: '数据链路', color: '#27877f', ids: ['mini', 'gateway', 'message', 'mq', 'lake'] }
+  };
+  let width = 0;
+  let height = 0;
+  let nodes = [];
+  let nodeMap = new Map();
+  let view = 'all';
+  let selectedId = null;
+  let hoverId = null;
+  let zoom = 1;
+  let panX = 0;
+  let panY = 0;
+  let flowRunning = !reducedMotion;
+  let animationId = 0;
+  let resizeTimer = 0;
+  let drag = null;
+
+  function roundedRect(context, x, y, w, h, radius) {
+    const r = Math.min(radius, w / 2, h / 2);
+    context.beginPath();
+    context.roundRect(x, y, w, h, r);
+  }
+
+  function buildLayout() {
+    const left = 26;
+    const labelWidth = 108;
+    const sideWidth = 150;
+    const contentX = left + labelWidth + 14;
+    const contentRight = width - 26 - sideWidth - 14;
+    const contentWidth = contentRight - contentX;
+    nodes = [];
+    definitions.forEach(layer => {
+      const gap = 10;
+      const perRow = layer.columns;
+      const rowCount = Math.ceil(layer.nodes.length / perRow);
+      const nodeHeight = (layer.h - gap * (rowCount - 1)) / rowCount;
+      const nodeWidth = (contentWidth - gap * (perRow - 1)) / perRow;
+      layer.nodes.forEach((item, index) => {
+        const row = Math.floor(index / perRow);
+        const col = index % perRow;
+        nodes.push({
+          ...item,
+          layer: layer.id,
+          layerName: layerNames[layer.id],
+          color: layerColors[layer.id],
+          x: contentX + col * (nodeWidth + gap),
+          y: layer.y + row * (nodeHeight + gap),
+          w: nodeWidth,
+          h: nodeHeight
+        });
+      });
+    });
+    const sideX = width - 26 - sideWidth;
+    nodes.push({ ...crossNodes[0], layerName: '横切能力', color: layerColors.access, x: sideX, y: 226, w: sideWidth, h: 160 });
+    nodes.push({ ...crossNodes[1], layerName: '横切能力', color: layerColors.infra, x: sideX, y: 398, w: sideWidth, h: 160 });
+    nodeMap = new Map(nodes.map(item => [item.id, item]));
+  }
+
+  function resize() {
+    const rect = holder.getBoundingClientRect();
+    width = Math.max(1080, Math.round(rect.width));
+    height = Math.max(620, Math.round(rect.height));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildLayout();
+    clampPan();
+    draw(performance.now());
+  }
+
+  function clampPan() {
+    const scaledWidth = width * zoom;
+    const scaledHeight = height * zoom;
+    panX = scaledWidth <= width ? (width - scaledWidth) / 2 : Math.min(0, Math.max(width - scaledWidth, panX));
+    panY = scaledHeight <= height ? (height - scaledHeight) / 2 : Math.min(0, Math.max(height - scaledHeight, panY));
+  }
+
+  function drawBackground() {
+    ctx.fillStyle = '#f4f7f6';
+    ctx.fillRect(0, 0, width, height);
+    const wash = ctx.createLinearGradient(0, 0, width, height);
+    wash.addColorStop(0, 'rgba(159,200,244,.16)');
+    wash.addColorStop(.52, 'rgba(255,255,255,0)');
+    wash.addColorStop(1, 'rgba(245,181,163,.13)');
+    ctx.fillStyle = wash;
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = 'rgba(40,52,74,.04)';
+    ctx.lineWidth = 1;
+    for (let x = 26; x < width; x += 52) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
+    for (let y = 24; y < height; y += 52) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
+  }
+
+  function drawLayerBands() {
+    definitions.forEach(layer => {
+      const color = layerColors[layer.id];
+      ctx.save();
+      ctx.globalAlpha = .10;
+      ctx.fillStyle = color;
+      roundedRect(ctx, 18, layer.y - 5, width - 36, layer.h + 10, 16);
+      ctx.fill();
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(73,92,128,.10)';
+      ctx.lineWidth = 1;
+      roundedRect(ctx, 18, layer.y - 5, width - 36, layer.h + 10, 16);
+      ctx.stroke();
+      ctx.fillStyle = '#28344a';
+      ctx.font = '620 13px "Sora Variable", "Noto Sans SC Variable", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(layerNames[layer.id], 28, layer.y + layer.h / 2 - 10, 96);
+      ctx.fillStyle = '#5d6b82';
+      ctx.font = '500 8px "IBM Plex Mono", monospace';
+      ctx.fillText(layer.en, 28, layer.y + layer.h / 2 + 10, 96);
+    });
+  }
+
+  function drawDefaultConnectors() {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(40,52,74,.24)';
+    ctx.fillStyle = 'rgba(40,52,74,.36)';
+    ctx.lineWidth = 1.3;
+    for (let index = 0; index < definitions.length - 1; index++) {
+      const current = definitions[index];
+      const next = definitions[index + 1];
+      const y1 = current.y + current.h + 4;
+      const y2 = next.y - 5;
+      const contentX = 148;
+      const contentRight = width - 190;
+      [.24, .50, .76].forEach(ratio => {
+        const x = contentX + (contentRight - contentX) * ratio;
+        ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x, y2 + 1); ctx.lineTo(x - 3.5, y2 - 5); ctx.lineTo(x + 3.5, y2 - 5); ctx.closePath(); ctx.fill();
+      });
+    }
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = 'rgba(40,52,74,.18)';
+    const sideX = width - 176;
+    [[sideX, 260, width - 190, 260], [sideX, 442, width - 190, 442]].forEach(points => {
+      ctx.beginPath(); ctx.moveTo(points[0], points[1]); ctx.lineTo(points[2], points[3]); ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  function center(item) { return { x: item.x + item.w / 2, y: item.y + item.h / 2 }; }
+
+  function edgePoint(item, toward) {
+    const c = center(item);
+    const t = center(toward);
+    const dx = t.x - c.x;
+    const dy = t.y - c.y;
+    if (!dx && !dy) return c;
+    const scale = Math.min((item.w / 2) / Math.max(Math.abs(dx), .001), (item.h / 2) / Math.max(Math.abs(dy), .001));
+    return { x: c.x + dx * scale, y: c.y + dy * scale };
+  }
+
+  function curveBetween(a, b) {
+    const start = edgePoint(a, b);
+    const end = edgePoint(b, a);
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const bend = Math.min(44, Math.max(16, Math.hypot(dx, dy) * .10));
+    const direction = a.id < b.id ? 1 : -1;
+    const control = { x: (start.x + end.x) / 2 - dy / (Math.hypot(dx, dy) || 1) * bend * direction, y: (start.y + end.y) / 2 + dx / (Math.hypot(dx, dy) || 1) * bend * direction };
+    return { start, control, end };
+  }
+
+  function quadraticPoint(curve, t) {
+    const mt = 1 - t;
+    return { x: mt * mt * curve.start.x + 2 * mt * t * curve.control.x + t * t * curve.end.x, y: mt * mt * curve.start.y + 2 * mt * t * curve.control.y + t * t * curve.end.y };
+  }
+
+  function drawFlow(timestamp) {
+    if (view === 'all') return;
+    const flow = flows[view];
+    const flowNodes = flow.ids.map(id => nodeMap.get(id)).filter(Boolean);
+    ctx.save();
+    ctx.strokeStyle = flow.color;
+    ctx.lineWidth = 2.5;
+    ctx.globalAlpha = .86;
+    flowNodes.slice(0, -1).forEach((item, index) => {
+      const curve = curveBetween(item, flowNodes[index + 1]);
+      ctx.beginPath(); ctx.moveTo(curve.start.x, curve.start.y); ctx.quadraticCurveTo(curve.control.x, curve.control.y, curve.end.x, curve.end.y); ctx.stroke();
+      const tangentX = curve.end.x - curve.control.x;
+      const tangentY = curve.end.y - curve.control.y;
+      const angle = Math.atan2(tangentY, tangentX);
+      ctx.fillStyle = flow.color;
+      ctx.beginPath();
+      ctx.moveTo(curve.end.x, curve.end.y);
+      ctx.lineTo(curve.end.x - Math.cos(angle - .48) * 9, curve.end.y - Math.sin(angle - .48) * 9);
+      ctx.lineTo(curve.end.x - Math.cos(angle + .48) * 9, curve.end.y - Math.sin(angle + .48) * 9);
+      ctx.closePath(); ctx.fill();
+      if (flowRunning && !reducedMotion) {
+        const t = ((timestamp / 2600) + index * .17) % 1;
+        const point = quadraticPoint(curve, t);
+        ctx.beginPath(); ctx.arc(point.x, point.y, 4.5, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
+        ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(point.x, point.y, 4.5, 0, Math.PI * 2); ctx.stroke();
+      }
+    });
+    ctx.restore();
+  }
+
+  function isNodeActive(item) {
+    if (view === 'all') return true;
+    return flows[view].ids.includes(item.id);
+  }
+
+  function drawNode(item) {
+    const active = isNodeActive(item);
+    const selected = selectedId === item.id;
+    const hovered = hoverId === item.id;
+    ctx.save();
+    ctx.globalAlpha = active ? 1 : .18;
+    ctx.shadowColor = selected || hovered ? 'rgba(31,46,78,.18)' : 'rgba(31,46,78,.07)';
+    ctx.shadowBlur = selected || hovered ? 16 : 8;
+    ctx.shadowOffsetY = selected || hovered ? 6 : 3;
+    roundedRect(ctx, item.x, item.y, item.w, item.h, 13);
+    ctx.fillStyle = selected ? '#28344a' : 'rgba(255,255,255,.88)';
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.lineWidth = selected ? 2 : 1;
+    ctx.strokeStyle = selected ? '#28344a' : (hovered ? item.color : 'rgba(73,92,128,.20)');
+    ctx.stroke();
+    if (!selected) {
+      roundedRect(ctx, item.x + 1, item.y + 1, item.w - 2, 5, 4);
+      ctx.fillStyle = item.color;
+      ctx.fill();
+    }
+    const pad = Math.min(13, item.w * .10);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = selected ? '#f8fbff' : '#172238';
+    ctx.font = '620 12px "Sora Variable", "Noto Sans SC Variable", sans-serif';
+    ctx.fillText(item.label, item.x + pad, item.y + item.h * .43, item.w - pad * 2);
+    ctx.fillStyle = selected ? 'rgba(248,251,255,.72)' : '#5d6b82';
+    ctx.font = '500 7.5px "IBM Plex Mono", monospace';
+    ctx.fillText(item.sub, item.x + pad, item.y + item.h * .72, item.w - pad * 2);
+    ctx.restore();
+  }
+
+  function drawFooterLabels() {
+    ctx.save();
+    ctx.fillStyle = '#5d6b82';
+    ctx.font = '500 8px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(view === 'all' ? 'TOP-DOWN DEPENDENCY VIEW' : `${flows[view].name.toUpperCase()} / ACTIVE PATH`, 26, height - 14);
+    ctx.textAlign = 'right';
+    ctx.fillText('LOGICAL ARCHITECTURE · NOT A VENDOR-SPECIFIC DEPLOYMENT', width - 26, height - 14);
+    ctx.restore();
+  }
+
+  function draw(timestamp = performance.now()) {
+    if (!width || !height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    drawBackground();
+    ctx.save();
+    ctx.translate(panX, panY);
+    ctx.scale(zoom, zoom);
+    drawLayerBands();
+    drawDefaultConnectors();
+    drawFlow(timestamp);
+    nodes.forEach(drawNode);
+    drawFooterLabels();
+    ctx.restore();
+  }
+
+  function animate(timestamp) {
+    draw(timestamp);
+    if (view !== 'all' && flowRunning && !reducedMotion && !document.hidden) animationId = requestAnimationFrame(animate);
+  }
+
+  function restartAnimation() {
+    cancelAnimationFrame(animationId);
+    if (view !== 'all' && flowRunning && !reducedMotion && !document.hidden) animationId = requestAnimationFrame(animate);
+    else draw();
+  }
+
+  function resetInspector() {
+    selectedId = null;
+    detailEyebrow.textContent = 'ARCHITECTURE GUIDE';
+    detailTitle.textContent = '架构导览';
+    detailDescription.textContent = '请求从接入层进入，业务服务通过平台能力协同，数据与中间件提供持久化、缓存和异步解耦，底层基础设施承载部署、弹性与容灾。';
+    detailTags.innerHTML = '<span class="tag">统一接入</span><span class="tag">服务协同</span><span class="tag">数据驱动</span>';
+    clearSelection.hidden = true;
+    draw();
+  }
+
+  function selectNode(id, announce = true) {
+    const item = nodeMap.get(id);
+    if (!item) return;
+    selectedId = id;
+    detailEyebrow.textContent = `${item.layerName} / ${item.sub}`;
+    detailTitle.textContent = item.label;
+    detailDescription.textContent = item.desc;
+    detailTags.replaceChildren(...item.tags.map(tag => {
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.textContent = tag;
+      return span;
+    }));
+    clearSelection.hidden = false;
+    if (announce) liveStatus.textContent = `已选择${item.label}：${item.desc}`;
+    draw();
+  }
+
+  function setView(nextView) {
+    view = nextView;
+    viewButtons.forEach(button => {
+      const active = button.dataset.view === view;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    flowToggle.disabled = view === 'all' || reducedMotion;
+    flowToggle.textContent = reducedMotion ? '静态链路' : (flowRunning ? '暂停流动' : '播放流动');
+    if (view === 'all') viewStatus.textContent = '全部架构 · 6 个层级 · 32 个节点';
+    else viewStatus.textContent = `${flows[view].name} · ${flows[view].ids.length} 个关键节点 · 动态流向`;
+    resetInspector();
+    liveStatus.textContent = view === 'all' ? '已显示全部电商系统架构' : `已高亮${flows[view].name}`;
+    restartAnimation();
+  }
+
+  function setZoom(nextZoom) {
+    zoom = Math.min(1.8, Math.max(1, Math.round(nextZoom * 100) / 100));
+    clampPan();
+    zoomLevel.textContent = `${Math.round(zoom * 100)}%`;
+    document.getElementById('zoomOut').disabled = zoom <= 1;
+    document.getElementById('zoomIn').disabled = zoom >= 1.8;
+    draw();
+  }
+
+  function pointFromEvent(event) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: (event.clientX - rect.left - panX) / zoom, y: (event.clientY - rect.top - panY) / zoom };
+  }
+
+  function hitTest(point) {
+    for (let index = nodes.length - 1; index >= 0; index--) {
+      const item = nodes[index];
+      if (point.x >= item.x && point.x <= item.x + item.w && point.y >= item.y && point.y <= item.y + item.h) return item;
+    }
+    return null;
+  }
+
+  viewButtons.forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+  clearSelection.addEventListener('click', () => { resetInspector(); liveStatus.textContent = '已返回架构导览'; });
+  document.getElementById('zoomIn').addEventListener('click', () => setZoom(zoom + .15));
+  document.getElementById('zoomOut').addEventListener('click', () => setZoom(zoom - .15));
+  document.getElementById('fitButton').addEventListener('click', () => { panX = 0; panY = 0; setZoom(1); liveStatus.textContent = '架构图已适应画布'; });
+  flowToggle.addEventListener('click', () => {
+    if (view === 'all' || reducedMotion) return;
+    flowRunning = !flowRunning;
+    flowToggle.textContent = flowRunning ? '暂停流动' : '播放流动';
+    liveStatus.textContent = flowRunning ? '链路流动已播放' : '链路流动已暂停';
+    restartAnimation();
+  });
+  canvas.addEventListener('pointerdown', event => {
+    const point = pointFromEvent(event);
+    drag = { startX: event.clientX, startY: event.clientY, panX, panY, moved: false, hit: hitTest(point) };
+    canvas.setPointerCapture(event.pointerId);
+  });
+  canvas.addEventListener('pointermove', event => {
+    const point = pointFromEvent(event);
+    if (drag) {
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      if (Math.hypot(dx, dy) > 5) drag.moved = true;
+      if (drag.moved && zoom > 1) {
+        panX = drag.panX + dx;
+        panY = drag.panY + dy;
+        clampPan();
+        canvas.style.cursor = 'grabbing';
+        draw();
+      }
+      return;
+    }
+    const hit = hitTest(point);
+    hoverId = hit ? hit.id : null;
+    canvas.style.cursor = hit ? 'pointer' : (zoom > 1 ? 'grab' : 'default');
+    draw();
+  });
+  canvas.addEventListener('pointerup', event => {
+    if (!drag) return;
+    if (!drag.moved) {
+      const hit = hitTest(pointFromEvent(event));
+      if (hit) selectNode(hit.id);
+    }
+    drag = null;
+    canvas.style.cursor = zoom > 1 ? 'grab' : 'default';
+    if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+  });
+  canvas.addEventListener('pointercancel', () => { drag = null; });
+  canvas.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; draw(); } });
+  canvas.addEventListener('keydown', event => {
+    const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Home', 'End', 'Escape'];
+    if (!keys.includes(event.key)) return;
+    event.preventDefault();
+    if (event.key === 'Escape') { resetInspector(); return; }
+    let index = nodes.findIndex(item => item.id === selectedId);
+    if (event.key === 'Home') index = 0;
+    else if (event.key === 'End') index = nodes.length - 1;
+    else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') index = (index + 1 + nodes.length) % nodes.length;
+    else index = (index - 1 + nodes.length) % nodes.length;
+    selectNode(nodes[index].id);
+  });
+  document.getElementById('exportButton').addEventListener('click', () => {
+    draw();
+    canvas.toBlob(blob => {
+      if (!blob) { liveStatus.textContent = '导出失败，请重试'; return; }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = '18-2-ecommerce-architecture.png';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      liveStatus.textContent = '架构图 PNG 已生成';
+    }, 'image/png');
+  });
+  document.addEventListener('visibilitychange', restartAnimation);
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 120);
+  });
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 100);
+    });
+    observer.observe(holder);
+  }
+  resize();
+  setZoom(1);
+  setView('all');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
+})();
+
+  </script>
+</body>
+</html>
